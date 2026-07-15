@@ -60,7 +60,9 @@
                         <div class="row mb-3 justify-content-center">
                             <div class="col-md-6">
                                 <label for="reg_no" class="form-label">RTI Request Registration Number<span class="text-danger">*</span></label><br>
-                                <span style="color: blue; font-size: 12px">( First Appeal can be filed only after 30 days of e-filing of initial RTI Request)</span>
+                                <span style="color: blue; font-size: 12px">( First Appeal can be filed only after 30 days of e-filing of initial RTI Request or
+ It can be filed immediately if the reply received is incomplete or unsatisfactory )
+                                </span>
                                 <input type="text" class="form-control @error('reg_no') is-invalid @enderror" id="reg_no" name="reg_no" placeholder="Registration Number" value="{{ old('reg_no') }}" required>
                                 @error('reg_no')
                                     <div class="invalid-feedback">{{ $message }}</div>

@@ -1102,6 +1102,14 @@ class SubmitRequestController extends Controller
                                 throw new Exception("Partial Request cannot be Partially Transfered Again");
                             }
 
+                            $exists = SubmitRequest::where('reg_no', 'LIKE', $submitRequestDetails['reg_no'] . '/%')
+                            ->where('reg_no', '!=', $submitRequestDetails['reg_no'])
+                            ->exists();
+
+                            if ($exists) {
+                                throw new Exception("This application is already partially transferred.");
+                            }
+
                             $submitRequestData = SubmitRequest::where('reg_no',$submitRequestDetails['reg_no'])->first();
                             // dd($submitRequestData->name, $submitRequestData->reg_no);
 

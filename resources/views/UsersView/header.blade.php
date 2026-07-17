@@ -64,17 +64,15 @@
 
 </style>
 
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <div class="header-background">
     <div class="container-fluid header-content text-center">
+        <!-- Logo and Title Section -->
         <div class="row align-items-center">
-            <!-- Logo -->
-            <div class="offset-md-2 col-md-3 text-md-start">
+            <div class="col-md-3 offset-md-2 text-md-start">
                 <img src="../images/Emblem_of_Goa.png" alt="Goa Govt Logo">
             </div>
-            <!-- Header Text -->
             <div class="col-md-5 text-md-end">
-                <!-- <p>Public Authorities Available</p> -->
                 <a class="nav-link" href="/searchDepartment">Public Authorities Available</a>
                 <h2>RTI Online</h2>
                 <p>Version 1.0</p>
@@ -82,37 +80,38 @@
             </div>
         </div>
 
-        <div class="row row-divider">
-            <div class="col">
-                <hr>
-            </div>
-        </div>
+        <hr>
 
-        <!-- Navigation -->
-        <div class="row justify-content-center navigation-row">
-            <div class="col-auto navigation-link"><a href="/">Home</a></div>
-           <div class="col-auto navigation-link">
-                @if($hasPendingRecords)
-                    <a href="{{ route('pending-records-list') }}">RTI New Request</a>
-                @else
-                    <a href="{{ url('/profile') }}">RTI New Request</a>
-                @endif
+        <!-- Bootstrap Navigation -->
+        <nav class="navbar navbar-expand-lg justify-content-center">
+            <button class="navbar-toggler navbar-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item px-2"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item px-2">
+                        @if($hasPendingRecords)
+                            <a class="nav-link" href="{{ route('pending-records-list') }}">RTI New Request</a>
+                        @else
+                            <a class="nav-link" href="{{ url('/profile') }}">RTI New Request</a>
+                        @endif
+                    </li>
+                    @if(session()->has('mobile_no'))
+                    <li class="nav-item px-2"><a class="nav-link" href="{{ route('first-appeal-detail') }}">Submit First Appeal</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" href="{{ route('request-type-form') }}">Submit Second Appeal</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" href="/application-status">Application Status</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" href="{{ route('dashboard') }}">Payment Status</a></li>
+                     @endif
+                    <li class="nav-item px-2"><a class="nav-link" href="{{ route('login') }}">Dept. Login</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" href="/contactUs">Contact Us</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" href="/FAQ">FAQ</a></li>
+                </ul>
             </div>
-            <div class="col-auto navigation-link"><a href="{{ route('first-appeal-detail') }}">Submit First Appeal</a></div>
-            <div class="col-auto navigation-link"><a href="{{ route('request-type-form') }}">Submit Second Appeal</a></div>
-            <div class="col-auto navigation-link"><a href="/application-status">Application Status</a></div>
-            <div class="col-auto navigation-link"><a href="{{ route('dashboard') }}">Payment Status</a></div>
-            <div class="col-auto navigation-link"><a href="{{ route('login') }}">Dept. Login</a></div>
-            <div class="col-auto navigation-link"><a href="/contactUs">Contact Us</a></div>
-            <div class="col-auto navigation-link"><a href="/FAQ">FAQ</a></div>
-        </div>
+        </nav>
 
         @if(session()->has('mobile_no'))
-            <div class="row row-divider">
-                <div class="col">
-                    <hr>
-                </div>
-            </div>
+            <hr>
             <div class="row user-info">
                 <div class="col-md-6 text-md-end text-center mb-2">
                      <a href="{{ route('profile') }}" class="btn btn-link cursor-tooltip" data-tooltip="My Profile">{{ session('username') }} | {{ session('mobile_no') }}</a>
@@ -124,3 +123,4 @@
         @endif
     </div>
 </div>
+

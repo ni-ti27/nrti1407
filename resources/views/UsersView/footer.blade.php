@@ -64,7 +64,10 @@
                             <a class="mx-3" href="/Policy" target="_self">Policy</a>
                         </div>
                     </div>
-
+               <div class="col-12 nic-logo-container mt-3">
+    <!-- Note the leading slash / -->
+    <img src="/images/nic-logo-revise.png" alt="National Informatics Centre" style="width:150px">
+</div>
                     <div class="col-12 mt-3">
                         <p>Contents of the site provided by Department of Information & Publicity, Government of Goa</p>
                         <p>Copyright © 2024. All rights reserved.
@@ -98,7 +101,6 @@
                     <div class="col-12 mt-3 d-flex justify-content-center">
                         <p>Page Last Updated on: 16/07/2026</p>
                     </div>
-
 
                 </div>
 

@@ -257,7 +257,7 @@
                                                         <br>
                                                         <div class="row justify-content-center">
                                                             <div class="form-group col-md-4 mb-2 ">
-                                                                <label>Department / Public Authority</label>
+                                                                <label>Department / Public Authority</label><span class="text-danger">*</span>
                                                                 <select name="applied_dept_forward" class="form-control" id="applied_dept_forward" readonly>
                                                                     <option value="{{ $fullDeptData['department']->dept_code }}">{{$fullDeptData['department']->department}} </option>
                                                                 </select>
@@ -270,7 +270,7 @@
 
                                                             @if($i == 2)
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_subdept_forward">Select Office</label>
+                                                                <label for="applied_subdept_forward">Select Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_subdept_forward" class="form-control" id="applied_subdept_forward">
                                                                     <option value="">Select Office</option>
                                                                 </select>
@@ -282,7 +282,7 @@
                                                             </div>
 
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_office_forward">Select Sub Office</label>
+                                                                <label for="applied_office_forward">Select Sub Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_office_forward" class="form-control" id="applied_office_forward">
                                                                     <option value="">Select Sub Office</option>
                                                                 </select>
@@ -294,7 +294,7 @@
                                                             </div>
                                                             @elseif($i == 3)
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_subdept_forward_apio">Select Office</label>
+                                                                <label for="applied_subdept_forward_apio">Select Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_subdept_forward_apio" class="form-control" id="applied_subdept_forward_apio">
                                                                     <option value="">Select Office</option>
                                                                 </select>
@@ -306,7 +306,7 @@
                                                             </div>
 
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_office_forward_apio">Select Sub Office</label>
+                                                                <label for="applied_office_forward_apio">Select Sub Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_office_forward_apio" class="form-control" id="applied_office_forward_apio">
                                                                     <option value="">Select Sub Office</option>
                                                                 </select>
@@ -347,7 +347,7 @@
                                                         <div class="row justify-content-center">
                                                             @if($i == 2)
                                                             <div class="form-group col-md-8 mb-2">
-                                                                <label for="forwardReasonPio">Reason for Forwarding</label>
+                                                                <label for="forwardReasonPio">Reason for Forwarding</label><span class="text-danger">*</span>
                                                                 <textarea style="height: 100px" class="form-control" name="forwardReasonPio" maxlength="3000" id="forwardReasonPio"></textarea>
                                                                 @error('forwardReasonPio')
                                                                 <span class="invalid-feedback" role="alert">
@@ -357,7 +357,7 @@
                                                             </div>
                                                             @elseif($i == 3)
                                                             <div class="form-group col-md-8 mb-2">
-                                                                <label for="forwardReasonApio">Reason for Forwarding</label>
+                                                                <label for="forwardReasonApio">Reason for Forwarding</label><span class="text-danger">*</span>
                                                                 <textarea style="height: 100px" class="form-control" name="forwardReasonApio" maxlength="3000" id="forwardReasonApio"></textarea>
                                                                 @error('forwardReasonApio')
                                                                 <span class="invalid-feedback" role="alert">
@@ -380,7 +380,7 @@
                                                     <br>
                                                     <div class="row justify-content-center">
                                                         <div class="form-group col-md-8 mb-2">
-                                                            <label for="req_dispose_reason">Enter Reason for RTI Application Document Upload (1000 Characters Max)</label>
+                                                            <label for="req_dispose_reason">Enter Reason for RTI Application Document Upload (1000 Characters Max)</label><span class="text-danger">*</span>
                                                             <textarea class="form-control" name="req_dispose_reason" id="req_dispose_reason" style="height: 160px" maxlength="1000"></textarea>
                                                         </div>
                                                     </div>
@@ -396,7 +396,7 @@
                                                         <br>
                                                         <div class="row justify-content-center">
                                                             <div class="form-group col-md-4 mb-2 ">
-                                                                <label>Select Department / Public Authority</label>
+                                                                <label>Select Department / Public Authority</label><span class="text-danger">*</span>
                                                                 <select name="applied_dept" class="form-control" id="applied_dept">
                                                                     <option value="">Select Department</option>
                                                                     @foreach ($deptData as $id => $department)
@@ -413,7 +413,7 @@
                                                             </div>
 
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_subdept">Select Office</label>
+                                                                <label for="applied_subdept">Select Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_subdept" class="form-control" id="applied_subdept">
                                                                     <option value="">Select Office</option>
                                                                 </select>
@@ -425,7 +425,7 @@
                                                             </div>
 
                                                             <div class="form-group col-md-4 mb-2">
-                                                                <label for="applied_office">Select Sub Office</label>
+                                                                <label for="applied_office">Select Sub Office</label><span class="text-danger">*</span>
                                                                 <select name="applied_office" class="form-control" id="applied_office">
                                                                     <option value="">Select Sub Office</option>
                                                                 </select>
@@ -453,7 +453,7 @@
                                                         </div>
                                                         <div class="row justify-content-center">
                                                             <div class="form-group col-md-8 mb-2">
-                                                                <label for="transferReason">Reason for Forwarding</label>
+                                                                <label for="transferReason">Reason for Forwarding</label><span class="text-danger">*</span>
                                                                 <textarea style="height: 100px" class="form-control" name="transferReason" maxlength="3000" id="transferReason"></textarea>
                                                                 @error('transferReason')
                                                                 <span class="invalid-feedback" role="alert">
@@ -475,7 +475,7 @@
                                                     <br>
                                                     <div class="row justify-content-center">
                                                         <div class="form-group col-md-8 mb-2">
-                                                            <label for="doc_req_reason">Enter Reason for Request Return</label>
+                                                            <label for="doc_req_reason">Enter Reason for Request Return</label><span class="text-danger">*</span>
                                                             <textarea class="form-control" name="doc_req_reason" id="doc_req_reason" style="height: 160px" maxlength="500"></textarea>
                                                         </div>
                                                     </div>
@@ -512,7 +512,7 @@
                                                     </div>
                                                     <div class="row justify-content-center">
                                                         <div class="form-group col-md-8 mb-4">
-                                                            <label for="additional_amount_reason">Reason for Additional Payment (Max 255 characters)</label>
+                                                            <label for="additional_amount_reason">Reason for Additional Payment (Max 255 characters)</label><span class="text-danger">*</span>
                                                             <textarea class="form-control" name="additional_amount_reason" id="additional_amount_reason" style="height: 160px"></textarea>
                                                         </div>
                                                     </div>
@@ -657,7 +657,7 @@
 
         // Department dropdown
         const departmentOptions = @json($deptData); // Pass departments from Laravel to JS
-        let partialDepartmentDropdown = '<div class="col-md-4 mb-2"> <label>Select Department</label> <select name="partial_departments[]" id="department-${dropdownCount}" class="department-dropdown form-control" data-id="${dropdownCount}">';
+        let partialDepartmentDropdown = '<div class="col-md-4 mb-2"> <label>Select Department</label><span class="text-danger">*</span> <select name="partial_departments[]" id="department-${dropdownCount}" class="department-dropdown form-control" data-id="${dropdownCount}">';
         partialDepartmentDropdown += '<option value="">Select Department</option>';
         departmentOptions.forEach(dept =>
         {
@@ -666,12 +666,12 @@
         partialDepartmentDropdown += '</select></div>';
 
         // Initial SubDepartment dropdown (empty, will be populated based on department)
-        const subpartialDepartmentDropdown = `<div class="col-md-4 mb-2"><label>Select Office</label> <select name="partial_subdepartments[]" class="sub-department-dropdown form-control" data-id="${dropdownCount}">
+        const subpartialDepartmentDropdown = `<div class="col-md-4 mb-2"><label>Select Office</label><span class="text-danger">*</span> <select name="partial_subdepartments[]" class="sub-department-dropdown form-control" data-id="${dropdownCount}">
             <option value="">Select Office</option>
         </select></div>`;
 
         // Initial SubSubDepartment dropdown (empty, will be populated based on sub-department)
-        const partialOfficeDropdown = `<div class="col-md-4 mb-2"> <label>Select Sub Office</label> <select name="partial_offices[]" class="office-department-dropdown form-control" data-id="${dropdownCount}">
+        const partialOfficeDropdown = `<div class="col-md-4 mb-2"> <label>Select Sub Office</label><span class="text-danger">*</span> <select name="partial_offices[]" class="office-department-dropdown form-control" data-id="${dropdownCount}">
             <option value="">Select Sub Office</option>
         </select> </div>`;
 

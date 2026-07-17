@@ -313,12 +313,15 @@
                                         <br>
 
                                         <div class="form-group col-md-8 mb-4">
-                                            <label for="disposal_reason">Reason for Disposal</label>
+                                            <label for="disposal_reason">Reason for Disposal</label><span class="text-danger">*</span>
                                             <textarea class="form-control" name="disposal_reason" id="disposal_reason" style="height: 160px"></textarea>
                                         </div>
 
                                         <div class="form-group col-md-4 mb-2 ">
-                                            <label for="fa_reply_doc">Reply Document</label>
+                                            <label for="fa_reply_doc">Reply Document</label><span class="text-danger">*</span>
+                                            <span for="fa_reply_doc" style="color: blue; font-size: 12px; display: block;">
+        (File Type .pdf ; File size must not exceed 1 MB)
+    </span>
                                             <input type="file" class="form-control" name="fa_reply_doc" id="fa_reply_doc" placeholder="Choose file">
                                         </div>
                                     </div>
@@ -329,7 +332,7 @@
                                         <br>
                                         <h4 class="d-block text-center" style="margin-top: 20px">SEEK COMMENTS FROM SPIO</h4>
                                         <div class="form-group col-md-8 mb-4">
-                                            <label for="spio_comments">Comments from SPIO (Max 2000 characters)</label>
+                                            <label for="spio_comments">Comments from SPIO (Max 2000 characters)</label><span class="text-danger">*</span>
                                             <textarea class="form-control" name="spio_comments" id="spio_comments" style="height: 160px"></textarea>
                                         </div>
                                     </div>
@@ -340,7 +343,7 @@
                                         <br>
                                         <h4 class="d-block text-center" style="margin-top: 20px">RETURN FIRST APPEAL TO APPLICANT</h4>
                                         <div class="form-group col-md-8 mb-4">
-                                            <label for="return_reason">Return to Applicant Reason(50 characters)</label>
+                                            <label for="return_reason">Return to Applicant Reason(50 characters)</label><span class="text-danger">*</span>
                                             <textarea class="form-control" name="return_reason" id="return_reason" style="height: 160px"></textarea>
                                         </div>
                                     </div>

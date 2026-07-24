@@ -287,7 +287,7 @@
 
                                     <div class="row justify-content-center">
                                         <div class="form-group col-md-4 mb-2">
-                                            <label for="edu_status">Educational Status</label>
+                                            <label for="edu_status">Educational Status<span class="text-danger">*</span></label>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="edu_status" id="edu_status1" value="educated" {{ old('edu_status', $requestData->edu_status ?? '') == 'educated' || old('edu_status', $requestData->edu_status ?? '') == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="edu_status1">Educated</label>
@@ -305,7 +305,7 @@
 
                                         <!-- Visibility logic maintained natively via inline Blade evaluation -->
                                         <div class="form-group col-md-4 mb-2 hiddenQualificationDiv" style="{{ old('edu_status', $requestData->edu_status ?? '') == 'educated' || old('edu_status', $requestData->edu_status ?? '') == 1 ? '' : 'display:none;' }}">
-                                            <label for="qualification">Qualification</label>
+                                            <label for="qualification">Qualification<span class="text-danger">*</span></label>
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="qualification" id="qualification1" value="1" {{ old('qualification', $requestData->qualification ?? '') == 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="qualification1">10th Standard</label>

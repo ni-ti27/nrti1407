@@ -408,9 +408,13 @@ class PdfController extends Controller
             $pdfContent = $pdf->output();
             $fileName = 'Second-Appeal-Notice' . $saDetails->id . '.pdf';
 
-            $path = Storage::put($folderPath . '/' . $fileName, $pdfContent);
+           /* $path = Storage::put($folderPath . '/' . $fileName, $pdfContent);
             $pdfUrl = Storage::url($folderPath.'/'.$fileName);
-            Session::put('noticePath',$pdfUrl);
+            Session::put('noticePath',$pdfUrl);*/
+            $relativePath = $folderPath . '/' . $fileName;
+            Storage::put($relativePath, $pdfContent);
+            $pdfUrl = Storage::url($relativePath);
+            Session::put('noticePath', $relativePath);
 
             return response()->json([
                 'pdfUrl' => $pdfUrl

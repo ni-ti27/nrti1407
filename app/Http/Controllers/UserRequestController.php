@@ -137,6 +137,61 @@ class UserRequestController extends Controller
 
     public function pendingList(Request $request)
     {
+        $mobileNo = session('mobile_no');
+        // Single query execution to fetch data
+        // If no records are found, $nrStatus will be empty, allowing us to redirect
+        $nrStatus = DB::table('submit_requests as sr')
+            ->leftJoin('payment__details as pd', function ($join) {
+                $join->on('pd.applicant_id', '=', 'sr.id')
+                    ->whereRaw('pd.id = (select max(id) from payment__details where applicant_id = sr.id)');
+            })
+            ->select([
+                'sr.*',
+                'sr.reg_no as registration_no',
+                'pd.id as transaction_id',
+                'pd.echallan_no',
+                'pd.total_amt'
+            ])
+            ->where('sr.mobile_no', $mobileNo)
+            ->where('sr.is_bpl', 0)
+            ->where('sr.payment_details', 'N/A')
+            ->where('sr.created_at', '>=', now()->subDays(7)->startOfDay())
+            ->whereNull('pd.id') // Filters for records without payment details
+            ->orderBy('sr.created_at', 'desc')
+            ->paginate(10);
+
+        // Redirect if no pending requests exist
+        if ($nrStatus->isEmpty()) {
+            return redirect()->route('profile');
+        }
+
+        return view('Applicant.PendingList', [
+            'nrStatus' => $nrStatus,
+            'divSelector' => $request->input('divSelector', 'display1')
+        ]);
+    }
+
+    /*public function pendingList(Request $request)
+    {
+        $mobileNo = session('mobile_no');
+
+        if ($mobileNo) {
+            $hasPending = DB::table('submit_requests as sr')
+            ->where('sr.mobile_no', $mobileNo)
+            ->where('sr.is_bpl', 0)
+            ->where('sr.payment_details', 'N/A')
+            ->where('sr.created_at', '>=', Carbon::now()->subDays(7)->startOfDay())
+            ->whereNotExists(function ($query) {
+            $query->select(DB::raw(1))
+            ->from('payment__details as pd')
+            ->whereColumn('pd.applicant_id', 'sr.id');
+            })
+            ->exists();
+        }
+
+        if (!$hasPending) {
+            return redirect()->route('profile');
+        }
         $divSelector = $request->input('divSelector', 'display1');
 
        $nrStatus = DB::table('submit_requests as sr')
@@ -164,7 +219,7 @@ class UserRequestController extends Controller
             ->paginate(10);
 
         return view('Applicant.PendingList', compact('nrStatus', 'divSelector'));
-    }
+    }*/
 
    /* public function update($id)
     {

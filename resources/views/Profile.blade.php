@@ -470,6 +470,9 @@
             // console.log(fileUpload.files);
             // event.preventDefault();
             //         return false;
+        if (event.submitter && event.submitter.name === 'skip') {
+            return true;
+        }
 
         if (!confirm("Are you sure you want to update?")) {
             event.preventDefault();

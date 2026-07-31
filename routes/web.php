@@ -177,6 +177,7 @@ Route::post('/officerVerifyOtp', [AuthNewController::class, 'VerifyOfficerOtp'])
 Route::get('/RTIMIS/updatePass', [AuthNewController::class, 'showUpdatePassForm'])->name('changePassword');
 Route::post('/changePassword', [AuthNewController::class, 'changePassword'])->name('changePassword');
 Route::get('/forgot-password', [AuthNewController::class, 'forgotPass']);
+Route::get('/updatePass', [AuthNewController::class, 'showUpdatePassForm'])->name('updatePass');
 // Route::get('/officerPasswordReset', [AuthNewController::class, 'resetPass']);
 Route::post('/verifyResetOTP', [AuthNewController::class, 'verifyResetOtp'])->name('verifyResetOTP');
 

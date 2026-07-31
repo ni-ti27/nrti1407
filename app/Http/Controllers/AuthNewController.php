@@ -214,7 +214,9 @@ class AuthNewController extends Controller
         }
         catch(Exception $ex)
         {
-            return redirect('/UpdatePass')->withErrors(['message' => $ex->getMessage()])->withInput();
+            return redirect('/updatePass')
+            ->withErrors(explode(PHP_EOL, $ex->getMessage()))
+            ->withInput();
         }
     }
 

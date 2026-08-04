@@ -90,7 +90,7 @@ class ReportsController extends Controller
         $sql = $query->toSql();
         $bindings = $query->getBindings();
 
-        $fullSql = vsprintf(
+        /*$fullSql = vsprintf(
             str_replace('?', '%s', $sql),
             array_map(function ($binding) {
                 if (is_null($binding)) return 'NULL';
@@ -98,7 +98,7 @@ class ReportsController extends Controller
                 if ($binding instanceof \DateTime) return "'" . $binding->format('Y-m-d H:i:s') . "'";
                 return is_numeric($binding) ? $binding : "'" . addslashes($binding) . "'";
             }, $bindings)
-        );
+        );*/
 
        //dd($fullSql);
 

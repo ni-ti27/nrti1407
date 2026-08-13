@@ -102,9 +102,20 @@
                                         <div class="form-group col-md-6 mb-2" style="pointer-events: none;">
                                             <label for="gender">Gender</label>
                                             <select class="form-control @error('gender') is-invalid @enderror" name="gender" id="gender" readonly>
-                                            <option value="male" {{ isset($data['submitRequest']->gender) === 'male' ? 'selected' : '' }}>Male</option>
-                                            <option value="female" {{ isset($data['submitRequest']->gender) === 'female' ? 'selected' : '' }}>Female</option>
-                                            <option value="other" {{ isset($data['submitRequest']->gender) === 'other' ? 'selected' : '' }}>Other</option>
+                                                <option value="male"
+                                                    @selected(isset($data['submitRequest']->gender) && $data['submitRequest']->gender == 'male')>
+                                                    Male
+                                                </option>
+
+                                                <option value="female"
+                                                    @selected(isset($data['submitRequest']->gender) && $data['submitRequest']->gender == 'female')>
+                                                    Female
+                                                </option>
+
+                                                <option value="other"
+                                                    @selected(isset($data['submitRequest']->gender) && $data['submitRequest']->gender == 'other')>
+                                                    Other
+                                                </option>
                                             </select>
                                             @error('gender')
                                             <span class="invalid-feedback" role="alert">

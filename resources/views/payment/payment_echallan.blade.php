@@ -1,4 +1,4 @@
-<form name="json_form" action="https://echallanpg.goa.gov.in/haveechallan.aspx" method="post">
+<form name="json_form" action="https://echallanpg.goa.gov.in/haveechallan" method="get">
 	<section class="content">
 		<div class="row">
 			<section class="col-lg-12 connectedSortable">

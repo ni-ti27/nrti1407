@@ -944,6 +944,10 @@ class SubmitRequestController extends Controller
                                 }
 
                                 $file = $request->file('reply_doc');
+
+                                if (!$file->isValid()) {
+                                    throw new \Exception('Invalid reply document uploaded.');
+                                }
                                 $fileNameSplit = explode('/', $submitRequestDetails['reg_no']);
 
                                 $fileName = $fileNameSplit[3].'_'.date('dmyHi').'_REPLY.'.$file->getClientOriginalExtension();
@@ -960,6 +964,10 @@ class SubmitRequestController extends Controller
                                 }
 
                                 $file1 = $request->file('reply_doc1');
+
+                                if (!$file1->isValid()) {
+                                    throw new \Exception('Invalid reply document 1 uploaded.');
+                                }
                                 $fileNameSplit = explode('/', $submitRequestDetails['reg_no']);
 
                                 $fileName1 = $fileNameSplit[3].'_'.date('dmyHi').'_REPLY_1.'.$file1->getClientOriginalExtension();
@@ -976,6 +984,10 @@ class SubmitRequestController extends Controller
                                 }
 
                                 $file2 = $request->file('reply_doc2');
+
+                                if (!$file2->isValid()) {
+                                    throw new \Exception('Invalid file upload.');
+                                }
                                 $fileNameSplit = explode('/', $submitRequestDetails['reg_no']);
 
                                 $fileName2 = $fileNameSplit[3].'_'.date('dmyHi').'_REPLY_2.'.$file2->getClientOriginalExtension();
@@ -983,10 +995,6 @@ class SubmitRequestController extends Controller
                                 $path2 = Storage::putFileAs(
                                     $folderPath2, $file2, $fileName2
                                 );
-                            }
-                            else
-                            {
-                                echo "Possible file upload attack!\n";
                             }
 
                             $reqDisposeCreate = [
@@ -996,7 +1004,7 @@ class SubmitRequestController extends Controller
                                 'disposal_type' => $disposalType,
                                 'document_path' => $path,
                                 'document_name' => $fileName,
-                                'original_doc_name' => $file->getClientOriginalName()
+                                'original_doc_name' => $request->hasFile('reply_doc') ? $file->getClientOriginalName() : null
                             ];
 
                             if ($request->hasFile('reply_doc1'))

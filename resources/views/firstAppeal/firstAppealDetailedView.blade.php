@@ -343,8 +343,8 @@
                                         <br>
                                         <h4 class="d-block text-center" style="margin-top: 20px">RETURN FIRST APPEAL TO APPLICANT</h4>
                                         <div class="form-group col-md-8 mb-4">
-                                            <label for="return_reason">Return to Applicant Reason(50 characters)</label><span class="text-danger">*</span>
-                                            <textarea class="form-control" name="return_reason" id="return_reason" maxlength="50" style="height: 160px"></textarea>
+                                            <label for="return_reason">Return to Applicant Reason(100 characters)</label><span class="text-danger">*</span>
+                                            <textarea class="form-control" name="return_reason" id="return_reason" maxlength="100" style="height: 160px"></textarea>
                                         </div>
                                     </div>
                                     @endif
@@ -475,8 +475,8 @@ $(document).ready(function() {
                 return false;
             }
 
-            if (return_reason.length > 50) {
-                alert('Return Reason should not exceed 50 characters');
+            if (return_reason.length > 100) {
+                alert('Return Reason should not exceed 100 characters');
                 event.preventDefault();
                 return false;
             }

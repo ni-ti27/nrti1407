@@ -164,7 +164,6 @@ class PaymentController extends Controller
         ));
 
         $response = curl_exec($curl);
-
         // dd($response);
         curl_close($curl);
 

@@ -54,20 +54,20 @@
             <div class="container text-center">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8">
-                        <div class="d-flex justify-content-center flex-wrap">
+                        <div class="d-flex flex-column flex-md-row justify-content-center align-items-center flex-wrap text-center">
                             <a class="mx-3" href="/" target="_self">Home</a>
-                            <a class="mx-3" href="https://www.goa.gov.in/" target="_blank" class="external-link">Govt. of Goa</a>
-                            <a class="mx-3" href="https://www.india.gov.in/" target="_blank" class="external-link">National Portal of India</a>
-                            <a class="mx-3" href="https://gsic.goa.gov.in/" target="_blank" class="external-link">Complaint & Second Appeal to SIC</a>
+                            <a class="mx-3 external-link" href="https://www.goa.gov.in/" target="_blank">Govt. of Goa</a>
+                            <a class="mx-3 external-link" href="https://www.india.gov.in/" target="_blank">National Portal of India</a>
+                            <a class="mx-3 external-link" href="https://gsic.goa.gov.in/" target="_blank">Complaint &amp; Second Appeal to SIC</a>
                             <a class="mx-3" href="/FAQ" target="_self">FAQ</a>
                             <a class="mx-3" href="/AboutUs" target="_self">About Us</a>
                             <a class="mx-3" href="/Policy" target="_self">Policy</a>
                         </div>
                     </div>
                <div class="col-12 nic-logo-container mt-3">
-    <!-- Note the leading slash / -->
-    <img src="/images/nic-logo-revise.png" alt="National Informatics Centre" style="width:150px">
-</div>
+                    <!-- Note the leading slash / -->
+                    <img src="/images/nic-logo-revise.png" alt="National Informatics Centre" style="width:150px">
+                </div>
                     <div class="col-12 mt-3">
                         <p>Contents of the site provided by Department of Information & Publicity, Government of Goa</p>
                         <p>Copyright © 2024. All rights reserved.
@@ -99,7 +99,7 @@
                     </div>
 
                     <div class="col-12 mt-3 d-flex justify-content-center">
-                        <p>Page Last Updated on: 29/07/2026</p>
+                        <p>Page Last Updated on: 28/09/2026</p>
                     </div>
 
                 </div>

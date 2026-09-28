@@ -880,4 +880,20 @@ class UserRequestController extends Controller
         return view('searchDepartment', compact('departments', 'search', 'hierarchy'));
     }
 
+    public function checkPioStatus($dept, $office = 0, $suboffice = 0)
+    {
+        // Query the dept_officers_master table for role = 2 (PIO)
+        $pio = DB::table('dept_officers_master')
+            ->where('dept_code', $dept)
+            ->where('office_code', $office)
+            ->where('suboffice_code', $suboffice)
+            ->where('role', 2)
+            ->first();
+
+        // Check if PIO exists and active is 0
+        $isInactive = !$pio || $pio->is_active == 0;
+
+        return response()->json(['inactive' => $isInactive]);
+    }
+
 }

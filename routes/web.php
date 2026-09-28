@@ -81,6 +81,7 @@ Route::get('officeDropdown/{deptId}/{officeId}',[userRequestController::class,'g
 
 Route::get('pioDropdown/{deptId}/{subDept}', [userRequestController::class, 'getPio']);
 Route::get('faaDropdown/{deptId}/{subDept}', [userRequestController::class, 'getFaa']);
+Route::get('/check-pio-status/{dept}/{office}/{suboffice}', [userRequestController::class, 'checkPioStatus']);
 
 // Route::post('/sessionForm', [SessionFormController::class, 'saveSession'])->name('sessionForm.save');
 Route::get('/boom', [SessionFormController::class, 'destroySession'])->name('sessionForm.destroy');

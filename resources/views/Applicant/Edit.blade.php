@@ -445,7 +445,7 @@
                                     </div>
                                     <div class="row justify-content-center">
                                     <x-captcha />
-                                        <button type="submit" name="send" onclick="validateForm()" value="" class="btn btn-success pay_btn">Proceed to Fee Payment</button>
+                                        <button type="submit" name="send" value="" class="btn btn-success pay_btn">Proceed to Fee Payment</button>
                                     </div>
                                 </div>
 
@@ -460,8 +460,7 @@
         </div>
     </div>
 
-    <!-- Retained your JavaScript UI event listeners for interactive toggle elements -->
-    <script>
+ <script>
 
 $(document).ready(function(){
 
@@ -497,7 +496,7 @@ $(document).ready(function(){
                 var selected = (v.id == oldDistrict) ? 'selected' : '';
                 districtSelect.append('<option value="'+v.id+'" '+selected+'>'+v.name+'</option>');
             });
-            populateTalukaDropdown(); // auto update dependent dropdown
+            populateTalukaDropdown();
         });
     }
 
@@ -532,18 +531,29 @@ $(document).ready(function(){
         });
     }
 
-    // DEPARTMENT → OFFICE → SUB-OFFICE
+    // DEPARTMENT → OFFICE → SUB-OFFICE (single, callback-aware versions only)
     $('select[name="applied_dept"]').on('change', function(){
-        populateSubDeptDropdown();
+        populateSubDeptDropdown(function(){
+            checkPioStatus();
+        });
     });
 
     $('select[name="applied_subdept"]').on('change', function(){
-        populateOfficeDropdown();
+        populateOfficeDropdown(function(){
+            checkPioStatus();
+        });
     });
 
-    function populateSubDeptDropdown(){
+    $('select[name="applied_office"]').on('change', function(){
+        checkPioStatus();
+    });
+
+    function populateSubDeptDropdown(callback){
         var deptId = $('select[name="applied_dept"]').val();
-        if(!deptId) return;
+        if(!deptId) {
+            if (typeof callback === 'function') callback();
+            return;
+        }
 
         $.get('/subDeptDropdown/' + deptId, function(data){
             var oldSubDept = '{{ old("applied_subdept", $requestData->applied_subdept ?? "") }}';
@@ -553,14 +563,17 @@ $(document).ready(function(){
                 var selected = (v.office_code == oldSubDept) ? 'selected' : '';
                 subDeptSelect.append('<option value="'+v.office_code+'" '+selected+'>'+v.department+'</option>');
             });
-            populateOfficeDropdown();
+            populateOfficeDropdown(callback);
         });
     }
 
-    function populateOfficeDropdown(){
+    function populateOfficeDropdown(callback){
         var deptId = $('select[name="applied_dept"]').val();
         var subDeptId = $('select[name="applied_subdept"]').val();
-        if(!subDeptId) return;
+        if(!subDeptId) {
+            if (typeof callback === 'function') callback();
+            return;
+        }
 
         $.get('/officeDropdown/' + deptId + '/' + subDeptId, function(data){
             var oldOffice = '{{ old("applied_office", $requestData->applied_office ?? "") }}';
@@ -570,10 +583,11 @@ $(document).ready(function(){
                 var selected = (v.suboffice_code == oldOffice) ? 'selected' : '';
                 officeSelect.append('<option value="'+v.suboffice_code+'" '+selected+'>'+v.department+'</option>');
             });
+            if (typeof callback === 'function') callback();
         });
     }
 
-     // EDU STATUS (Educated / Non-Educated)
+    // EDU STATUS (Educated / Non-Educated)
     function toggleQualificationDiv() {
         var eduStatus = $('input[name="edu_status"]:checked').val();
         if(eduStatus === 'educated' || eduStatus == 1){
@@ -582,7 +596,7 @@ $(document).ready(function(){
             $('.hiddenQualificationDiv').hide();
         }
     }
-    toggleQualificationDiv(); // run on page load
+    toggleQualificationDiv();
     $('input[name="edu_status"]').change(toggleQualificationDiv);
 
     // BPL Yes / No
@@ -594,10 +608,10 @@ $(document).ready(function(){
             $('.hiddenCardDiv').hide();
         }
     }
-    toggleBPLDiv(); // run on page load
+    toggleBPLDiv();
     $('input[name="is_bpl"]').change(toggleBPLDiv);
 
-     $('input[name="is_bpl"]').change(function() {
+    $('input[name="is_bpl"]').change(function() {
         if ($(this).val() === 'yes')
         {
             $('.hiddenCardDiv').show();
@@ -614,25 +628,242 @@ $(document).ready(function(){
 
     $('.send').hide();
 
+    document.getElementById('document').addEventListener('change', function(e){
+        const fileInput = e.target;
+        const currentFileDiv = document.getElementById('currentFile');
 
-document.getElementById('document').addEventListener('change', function(e){
-    const fileInput = e.target;
-    const currentFileDiv = document.getElementById('currentFile');
+        if(fileInput.files && fileInput.files[0]){
+            const fileName = fileInput.files[0].name;
+            currentFileDiv.innerHTML = '<small>Selected File: ' + fileName + '</small>';
+        } else {
+            @if($filePath)
+                currentFileDiv.innerHTML = '<small>Current File: <a href="{{ $filePath }}" target="_blank" id="fileLink">View Document</a></small>';
+            @else
+                currentFileDiv.innerHTML = '<small>No file uploaded yet.</small>';
+            @endif
+        }
+    });
 
-    if(fileInput.files && fileInput.files[0]){
-        const fileName = fileInput.files[0].name;
-        currentFileDiv.innerHTML = '<small>Selected File: ' + fileName + '</small>';
-    } else {
-        // Show existing file link if no new file is selected
-        @if($filePath)
-            currentFileDiv.innerHTML = '<small>Current File: <a href="{{ $filePath }}" target="_blank" id="fileLink">View Document</a></small>';
-        @else
-            currentFileDiv.innerHTML = '<small>No file uploaded yet.</small>';
-        @endif
+    // SUBMIT: full field validation, then PIO check
+    var editForm = document.querySelector("form[name='edit_req_form']");
+
+    editForm.addEventListener("submit", function(event) {
+        var appliedDeptSelect = editForm.querySelector("#applied_dept");
+        if (appliedDeptSelect.value === "") {
+            alert("Please select a department.");
+            appliedDeptSelect.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var appliedSubDeptSelect = editForm.querySelector("#applied_subdept");
+        if (appliedSubDeptSelect.value === "") {
+            alert("Please select a sub department.");
+            appliedSubDeptSelect.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var appliedOffice = editForm.querySelector("#applied_office");
+        if (appliedOffice.value === "") {
+            alert("Please select a sub office.");
+            appliedOffice.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var applicantName = editForm.querySelector("#name");
+        if (applicantName.value === "") {
+            alert("Please enter your name.");
+            applicantName.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var address_line1 = editForm.querySelector("#address_line1");
+        if (address_line1.value === "") {
+            alert("Please enter your address line 1.");
+            address_line1.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var address_line2 = editForm.querySelector("#address_line2");
+        if (address_line2.value === "") {
+            alert("Please enter your address line 2.");
+            address_line2.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var address_line3 = editForm.querySelector("#address_line3");
+        if (address_line3.value === "") {
+            alert("Please enter your address line 3.");
+            address_line3.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var pincode = editForm.querySelector("#pincode");
+        if (pincode.value === "") {
+            alert("Please enter your pincode.");
+            pincode.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var state = editForm.querySelector("#state");
+        if (state.value === "") {
+            alert("Please select your state.");
+            state.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var district = editForm.querySelector("#district");
+        if (district.value === "") {
+            alert("Please select your district.");
+            district.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var taluka = editForm.querySelector("#taluka");
+        if (taluka.value === "") {
+            alert("Please select your taluka.");
+            taluka.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var village = editForm.querySelector("#village");
+        if (village.value === "") {
+            alert("Please select your village.");
+            village.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var mobile_no = editForm.querySelector("#mobile_no");
+        var mobileNumberPattern = /^\d{10}$/;
+        if (mobile_no.value === "" || !mobileNumberPattern.test(mobile_no.value)) {
+            alert("Please enter a valid 10-digit mobile number.");
+            mobile_no.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var email = editForm.querySelector("#email_id");
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email.value === "" || !emailPattern.test(email.value)) {
+            alert("Please enter a valid email address.");
+            email.focus();
+            event.preventDefault();
+            return;
+        }
+
+        var eduStatusInputs = editForm.querySelectorAll('input[name="edu_status"]');
+        var eduStatusChecked = false;
+        eduStatusInputs.forEach(function(input) {
+            if (input.checked) eduStatusChecked = true;
+        });
+        if (!eduStatusChecked) {
+            alert("Please select Education status.");
+            event.preventDefault();
+            return;
+        }
+
+        if (editForm.querySelector('input[name="edu_status"]:checked').value === "educated") {
+            var qualificationInputs = editForm.querySelectorAll('input[name="qualification"]');
+            var qualificationChecked = false;
+            qualificationInputs.forEach(function(input) {
+                if (input.checked) qualificationChecked = true;
+            });
+            if (!qualificationChecked) {
+                alert("Please select Qualification.");
+                event.preventDefault();
+                return;
+            }
+        }
+
+        var textarea = editForm.querySelector("textarea[name='request_text']");
+        if (textarea.value === "") {
+            alert("Please explain your request.");
+            textarea.focus();
+            event.preventDefault();
+            return;
+        }
+
+        if (textarea.value.length > 3000) {
+            alert("Maximum length of request text is 3000.");
+            textarea.focus();
+            event.preventDefault();
+            return;
+        }
+
+        // File is optional on edit — no file means "keep existing file"
+        var fileUpload = editForm.querySelector("input[type='file']");
+        if (fileUpload.files.length > 0 && fileUpload.files[0].size > 5 * 1024 * 1024) {
+            alert("File size exceeds the limit of 5MB.");
+            fileUpload.value = "";
+            event.preventDefault();
+            return;
+        }
+
+        // All field validation passed — now run PIO check before actually submitting
+        event.preventDefault();
+        checkPioStatus(function(canSubmit) {
+            if (canSubmit) {
+                editForm.submit();
+            }
+            // else: alert already shown inside checkPioStatus
+        });
+    });
+
+});
+
+// Function to check PIO status via AJAX
+function checkPioStatus(callback) {
+    var deptSelect = $('select[name="applied_dept"]');
+    var subDeptSelect = $('select[name="applied_subdept"]');
+    var officeSelect = $('select[name="applied_office"]');
+
+    var deptId = deptSelect.val();
+    var subDeptId = subDeptSelect.val() || 0;
+    var officeId = officeSelect.val() || 0;
+
+    var deptText = deptSelect.find(':selected').text().trim();
+    var subDeptText = subDeptSelect.find(':selected').text().trim();
+    var officeText = officeSelect.find(':selected').text().trim();
+
+    if (deptId && deptId !== "0" && deptId !== "") {
+        $.ajax({
+            url: '/check-pio-status/' + deptId + '/' + subDeptId + '/' + officeId,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.inactive) {
+                    alert(
+                       // "For \n" +
+                        "Department: " + deptText + "\n" +
+                        "Office: " + subDeptText + "\n" +
+                        "Sub-Office: " + officeText + "\n\n" +
+                        "PIO not appointed at this level."
+                    );
+                    if (typeof callback === 'function') callback(false);
+                    return;
+                }
+                if (typeof callback === 'function') callback(true);
+            },
+            error: function(xhr) {
+                console.error('check-pio-status failed', xhr.status, xhr.responseText);
+                if (typeof callback === 'function') callback(true); // fail-open on unexpected error
+            }
+        });
+    } else if (typeof callback === 'function') {
+        callback(true);
     }
-});
-
-});
+}
 </script>
 
 </body>

@@ -7,46 +7,67 @@ use Illuminate\Support\Facades\DB;
 
 class FaaDept22Audit extends Command
 {
-    protected $signature = 'faa:audit-dept-22';
-    protected $description = 'Audit Dept 22: Validate master vs. mapping table';
+    protected $signature = 'faa:audit-dept-32';
+    protected $description = 'Audit Dept 32: Validate master vs. mapping table';
 
     public function handle()
     {
-        $this->info("--- Auditing Dept 22: dept_officers_master vs faa_dept_mapping ---");
+        $this->info("--- Auditing Dept 32: dept_officers_master vs faa_dept_mapping ---");
 
         // 1. Get all active officers in Dept 22
         $officers = DB::table('dept_officers_master')
-            ->where('dept_code', 22)
+            ->where('dept_code', 32)
             ->where('is_active', 1)
             ->orderBy('dept_id', 'asc')
             ->get();
 
         foreach ($officers as $officer) {
             // 2. Determine what the FAA SHOULD be
-            $expectedFaa = $this->findFaa(22, $officer->office_code, $officer->suboffice_code);
+            $expectedFaa = $this->findFaa(32, $officer->office_code, $officer->suboffice_code);
 
             if (!$expectedFaa) {
                 $this->warn("MISSING FAA: No FAA found for Office {$officer->office_code}, Sub {$officer->suboffice_code}");
+
+
                 continue;
             }
 
             // 3. Check what is currently mapped in faa_dept_mapping
             $currentMapping = DB::table('faa_dept_mapping')
-                ->where('dept_code', 22)
+                ->where('dept_code', 32)
                 ->where('office_code', $officer->office_code)
                 ->where('suboffice_code', $officer->suboffice_code)
                 ->first();
 
             // 4. Validate
             if (!$currentMapping) {
-                $this->error("UNMAPPED: Dept 22, Off {$officer->office_code}, Sub {$officer->suboffice_code} exists but is missing from mapping table.");
+                //$this->error("UNMAPPED: Dept 32, Off {$officer->office_code}, Sub {$officer->suboffice_code} exists but is missing from mapping table.");
+
+                    // Generate INSERT query
+ $sql = sprintf(
+    "INSERT INTO faa_dept_mapping
+    (dept_code, office_code, suboffice_code, dept_id, fadept_code, faoffice_code, fasuboffice_code, fadept_id, active)
+    VALUES (%d, %d, %d, %d, %d, %d, %d, '%s', %d);",
+
+    32,
+    $officer->office_code,
+    $officer->suboffice_code,
+    $officer->dept_id,
+    $expectedFaa->dept_code,
+    $expectedFaa->office_code,
+    $expectedFaa->suboffice_code,
+    $expectedFaa->dept_id,
+    1
+);
+
+    $this->line($sql);
             } elseif ($currentMapping->fadept_id != $expectedFaa->dept_id) {
                // $this->error("INCORRECT MAPPING: Department 22, Office {$officer->office_code}, Suboffice {$officer->suboffice_code}");
                 //$this->line("   Current Mapping points to FAA ID: {$currentMapping->fadept_id}");
                 //$this->line("   Required Mapping points to FAA ID: {$expectedFaa->dept_id}");
 
                 $sql = sprintf(
-                    "UPDATE faa_dept_mapping SET fadept_code = %d, faoffice_code = %d, fasuboffice_code = %d, fadept_id = '%s' WHERE dept_code = 22 AND office_code = %d AND suboffice_code = %d;",
+                    "UPDATE faa_dept_mapping SET fadept_code = %d, faoffice_code = %d, fasuboffice_code = %d, fadept_id = '%s' WHERE dept_code = 32 AND office_code = %d AND suboffice_code = %d;",
                     $expectedFaa->dept_code,
                     $expectedFaa->office_code,
                     $expectedFaa->suboffice_code,

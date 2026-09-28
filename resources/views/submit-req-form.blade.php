@@ -701,8 +701,17 @@
                 return;
             }
 
+            // 2. Stop the form from submitting immediately
+            event.preventDefault();
 
-            form.submit();
+            // 3. Call checkPioStatus and pass a callback function to handle submission
+            checkPioStatus(function(canSubmit) {
+                if (canSubmit) {
+                    form.submit();
+                }
+                // else: alert already shown inside checkPioStatus
+            });
+
         });
     });
 
@@ -829,18 +838,28 @@ $(document).ready(function()
         }
     }
 
+    // 1. Department Change
     $('select[name="applied_dept"]').on('change', function() {
-        populateSubDeptDropdown();
+        // If populateSubDeptDropdown uses a callback or Promise:
+        populateSubDeptDropdown(function() {
+            // Reset subdept/office values if needed, then check status
+            checkPioStatus();
+        });
     });
 
-    // Event listener for District dropdown change
+    // 2. Sub-Department Change
     $('select[name="applied_subdept"]').on('change', function() {
-        populateOfficeDropdown();
+        populateOfficeDropdown(function() {
+            checkPioStatus();
+        });
     });
-
+    // Event listener for Sub Office dropdown change
+    $('select[name="applied_office"]').on('change', function() {
+        checkPioStatus(); // Check with all three values
+    });
 
     // Function to populate Sub Department dropdown
-    function populateSubDeptDropdown() {
+    function populateSubDeptDropdown(callback) {
         var deptId = $('select[name="applied_dept"]').val();
         if (deptId) {
             $.ajax({
@@ -860,17 +879,18 @@ $(document).ready(function()
 
                         $('select[name="applied_subdept"]').append(option);
                     });
-                    populateOfficeDropdown();
+                    populateOfficeDropdown(callback);
                 }
             });
         } else {
             var subDeptSelect = $('select[name="applied_subdept"]');
             subDeptSelect.empty().append('<option value="">Select Office</option>');
+            if (typeof callback === 'function') callback(); // still fire it in the empty case
         }
     }
 
     // Function to populate Sub Department dropdown
-    function populateOfficeDropdown() {
+    function populateOfficeDropdown(callback) {
         var deptId = $('select[name="applied_dept"]').val();
         var subDeptId = $('select[name="applied_subdept"]').val();
         if (subDeptId) {
@@ -892,10 +912,12 @@ $(document).ready(function()
 
                         $('select[name="applied_office"]').append(option);
                     });
+                    if (typeof callback === 'function') callback(); // still fire it in the empty case
                 }
             });
         } else {
             $('select[name="applied_office"]').append('<option value="0">Sub Office</option>');
+             if (typeof callback === 'function') callback();
         }
     }
 
@@ -944,6 +966,48 @@ $(document).ready(function()
     $('.send').hide();
 
 });
+// Function to check PIO status via AJAX
+function checkPioStatus(callback) {
+    var deptSelect = $('select[name="applied_dept"]');
+    var subDeptSelect = $('select[name="applied_subdept"]');
+    var officeSelect = $('select[name="applied_office"]');
+
+    var deptId = deptSelect.val();
+    var subDeptId = subDeptSelect.val() || 0;
+    var officeId = officeSelect.val() || 0;
+
+    var deptText = deptSelect.find(':selected').text().trim();
+    var subDeptText = subDeptSelect.find(':selected').text().trim();
+    var officeText = officeSelect.find(':selected').text().trim();
+
+    if (deptId && deptId !== "0" && deptId !== "") {
+        $.ajax({
+            url: '/check-pio-status/' + deptId + '/' + subDeptId + '/' + officeId,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                if (response.inactive) {
+                    alert(
+                        //"For \n"+
+    "Department: " + deptText + "\n" +
+    "Office: " + subDeptText + "\n" +
+    "Sub-Office: " + officeText + "\n\n" +
+    "PIO not appointed at this level."
+);
+                    if (typeof callback === 'function') callback(false);
+                    return;
+                }
+                if (typeof callback === 'function') callback(true);
+            },
+            error: function(xhr) {
+                console.error('check-pio-status failed', xhr.status, xhr.responseText);
+                if (typeof callback === 'function') callback(true); // fail-open on unexpected error
+            }
+        });
+    } else if (typeof callback === 'function') {
+        callback(true);
+    }
+}
 
 </script>
 </html>

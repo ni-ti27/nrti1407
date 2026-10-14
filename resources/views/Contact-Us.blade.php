@@ -1,48 +1,55 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact Us</title>
-    <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-</head>
+{{-- ============================================================
+     Contact Us  (DBIM / GIGW 3.0, keyboard + screen reader friendly)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     No inline styles.
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
+@section('title', 'Contact Us | RTI Online, Government of Goa')
 
-    .container.mt-5
-    {
-        /* border: 2px solid black; */
-        border-top:none;
-        margin-top:0 !important;
-    }
+@section('content')
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
 
-</style>
-<body>
-    @include('UsersView.header')
+            {{-- Page heading: 24px bold, starts at the card's left edge --}}
+            <h1 class="h2 mb-4">Contact Us</h1>
 
-    <div class="container mt-5" style="border-bottom:0px">
-        <br>
-        <h2>Contact Us</h2>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-md-12">
-                <div class="card">
-                    <h5 class="card-header"><span style="color:red">NOTE:</span><br> If the applicant's query doesn't get resolved through, <span style="color:blue">@obfuscateEmail('support.rtionline@goa.gov.in')</span>
-then they may contact below mentioned officials.</h5>
-                    <!-- <h5 class="card-header">Department of Information and Publicity</h5> -->
-                    <div class="card-body">
-                        <p class="card-text">Department of Information and Publicity</p>
-                        <p class="card-text">Government of Goa</p>
-                        <p class="card-text">Udyog Bhavan, 3rd Floor,</p>
-                        <p class="card-text">Panaji – Goa. Pin 403001, India.</p>
-                        <p class="card-text">Email: <a href="mailto:dir-dip.goa@gov.in">@obfuscateEmail('dir-dip.goa@gov.in')</a></p>
-                        <p class="card-text">Telephone: 2223157 / 2422675 / 2226047</p>
-                    </div>
+            {{-- Note: information (blue bar), not an error, so no red text --}}
+            <div class="alert alert-info mb-4" role="note">
+                <strong>Note:</strong>
+                If the applicant's query doesn't get resolved through
+                <strong>@obfuscateEmail('support.rtionline@goa.gov.in')</strong>
+                then they may contact below mentioned officials.
+            </div>
+
+            <div class="card shadow-sm">
+                <h2 class="card-header h5 mb-0">Contact Details</h2>
+
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">Address</dt>
+                        <dd class="col-sm-9">
+                            <address class="mb-0">
+                                Department of Information and Publicity<br>
+                                Government of Goa<br>
+                                Udyog Bhavan, 3rd Floor,<br>
+                                Panaji – Goa. Pin 403001, India.
+                            </address>
+                        </dd>
+
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9">
+                            <a href="mailto:dir-dip.goa@gov.in">@obfuscateEmail('dir-dip.goa@gov.in')</a>
+                        </dd>
+
+                        <dt class="col-sm-3">Telephone</dt>
+                        <dd class="col-sm-9 mb-0">2223157 / 2422675 / 2226047</dd>
+                    </dl>
                 </div>
             </div>
-        </div>
-        <br>
-    </div>
 
-    @include('UsersView.footer')
-</body>
-</html>
+        </div>
+    </div>
+</div>
+@endsection

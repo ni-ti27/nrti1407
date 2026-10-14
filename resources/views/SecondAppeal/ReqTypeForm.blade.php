@@ -1,116 +1,132 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Online RTI Second Appeal Form</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-    {{-- <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> --}}
+{{-- ============================================================
+     Online RTI Second Appeal - Request Type Check Form
+     (DBIM / GIGW 3.0, keyboard accessible)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     No inline styles, no auto-hiding messages.
+     ============================================================ --}}
+@extends('layouts.app')
 
+@section('title', 'Online RTI Second Appeal Form | RTI Online, Government of Goa')
 
-</head>
-
-<style>
-
-.container.mt-5
-{
-    /* border: 2px solid black; */
-    /* border-bottom: none; */
-    border-top:none;
-    margin-top:0 !important;
-}
-
-</style>
-
-<body>
-
-@include('UsersView.header')
-<div class="container mt-5">
+@section('content')
+<div class="container py-4">
     <div class="row justify-content-center">
-        <div class="col-md-8 justify-content-center">
-            <br>
-            <div style="margin: 20px">
-                @if(session('success'))
-                    <div class="alert alert-success" id="successAlert">
-                        {{ session('success') }}
-                    </div>
-                @endif
+        <div class="col-12 col-md-10 col-lg-6">
 
-                @if(session('warning'))
-                    <div class="alert alert-warning" id="warningAlert">
-                        {{ session('warning') }}
-                    </div>
-                @endif
+            @include('partials.flash-messages')
 
-                @if(session('error'))
-                    <div class="alert alert-danger" id="errorAlert">
-                        {{ session('error') }}
-                    </div>
-                @endif
-            </div>
-            <div class="card" style="margin: 20px 20px">
-                <h5 class="card-header">Request Type Check Form</h5>
+            <div class="card shadow-sm">
+                <h1 class="card-header h4 mb-0">Online RTI Second Appeal Form</h1>
+
                 <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" action="{{ route('request-form-handle') }}" novalidate>
-                        @csrf
-                        <div class="row mb-3 justify-content-center">
-                            <label class="form-label">Request Type:</label>
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="request_type" id="online_request" value="online" {{ old('request_type') == 'online' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="online_request">
-                                        Previously Filed First Appeal Was Online
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="request_type" id="offline_request" value="offline" {{ old('request_type') == 'offline' ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="offline_request">
-                                    Previously Filed First Appeal Was Offline
-                                    </label>
-                                </div>
-                            </div>
-                            @error('request_type')
-                            <br><br>
-                            <span class="invalid-feedback" role="alert" style="display:block; text-align:center">
-                            <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
 
-                        <div class="row justify-content-center">
-                            <div class="col-md-3 mb-2">
-                                <button style="width: 100%" type="submit" class="btn btn-primary btn-block">Submit</button>
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <form id="requestTypeForm" method="post" enctype="multipart/form-data"
+                          action="{{ route('request-form-handle') }}" novalidate>
+                        @csrf
+
+                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
+
+                        <fieldset class="mb-4" aria-describedby="request_typeError">
+                            <legend class="fs-6 fw-bold">
+                                Request Type <span class="dbim-required" aria-hidden="true">*</span>
+                            </legend>
+
+                            <div class="form-check">
+                                <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
+                                       name="request_type" id="online_request" value="online"
+                                       required {{ old('request_type') == 'online' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="online_request">
+                                    Previously Filed First Appeal Was Online
+                                </label>
                             </div>
-                            <div class="col-md-3 mb-2">
-                                <button style="width:100%" type="reset" class="btn btn-secondary btn-block">Reset</button>
+                            <div class="form-check">
+                                <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
+                                       name="request_type" id="offline_request" value="offline"
+                                       required {{ old('request_type') == 'offline' ? 'checked' : '' }}>
+                                <label class="form-check-label" for="offline_request">
+                                    Previously Filed First Appeal Was Offline
+                                </label>
                             </div>
+
+                            <div id="request_typeError" class="invalid-feedback @error('request_type') d-block @enderror">@error('request_type'){{ $message }}@enderror</div>
+                        </fieldset>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="reset" class="download-outline-btn text-uppercase w-ft" title="Reset">
+                                Reset
+                            </button>
+                            <button type="submit" class="download-btn text-uppercase w-ft" title="Submit">
+                                Submit
+                            </button>
                         </div>
                     </form>
                 </div>
-                <br>
             </div>
+
         </div>
     </div>
 </div>
-@include('UsersView.footer')
+@endsection
 
-</body>
-
+@push('scripts')
 <script>
+    (function () {
+        var form        = document.getElementById('requestTypeForm');
+        var summary     = document.getElementById('errorSummary');
+        var summaryList = document.getElementById('errorSummaryList');
+        var radios      = form.querySelectorAll('input[name="request_type"]');
+        var errorBox    = document.getElementById('request_typeError');
+        var message     = 'Select whether the previously filed first appeal was online or offline.';
 
-    setTimeout(() => {
-        const successAlert = document.getElementById("successAlert");
-        const warningAlert = document.getElementById("warningAlert");
-        const errorAlert = document.getElementById("errorAlert");
+        function chosen() {
+            return Array.prototype.some.call(radios, function (r) { return r.checked; });
+        }
 
-        if (successAlert) successAlert.style.display = "none";
-        if (warningAlert) warningAlert.style.display = "none";
-        if (errorAlert) errorAlert.style.display = "none";
+        function setInvalid(on) {
+            Array.prototype.forEach.call(radios, function (r) { r.classList.toggle('is-invalid', on); });
+            errorBox.textContent = on ? message : '';
+            errorBox.classList.toggle('d-block', on);
+        }
 
-    }, 10000);
+        form.addEventListener('submit', function (event) {
+            if (chosen()) { setInvalid(false); return; }
 
+            event.preventDefault();
+            setInvalid(true);
+
+            summaryList.textContent = '';
+            var li = document.createElement('li');
+            var a  = document.createElement('a');
+            a.href = '#online_request';
+            a.textContent = message;
+            a.addEventListener('click', function (e) { e.preventDefault(); radios[0].focus(); });
+            li.appendChild(a);
+            summaryList.appendChild(li);
+            summary.hidden = false;
+            summary.focus();
+        });
+
+        Array.prototype.forEach.call(radios, function (r) {
+            r.addEventListener('change', function () { setInvalid(false); });
+        });
+
+        form.addEventListener('reset', function () {
+            setInvalid(false);
+            summary.hidden = true;
+        });
+
+        if (!summary.hidden) { summary.focus(); }
+    })();
 </script>
-
-
-</html>
+@endpush

@@ -1,244 +1,240 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Applicant Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{{-- ============================================================
+     Applicant Login with OTP  (DBIM / GIGW 3.0, keyboard accessible)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     Hints are in the placeholders; messages only appear under a
+     field when it has an error.
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
-    .invalid-feedback {
-    color: red;
-    font-size: 14px;
-}
-</style>
+@section('title', 'Applicant Login | RTI Online, Government of Goa')
 
-</head>
-<body>
+@section('content')
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-6">
 
-@include('UsersView.header')
-<div class="container mt-5" style="margin-top: 0px !important;">
-    <div class="row justify-content-center" style="border:none">
-        <div class="col-md-8">
-                @if(session('warning'))
-                    <br>
-                    <div class="alert alert-warning text-center">
-                        {{ session('warning') }}
-                    </div>
-                @endif
-                @if(session('error'))
-                    <br>
-                    <div class="alert alert-warning text-center">
-                        {{ session('error') }}
-                    </div>
-                @endif
+            {{-- Messages from the server --}}
+            @if(session('warning'))
+                <div class="alert alert-warning text-center" role="alert">{{ session('warning') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-danger text-center" role="alert">{{ session('error') }}</div>
+            @endif
+            @if(session('success'))
+                <div class="alert alert-success text-center" role="status">{{ session('success') }}</div>
+            @endif
 
-            <div class="card" style="margin: 20px 20px">
-                <h5 class="card-header">RTI Applicant Login</h5>
+            <div class="card shadow-sm">
+                <h1 class="card-header h4 mb-0">RTI Applicant Login</h1>
+
                 <div class="card-body">
-                    <form id="rtiRequestForm" method="post" enctype="multipart/form-data" action="{{ route('sessionForm.save') }}" novalidate>
+
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+
+                    <form id="rtiRequestForm" method="post" enctype="multipart/form-data"
+                          action="{{ route('sessionForm.save') }}" novalidate>
                         @csrf
-                        <div class="row mb-3 justify-content-center">
-                            <div class="col-md-6">
-                                <label for="username" class="form-label">Name:</label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Firstname Lastname" value="{{ old('username') }}" required     class="@error('username') is-invalid @enderror">
-                                @if($errors->has('username'))
-                                <br>
-                                <div>
-                                    @error('username')
-                                    <span style="color:red" class="invalid feedback">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                @endif
-                            </div>
 
+                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
+
+                        {{-- Name --}}
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-bold">
+                                Name <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                   id="username" name="username" value="{{ old('username') }}"
+                                   placeholder="Enter your name (first name and last name)"
+                                   autocomplete="name" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                                   aria-describedby="usernameError">
+                            <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
                         </div>
 
-                        <div class="row mb-3 justify-content-center">
-                            <div class="col-md-6">
-                                <label for="email_id" class="form-label">Email Id:</label>
-                                <input type="email" class="form-control" id="email_id" name="email_id" placeholder="Enter your email" value="{{ old('email_id') }}">
-                                @if($errors->has('email_id'))
-                                <br>
-                                <div>
-                                    @error('email_id')
-                                    <span style="color:red" class="invalid feedback">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                @endif
-                            </div>
+                        {{-- Email --}}
+                        <div class="mb-3">
+                            <label for="email_id" class="form-label fw-bold">
+                                Email <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="email" class="form-control @error('email_id') is-invalid @enderror"
+                                   id="email_id" name="email_id" value="{{ old('email_id') }}"
+                                   placeholder="Enter email, for example name@example.com"
+                                   autocomplete="email" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('email_id') ? 'true' : 'false' }}"
+                                   aria-describedby="emailIdError">
+                            <div id="emailIdError" class="invalid-feedback @error('email_id') d-block @enderror">@error('email_id'){{ $message }}@enderror</div>
                         </div>
 
-                        <div class="row mb-3 justify-content-center">
-                            <div class="col-md-4">
-                                <label for="mobile_no" class="form-label">Mobile Number:</label>
-                                <input type="text" class="form-control" id="mobile_no" name="mobile_no" placeholder="Enter your mobile number" value="{{ old('mobile_no') }}" required>
-                                @if($errors->has('mobile_no'))
-                                <br>
-                                <div>
-                                    @error('mobile_no')
-                                    <span style="color:red" class="invalid feedback">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                @endif
+                        {{-- Mobile + Send OTP (button beside the field) --}}
+                        <div class="mb-3">
+                            <label for="mobile_no" class="form-label fw-bold">
+                                Mobile <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="tel" class="form-control @error('mobile_no') is-invalid @enderror"
+                                       id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
+                                       placeholder="Enter 10 digit mobile"
+                                       inputmode="numeric" maxlength="10" autocomplete="tel-national"
+                                       required aria-required="true"
+                                       aria-invalid="{{ $errors->has('mobile_no') ? 'true' : 'false' }}"
+                                       aria-describedby="mobileNoError">
+                                <button type="button" id="sendOTP" class="download-btn text-uppercase w-ft mt-0"
+                                        title="Send OTP to this mobile number">
+                                    Send OTP
+                                </button>
                             </div>
-                            <div class="col-md-2">
-                                <label for="sendOTP" class="form-label">Send OTP:</label>
-                                <button type="button" class="btn btn-secondary" id="sendOTP">Send</button>
-                                <button type="button" class="btn btn-secondary" style="display:none" id="resendOTP">Re Send</button>
-                                <div id="mobileNoError" class="invalid-feedback"></div>
-                            </div>
+                            <div id="mobileNoError" class="invalid-feedback @error('mobile_no') d-block @enderror">@error('mobile_no'){{ $message }}@enderror</div>
                         </div>
 
-                        <div id="timerContainer" class="text-center mt-2"></div>
-
-                        <div class="row mb-3 justify-content-center">
-                            <div class="col-md-6">
-                                <label for="otp" class="form-label">Enter OTP:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP">
-                                    @if($errors->has('otp'))
-                                    <br>
-                                    <div class="col-md-12">
-                                        @error('otp')
-                                        <span style="color:red" class="invalid feedback">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
+                        {{-- OTP --}}
+                        <div class="mb-3">
+                            <label for="otp" class="form-label fw-bold">
+                                OTP <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text" class="form-control @error('otp') is-invalid @enderror"
+                                   id="otp" name="otp"
+                                   placeholder="Enter the OTP received on your mobile"
+                                   inputmode="numeric" autocomplete="one-time-code" aria-required="true"
+                                   aria-invalid="{{ $errors->has('otp') ? 'true' : 'false' }}"
+                                   aria-describedby="otpError">
+                            <div id="otpError" class="invalid-feedback @error('otp') d-block @enderror">@error('otp'){{ $message }}@enderror</div>
                         </div>
 
-                        <br>
-                        <div class="row justify-content-center">
-                            <div class="col-md-3 mb-2">
-                                <button id="loginButton" style="width: 100%" type="submit" class="btn btn-primary btn-block">Log-In</button>
-                            </div>
-                            <!-- <div class="col-md-3 mb-2">
-                                <button style="width:100%" type="reset" class="btn btn-secondary btn-block">Reset</button>
-                            </div> -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" id="loginButton" class="download-btn text-uppercase w-ft" title="Log in">
+                                Log In
+                            </button>
                         </div>
                     </form>
                 </div>
-                <div class="card-body">
-                    <div class="row mb-3 justify-content-center">
-                        <div class="col-md-6">
-                            <strong>Refer this User Manual if required: </strong>
-                            <a href="../Applicant_Module_User_Manual.pdf" target="_blank" download>User Manual</a>
-                        </div>
-                    </div>
+
+                <div class="card-footer bg-transparent">
+                    <strong>Refer this User Manual if required:</strong>
+                    <a href="../Applicant_Module_User_Manual.pdf" download>User Manual (PDF)</a>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
-@include('UsersView.footer')
+@endsection
 
+@push('scripts')
 <script>
-    // document.getElementById("loginButton").disabled = true;
-    document.getElementById('rtiRequestForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        validateForm('submission');
-    });
+    (function () {
+        var form        = document.getElementById('rtiRequestForm');
+        var summary     = document.getElementById('errorSummary');
+        var summaryList = document.getElementById('errorSummaryList');
+        var sendBtn     = document.getElementById('sendOTP');
 
-    document.getElementById('sendOTP').addEventListener('click', function()
-    {
-        if(validateForm('otp'))
-        {
-            this.disabled = true;
+        var fields = {
+            username:  { id: 'username',  errorId: 'usernameError' },
+            email_id:  { id: 'email_id',  errorId: 'emailIdError' },
+            mobile_no: { id: 'mobile_no', errorId: 'mobileNoError' },
+            otp:       { id: 'otp',       errorId: 'otpError' }
+        };
 
-            // var timerContainer = document.getElementById('timerContainer');
-            // var count = 4;
-            // timerContainer.textContent = '00:' + (count < 10 ? '0' : '') + count;
-
-            var username = document.getElementById('username').value;
-            var mobileNo = document.getElementById('mobile_no').value;
-            var emailId = document.getElementById('email_id').value;
-
-            // var timer = setInterval(function()
-            // {
-            //     count--;
-            //     timerContainer.textContent = '00:' + (count < 10 ? '0' : '') + count;
-            //     if (count <= 0)
-            //     {
-            //         clearInterval(timer);
-            //         timerContainer.textContent = ''; // Remove the timer text
-            //         document.getElementById('sendOTP').style.display = 'none';
-            //         document.getElementById('resendOTP').style.display = 'block';
-            //     }
-            // },1000);
-            document.getElementById("loginButton").disabled = false;
-        }
-    });
-
-    function validateForm(method) {
-        var username = document.getElementById('username').value;
-        var mobileNo = document.getElementById('mobile_no').value;
-        var emailId = document.getElementById('email_id').value;
-        var usernameError = document.getElementById('usernameError');
-        var mobileNoError = document.getElementById('mobileNoError');
-        var emailIdError = document.getElementById('emailIdError');
-        var isValid = true;
-
-        if (username.trim() === '') {
-            isValid = false;
-            alert('Name is required.');
-            return false;
+        function showError(f, message) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.add('is-invalid');
+            input.setAttribute('aria-invalid', 'true');
+            box.textContent = message;
+            box.classList.add('d-block');
         }
 
-        if (emailId.trim() === '') {
-            isValid = false;
-            alert('Email is required.');
-            return false;
+        function clearError(f) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-invalid', 'false');
+            box.textContent = '';
+            box.classList.remove('d-block');
         }
 
-        if (mobileNo.trim() === '') {
-            isValid = false;
-            alert('Mobile number is required.');
-            return false;
-        }
-        else
-        {
-            if (isNaN(mobileNo))
-            {
-                alert('Inproper Mobile number.');
+        /* Message for one field, or '' when valid. mode: 'otp' (send OTP) or 'login' */
+        function check(key, mode) {
+            var input = document.getElementById(fields[key].id);
+            var v = input.value.trim();
+            if (key === 'username' && v === '') { return 'Enter your name.'; }
+            if (key === 'email_id') {
+                if (v === '') { return 'Enter your email address.'; }
+                if (!input.validity.valid) { return 'Enter a valid email address, for example name@example.com.'; }
             }
-
-            if(mobileNo.length != 10)
-            {
-                isValid = false;
-                alert('Mobile number should be of 10 digits.');
-                return false;
+            if (key === 'mobile_no') {
+                if (v === '') { return 'Enter your mobile number.'; }
+                if (!/^[0-9]{10}$/.test(v)) { return 'Enter a 10-digit mobile number, using digits only.'; }
             }
+            if (key === 'otp' && mode === 'login' && v === '') {
+                return 'Enter the OTP sent to your mobile number.';
+            }
+            return '';
         }
 
-        if (isValid) {
-            if(method != 'otp')
-                document.getElementById('rtiRequestForm').submit();
-            else
-            {
-                var additionalDataField = document.createElement("input");
-                additionalDataField.setAttribute("type", "hidden");
-                additionalDataField.setAttribute("name", "sendOtp");
-                additionalDataField.setAttribute("value", "true");
-                document.getElementById('rtiRequestForm').appendChild(additionalDataField);
-                document.getElementById('rtiRequestForm').submit();
-                return true;
-            }
-        }
-        else
+        /* Validates, shows inline errors and the summary. Returns true when valid. */
+        function validate(mode) {
+            var problems = [];
+            Object.keys(fields).forEach(function (key) {
+                var message = check(key, mode);
+                if (message) { showError(fields[key], message); problems.push({ key: key, message: message }); }
+                else { clearError(fields[key]); }
+            });
+
+            if (problems.length === 0) { summary.hidden = true; return true; }
+
+            summaryList.textContent = '';
+            problems.forEach(function (p) {
+                var li = document.createElement('li');
+                var a  = document.createElement('a');
+                a.href = '#' + fields[p.key].id;
+                a.textContent = p.message;
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById(fields[p.key].id).focus();
+                });
+                li.appendChild(a);
+                summaryList.appendChild(li);
+            });
+            summary.hidden = false;
+            summary.focus();             /* announced by screen readers; keyboard users start here */
             return false;
-    }
+        }
+
+        /* Log In (button or Enter key) */
+        form.addEventListener('submit', function (event) {
+            if (!validate('login')) { event.preventDefault(); }
+        });
+
+        /* Send OTP: same form, flagged with sendOtp=true (as before) */
+        sendBtn.addEventListener('click', function () {
+            if (!validate('otp')) { return; }
+            sendBtn.disabled = true;
+            var flag = document.createElement('input');
+            flag.type  = 'hidden';
+            flag.name  = 'sendOtp';
+            flag.value = 'true';
+            form.appendChild(flag);
+            form.submit();
+        });
+
+        /* Clear an error as soon as the user fixes the field */
+        Object.keys(fields).forEach(function (key) {
+            document.getElementById(fields[key].id).addEventListener('input', function () {
+                if (!check(key, 'login')) { clearError(fields[key]); }
+            });
+        });
+
+        /* Errors sent back by the server: move focus to the summary */
+        if (!summary.hidden) { summary.focus(); }
+    })();
 </script>
-
-
-</body>
-</html>
+@endpush

@@ -1,0 +1,1114 @@
+/* ============================================================
+   DBIM / GIGW 3.0 styles  -  plain CSS (no build step needed)
+   Load AFTER Compiled/css/compiled.min.css
+
+   Sections:
+     1. Colour variables  (Classic Blue + Light + Dark)
+     2. Base, typography, tables, buttons
+     3. Header
+     4. Accessibility additions
+     5. Sticky header
+     6. Status colours
+     7. Footer
+     8. Action button (.download-btn)
+     9. Form fields (placeholder contrast)
+    10. Functional palette in forms, cards and alerts
+    11. Tables
+    12. FAQ page
+    13. Text utilities
+   Dark theme is switched on with  <html data-theme="dark">
+   ============================================================ */
+
+/* ============================================================
+   1. COLOUR VARIABLES
+   Use anywhere in the site:  color: var(--dbim-deep-blue);
+   ============================================================ */
+:root {
+  /* Classic Blue mode */
+  --dbim-banner-transparency: rgba(41, 19, 108, 0.95);
+  --dbim-wintergreen-dream: #162f6a;
+  --dbim-powder-blue: #214aab;
+  --dbim-columbia-blue: #5279d7;
+  --dbim-azureish-white: #a3bbf3;
+  --dbim-azureish-white-bg: #d2dfff;
+
+  /* Light theme (default) */
+  --dbim-deep-blue: #1d0a69;
+  --dbim-bright-gray: #ebeaea;
+  --dbim-anti-flash-white: #f1f1f1;
+  --dbim-rhythm: #3d4043;
+  --dbim-white: #ffffff;
+  --dbim-black: #150202;
+  --dbim-black-pure: #000000;
+  --dbim-profile-border-color: #d5cbbd;
+  --dbim-profile-card-secondary: #dbebeb;
+
+  /* ---- Functional palette (DBIM Table 1) ---- */
+  --dbim-linen: #ebeaea; /* image highlight bg, quote bg, outlines of boxes/components */
+  --dbim-inclusive-white: #ffffff; /* page bg, text/icons/emblem on dark bg, cookie banner */
+  --dbim-deep-earthy-brown: #150202; /* text over light backgrounds */
+  --dbim-black-emblem: #000000; /* State Emblem on light background */
+  --dbim-gov-deep-blue: #1d0a69; /* Gov.in root website identity */
+  --dbim-success: #198754; /* Liberty Green  - status: success */
+  --dbim-warning: #ffc107; /* Mustard Yellow - status: warning */
+  --dbim-error: #dc3545; /* Coral Red      - status: error */
+  --dbim-info: #0d6efd; /* Blue           - status: information */
+  --dbim-link: #0d6efd; /* hyperlinks (in addition to the key colour) */
+  --dbim-grey-01: #c6c6c6; /* Functional grey 1 */
+  --dbim-grey-02: #8e8e8e; /* Functional grey 2 */
+  --dbim-grey-03: #606060; /* Functional grey 3 */
+
+  /* ---- Key colour of the selected primary colour group (Blue) ---- */
+  --dbim-key: var(--dbim-wintergreen-dream); /* #162F6A */
+  --dbim-text-muted: var(--dbim-grey-03);
+
+  /* Gradient: any TWO variants of the selected group (DBIM Figure 2) */
+  --dbim-gradient: linear-gradient(180deg, #162f6a 0%, #5279d7 100%);
+
+  /* Other primary colour groups (reference only - a site must use ONE group):
+     Burgundy #6C1340 #A32966 #DB70A6 #EBADCC #FAEBF2
+     Purple   #29136C #4729A3 #8B70DB #BDADEB #EEEBFA
+     Blue     #162F6A #214AAB #5279D7 #A3BBF3 #D2DFFF   <- selected
+     Green    #0F5757 #2D8686 #75BDBD #A6D9D9 #D9F2F2
+     Yellow   #5D3E00 #916100 #DDA73A #F4D390 #FFEECC
+     Red      #771D1D #A72626 #D75151 #FAAAAA #FCDADA */
+
+  --dbim-focus-ring: var(
+    --dbim-powder-blue
+  ); /* Blue group #214AAB, ~7.5:1 on white */
+  --dbim-font-family: "Noto Sans", "Noto Sans Devanagari", system-ui,
+    -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* Type scale - desktop (px / 16) */
+  --dbim-fs-h1: 2.25rem; /* 36px */
+  --dbim-fs-h2: 1.5rem; /* 24px */
+  --dbim-fs-h3: 1.25rem; /* 20px */
+  --dbim-fs-p1: 1rem; /* 16px */
+  --dbim-fs-p2: 0.875rem; /* 14px */
+  --dbim-fs-small: 0.75rem; /* 12px */
+}
+
+/* Type scale - mobile */
+@media (max-width: 767.98px) {
+  :root {
+    --dbim-fs-h1: 1.5rem; /* 24px */
+    --dbim-fs-h2: 1.25rem; /* 20px */
+    --dbim-fs-h3: 1rem; /* 16px */
+    --dbim-fs-p1: 0.875rem; /* 14px */
+    --dbim-fs-p2: 0.75rem; /* 12px */
+    --dbim-fs-small: 0.625rem; /* 10px */
+  }
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --dbim-banner-transparency: rgba(38, 24, 0, 0.95);
+  --dbim-wintergreen-dream: #0b0c0e;
+  --dbim-powder-blue: #0b0c0e;
+  --dbim-columbia-blue: #0b0c0e;
+  --dbim-azureish-white: #23232a;
+  --dbim-azureish-white-bg: #bcb9c6;
+
+  --dbim-deep-blue: #ffff00;
+  --dbim-bright-gray: #ebeaea;
+  --dbim-anti-flash-white: #ffff00;
+  --dbim-rhythm: #ffff00;
+  --dbim-white: #0b0c0e;
+  --dbim-black: #ffff00;
+  --dbim-black-pure: #ffff00;
+  --dbim-profile-border-color: #23232a;
+  --dbim-profile-card-secondary: #23232a;
+
+  --dbim-linen: #23232a;
+  --dbim-inclusive-white: #0b0c0e;
+  --dbim-deep-earthy-brown: #ffff00;
+  --dbim-black-emblem: #ffff00;
+  --dbim-gov-deep-blue: #ffff00;
+  --dbim-link: #ffff00;
+  --dbim-grey-01: #23232a;
+  --dbim-grey-02: #ffff00;
+  --dbim-grey-03: #ffff00;
+
+  --dbim-key: #ffff00;
+  --dbim-gradient: linear-gradient(180deg, #0b0c0e 0%, #23232a 100%);
+
+  --dbim-focus-ring: var(
+    --dbim-azureish-white-bg
+  ); /* light tint on near-black */
+}
+
+/* ============================================================
+   2. BASE, TYPOGRAPHY, TABLES, BUTTONS
+   Noto Sans | weights 400/500/600/700 | line-height 1.2-1.5
+   ============================================================ */
+body {
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  color: var(--dbim-deep-earthy-brown);
+  background-color: var(--dbim-inclusive-white);
+}
+
+h1,
+.h1 {
+  font-size: var(--dbim-fs-h1);
+  font-weight: 700;
+  line-height: 1.25;
+}
+h2,
+.h2 {
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+h3,
+.h3,
+.subtitle {
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+h4,
+h5,
+h6 {
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+p,
+li,
+label,
+.form-control,
+.form-select {
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
+}
+.text-p2 {
+  font-size: var(--dbim-fs-p2);
+}
+small,
+.small,
+.text-small {
+  font-size: var(--dbim-fs-small);
+  line-height: 1.5;
+}
+strong,
+b,
+.fw-bold {
+  font-weight: 700;
+}
+.text-uppercase {
+  letter-spacing: normal;
+}
+
+/* Links: noticeable hover */
+a {
+  color: var(--dbim-link);
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--dbim-link);
+  text-decoration: underline;
+}
+
+/* Visible keyboard focus (GIGW) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Skip link */
+.dbim-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10000;
+  padding: 8px 16px;
+  font-weight: 600;
+  background: var(--dbim-wintergreen-dream);
+  color: var(--dbim-azureish-white-bg);
+  outline: 2px solid var(--dbim-azureish-white-bg);
+}
+.dbim-skip-link:focus {
+  left: 0;
+}
+
+/* Tables: names centred, text left, numbers right */
+table {
+  font-size: var(--dbim-fs-p2);
+}
+th {
+  text-align: center;
+  font-weight: 600;
+}
+td {
+  text-align: left;
+}
+td.num,
+td.text-number,
+.table .text-end {
+  text-align: right;
+}
+
+/* CTA buttons: uniform padding, clear states */
+.btn {
+  padding: 8px 20px;
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  line-height: 1.5;
+  border-radius: 4px;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn:hover {
+  filter: brightness(0.88);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: none;
+}
+
+.btn-primary {
+  background-color: var(--dbim-powder-blue);
+  border-color: var(--dbim-powder-blue);
+  color: #fff;
+}
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--dbim-wintergreen-dream);
+  border-color: var(--dbim-wintergreen-dream);
+  color: #fff;
+}
+[data-theme="dark"] .btn-primary {
+  background-color: #ffff00;
+  border-color: #ffff00;
+  color: #000;
+}
+
+/* ============================================================
+   3. HEADER   (layout modelled on meity.gov.in)
+   ============================================================ */
+.dbim-header {
+  background: var(--dbim-inclusive-white);
+  border-bottom: 1px solid var(--dbim-linen);
+  color: var(--dbim-key);
+}
+
+/* ---- Row 1 ---- */
+.dbim-header__top {
+  padding: 14px 0;
+}
+
+.dbim-header__brand {
+  /* layout + spacing come from Bootstrap classes in header.blade.php:
+     d-flex align-items-center justify-content-start gap-2 */
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+.dbim-header__brand:hover,
+.dbim-header__brand:focus {
+  color: var(--dbim-key);
+  text-decoration: none; /* title must not look like a link */
+}
+.dbim-header__brand img {
+  width: 57px;
+  height: 100px;
+  flex: 0 0 57px;
+  object-fit: contain;
+}
+.dbim-header__brand .gov {
+  display: block;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-header__brand .name {
+  display: block;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-header__brand .tag {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--dbim-text-muted);
+}
+.dbim-header__brand .ver {
+  margin-left: 6px;
+  padding: 1px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--dbim-key);
+  border-radius: 20px;
+  color: var(--dbim-key);
+  vertical-align: middle;
+}
+
+/* ---- Search ---- */
+.dbim-header__search {
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border: 1px solid var(--dbim-linen);
+  border-bottom: 2px solid var(--dbim-deep-blue);
+  background: var(--dbim-white);
+}
+.dbim-header__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 8px 10px;
+  font-size: 0.875rem;
+  background: transparent;
+  color: var(--dbim-black);
+}
+.dbim-header__search input::placeholder {
+  color: var(--dbim-text-muted);
+  opacity: 1;
+}
+.dbim-header__search button {
+  border: 0;
+  border-left: 1px solid var(--dbim-linen);
+  background: transparent;
+  color: var(--dbim-powder-blue);
+  padding: 0 12px;
+}
+.dbim-header__search button svg {
+  width: 18px;
+  height: 18px;
+}
+.dbim-header__search button:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+.dbim-header__search input:focus-visible,
+.dbim-header__search button:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+
+/* ---- Utility icons ---- */
+.dbim-header__tools {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.dbim-header__tools .tool {
+  position: relative;
+  padding: 0 14px;
+  border-left: 1px solid var(--dbim-linen);
+}
+.dbim-header__tools .tool:first-child {
+  border-left: 0;
+}
+.dbim-header__tools .tool:last-child {
+  padding-right: 0;
+}
+
+.dbim-header__tools .tool > a,
+.dbim-header__tools .tool > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: var(--dbim-powder-blue);
+  border-radius: 4px;
+}
+.dbim-header__tools .tool > a svg,
+.dbim-header__tools .tool > button svg {
+  width: 24px;
+  height: 24px;
+}
+.dbim-header__tools .tool > a:hover,
+.dbim-header__tools .tool > button:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+
+.dbim-header__tools .dropdown-menu {
+  background: var(--dbim-white);
+  border: 1px solid var(--dbim-linen);
+  min-width: 200px;
+  font-size: 0.875rem;
+}
+.dbim-header__tools .dropdown-item,
+.dbim-header__tools .dropdown-item-text {
+  color: var(--dbim-black);
+}
+.dbim-header__tools .dropdown-item:hover,
+.dbim-header__tools .dropdown-item:focus {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-black-pure);
+}
+.dbim-header__tools .dropdown-item.active {
+  background: var(--dbim-wintergreen-dream);
+  color: var(--dbim-white);
+}
+
+.dbim-header__tools .fs-group button {
+  min-width: 38px;
+  margin-right: 4px;
+  font-weight: 700;
+  border: 1px solid var(--dbim-linen);
+  background: transparent;
+  color: var(--dbim-black);
+}
+.dbim-header__tools .fs-group button:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+
+/* ---- Row 2 : main navigation ---- */
+.dbim-header__nav {
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-header__nav .navbar {
+  padding: 0;
+}
+
+.dbim-header__nav .nav-link {
+  display: flex;
+  align-items: center;
+  min-height: 58px; /* larger menu item, as on DBIM reference sites */
+  padding: 8px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--dbim-key);
+  border-bottom: 8px solid transparent;
+}
+.dbim-header__nav .nav-link:hover {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF fill on hover */
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+/* High-contrast theme: light fill would hide the yellow text, so underline instead */
+[data-theme="dark"] .dbim-header__nav .nav-link:hover {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+/* Active page (DBIM): key colour #162F6A, bold 700, thick underline */
+.dbim-header__nav .nav-link.active {
+  color: var(--dbim-key);
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  border-bottom: 8px solid var(--dbim-key);
+}
+
+.dbim-header__nav .navbar-toggler {
+  margin: 8px 0;
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+.dbim-header__nav .navbar-toggler-icon {
+  filter: none;
+}
+
+@media (max-width: 991.98px) {
+  .dbim-header__nav .nav-link {
+    border-bottom: 1px solid var(--dbim-linen);
+  }
+  .dbim-header__nav .nav-link.active {
+    border-bottom: 1px solid var(--dbim-linen);
+    border-left: 8px solid var(--dbim-key);
+  }
+}
+
+/* ---- Row 3 : logged-in user ---- */
+.dbim-header__user {
+  background: var(--dbim-azureish-white-bg);
+  border-top: 1px solid var(--dbim-linen);
+  font-size: 0.875rem;
+}
+.dbim-header__user a {
+  display: inline-block;
+  padding: 8px 12px;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-header__user a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Dark theme tweaks ---- */
+[data-theme="dark"] .dbim-header__user a {
+  color: var(--dbim-wintergreen-dream);
+}
+[data-theme="dark"] .dbim-header__search button,
+[data-theme="dark"] .dbim-header__tools .tool > a,
+[data-theme="dark"] .dbim-header__tools .tool > button {
+  color: var(--dbim-wintergreen-dream);
+}
+
+/* ============================================================
+   4. ACCESSIBILITY ADDITIONS
+   ============================================================ */
+/* "Skip to main content" target should not show a ring when focused by the skip link */
+main:focus {
+  outline: none;
+}
+
+/* Keep focus ring visible inside menus and on nav links */
+.dbim-header .dropdown-item:focus-visible,
+.dbim-header .nav-link:focus-visible,
+.dbim-header .fs-group button:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+
+/* Respect "reduce motion" system setting */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   5. STICKY HEADER
+   ============================================================ */
+.dbim-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030; /* above page content, below modals (1055) */
+  box-shadow: none; /* no shadow: a clean 1px line instead */
+  border-bottom: 1px solid var(--dbim-key);
+}
+
+/* Anchor jumps and keyboard focus must not hide behind the sticky header
+   (--dbim-header-h is set by the script in header.blade.php) */
+html {
+  scroll-padding-top: var(
+    --dbim-header-h,
+    12rem
+  ); /* 12rem = fallback if scripts are off */
+}
+
+/* Open mobile menu must scroll inside itself, not run off the screen */
+@media (max-width: 991.98px) {
+  .dbim-header__nav .navbar-collapse.show,
+  .dbim-header__nav .navbar-collapse.collapsing {
+    max-height: 55vh;
+    overflow-y: auto;
+  }
+}
+
+/* ============================================================
+   6. STATUS COLOURS (DBIM functional palette)
+   Bootstrap's own alerts already default to the same hex values;
+   these classes are for custom components.
+   ============================================================ */
+.dbim-status-success {
+  color: var(--dbim-success);
+}
+.dbim-status-warning {
+  color: #000;
+  background: var(--dbim-warning);
+}
+.dbim-status-error {
+  color: var(--dbim-error);
+}
+.dbim-status-info {
+  color: var(--dbim-info);
+}
+
+.dbim-bg-linen {
+  background: var(--dbim-linen);
+} /* highlight images / quotes */
+.dbim-bg-gradient {
+  background: var(--dbim-gradient);
+  color: #fff;
+}
+
+.btn:disabled,
+.btn.disabled {
+  border-color: var(--dbim-grey-01);
+}
+
+/* ============================================================
+   7. FOOTER   (layout modelled on meity.gov.in)
+   Uses the variables from section 1 only - no new variables.
+   Background follows the theme: #162F6A (light) / #0B0C0E (dark).
+   Markup: resources/views/partials/footer.blade.php (Bootstrap grid)
+   ============================================================ */
+
+/* Keep the footer at the bottom on short pages
+   (wrap page content in <div class="main-content">) */
+html,
+body {
+  min-height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.main-content {
+  flex: 1 0 auto;
+}
+.dbim-footer {
+  flex-shrink: 0;
+}
+
+.footerbox {
+  padding: 40px 0 24px;
+  background: var(--dbim-wintergreen-dream);
+  color: #fff;
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
+}
+[data-theme="dark"] .footerbox {
+  color: var(--dbim-key);
+}
+
+/* Headings */
+.footerbox .usefula {
+  margin: 0 0 16px;
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+  text-transform: uppercase;
+  color: inherit;
+}
+
+/* Links */
+.footerbox a {
+  color: inherit;
+  text-decoration: none;
+}
+.footerbox a:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+.footerbox a:focus-visible,
+.dbim-footer button:focus-visible {
+  outline: 2px solid var(--dbim-azureish-white-bg); /* Blue group light tint: ~9:1 on #162F6A */
+  outline-offset: 3px;
+  border-radius: 2px;
+  text-decoration: none;
+}
+.footer-links li {
+  display: flex;
+  align-items: flex-start;
+}
+.footer-links li::before {
+  content: "\203A"; /* chevron, decorative */
+  content: "\203A"/ "";
+  flex: 0 0 auto;
+  padding-top: 4px;
+  margin-right: 8px;
+}
+.footer-links a {
+  display: inline-block;
+  padding: 4px 0;
+  text-wrap: balance; /* if a long link must wrap, split it evenly (no lone last word) */
+}
+
+/* Last updated */
+.footer-updated {
+  margin: 16px 0 0;
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-azureish-white-bg);
+}
+
+/* Social icons */
+.sociala {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+}
+.sociala a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; /* 44px touch target */
+  height: 44px;
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 50%;
+}
+.sociala a:hover {
+  background: var(--dbim-powder-blue);
+  text-decoration: none;
+}
+[data-theme="dark"] .sociala a:hover {
+  background: var(--dbim-azureish-white);
+}
+.sociala svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+/* Right column: aligned to the right edge on large screens */
+.footer-right .sociala {
+  display: flex;
+}
+@media (min-width: 992px) {
+  .footer-right {
+    text-align: right;
+  }
+  .footer-right .sociala {
+    justify-content: flex-end;
+  }
+}
+
+/* NIC logo (above "Page Last Updated on") */
+.footer-logo-wrap {
+  margin-top: 20px;
+}
+
+/* Support email + visitor counters (under the links) */
+.footer-info {
+  margin-top: 75px;
+}
+.footerbox a.footer-logo {
+  display: inline-block;
+  padding: 6px 10px;
+  background: #fff;
+  border-radius: 4px;
+}
+.footer-logo img {
+  display: block;
+  width: 150px;
+  height: auto;
+}
+.footer-email {
+  margin: 0 0 8px;
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-azureish-white-bg);
+}
+
+/* Visitor counters */
+.footer-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+}
+.footer-stats p {
+  margin: 0;
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-azureish-white-bg);
+}
+.footer-stats strong {
+  color: #fff;
+}
+[data-theme="dark"] .footer-stats strong {
+  color: var(--dbim-key);
+}
+
+/* Ownership / copyright line */
+.footer-below-text {
+  padding-top: 20px;
+  border-top: 1px solid var(--dbim-azureish-white);
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-azureish-white-bg);
+}
+
+/* Back to top */
+.footer-top-btn {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1020;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--dbim-wintergreen-dream);
+  color: #fff;
+  cursor: pointer;
+}
+[data-theme="dark"] .footer-top-btn {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+.footer-top-btn.is-visible {
+  display: inline-flex;
+}
+.footer-top-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+/* Screen-reader-only text */
+.dbim-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 575.98px) {
+  .footerbox {
+    padding: 32px 0 20px;
+  }
+}
+@media (forced-colors: active) {
+  .footerbox a:focus-visible,
+  .dbim-footer button:focus-visible {
+    outline: 3px solid CanvasText;
+  }
+}
+
+/* ============================================================
+   8. ACTION BUTTON  (.download-btn)
+   Values taken from the inspected reference button:
+   colour #162F6A, background #D2DFFF, 12px Noto Sans, padding 8px 12px,
+   margin-top 10px, contrast 9.54:1.
+   Usage: <button type="submit" class="download-btn text-uppercase w-ft">Submit</button>
+   ============================================================ */
+.download-btn {
+  margin: 10px 0 0 0;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-wintergreen-dream); /* #162F6A */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-small); /* 12px */
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.download-btn:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3, same colour group */
+  color: var(--dbim-wintergreen-dream);
+}
+.w-ft {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+/* Less prominent action (Reset, Cancel): outline version, same size as .download-btn
+   Usage: <button type="reset" class="download-outline-btn text-uppercase w-ft">Reset</button> */
+.download-outline-btn {
+  margin: 10px 0 0 0;
+  padding: 8px 12px;
+  border: 1px solid var(--dbim-wintergreen-dream); /* #162F6A */
+  border-radius: 4px;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-wintergreen-dream);
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-small); /* 12px */
+  font-weight: 600;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.download-outline-btn:hover {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-wintergreen-dream);
+}
+[data-theme="dark"] .download-outline-btn {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .download-outline-btn:hover {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+  text-decoration: underline;
+}
+
+/* High-contrast theme: use the DBIM key colour with black text */
+[data-theme="dark"] .download-btn {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .download-btn:hover {
+  background: var(--dbim-key);
+  color: #000;
+  text-decoration: underline;
+}
+
+/* ============================================================
+   9. FORM FIELDS
+   Hints live in the placeholder, so it must be readable:
+   --dbim-text-muted (#606060) is about 6:1 on white.
+   ============================================================ */
+.form-control::placeholder,
+.form-select::placeholder {
+  color: var(--dbim-text-muted);
+  opacity: 1;
+}
+
+/* ============================================================
+   10. FUNCTIONAL PALETTE IN FORMS, CARDS AND ALERTS  (DBIM Table 1)
+   Uses only the functional colours from section 1:
+     Linen            --dbim-linen              outlines of boxes/components, highlight bg
+     Inclusive white  --dbim-inclusive-white    page / card background
+     Deep earthy brown--dbim-deep-earthy-brown  text over light background
+     Liberty green    --dbim-success            success
+     Mustard yellow   --dbim-warning            warning
+     Coral red        --dbim-error              error
+     Blue             --dbim-info               information
+     Functional grey  --dbim-grey-02            input borders (3:1 against white)
+   Colour is never the only cue: errors also have text and aria-invalid.
+   ============================================================ */
+
+/* Required-field asterisk */
+.dbim-required {
+  color: var(--dbim-error);
+}
+
+/* Cards: Linen outline + Linen header */
+.card {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+  border: 1px solid var(--dbim-linen);
+}
+.card-footer {
+  background: var(--dbim-linen);
+  color: var(--dbim-deep-earthy-brown);
+  border-color: var(--dbim-linen);
+}
+/* Card header: light tint of the Blue colour group (#D2DFFF) with key colour text, 9.5:1 */
+.card-header {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-wintergreen-dream);
+  border-color: var(--dbim-azureish-white);
+  font-weight: 600;
+}
+/* High-contrast theme: dark panel, yellow text */
+[data-theme="dark"] .card-header {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+}
+
+/* Inputs: grey border keeps the field visible (WCAG 1.4.11), error in Coral Red */
+.form-control,
+.form-select {
+  background-color: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 4px;
+}
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: var(--dbim-error);
+}
+.invalid-feedback {
+  color: var(--dbim-error);
+  font-size: var(--dbim-fs-p2);
+}
+
+/* Alerts: white box, dark text, thick left bar + outline in the status colour */
+.alert {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+  border: 1px solid var(--dbim-grey-01);
+  border-left-width: 8px;
+  border-radius: 4px;
+}
+.alert-success {
+  border-color: var(--dbim-success);
+}
+.alert-warning {
+  border-color: var(--dbim-warning);
+}
+.alert-danger {
+  border-color: var(--dbim-error);
+}
+.alert-info {
+  border-color: var(--dbim-info);
+}
+
+/* ============================================================
+   11. TABLES
+   Header row = light tint of the Blue colour group (same as card header),
+   borders = functional grey 1, text = Deep Earthy Brown.
+   ============================================================ */
+.table > thead > tr > th {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-wintergreen-dream);
+  border-color: var(--dbim-azureish-white);
+}
+.table-bordered > :not(caption) > * > * {
+  border-color: var(--dbim-grey-01);
+}
+.table > tbody > tr > td {
+  color: var(--dbim-deep-earthy-brown);
+}
+[data-theme="dark"] .table > thead > tr > th {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+
+/* ============================================================
+   12. FAQ PAGE
+   Questions use the Blue colour group key colour (red is reserved for errors);
+   answers use Deep Earthy Brown (body text); Linen separates the items.
+   ============================================================ */
+.dbim-faq-question {
+  color: var(--dbim-key); /* #162F6A, yellow in the high-contrast theme */
+  scroll-margin-top: 1rem; /* breathing space under the sticky header when jumped to */
+}
+.dbim-faq-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--dbim-linen);
+}
+.dbim-faq-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* ============================================================
+   13. TEXT UTILITIES
+   ============================================================ */
+.dbim-text-key {
+  color: var(
+    --dbim-key
+  ); /* Blue group key colour #162F6A, yellow in the high-contrast theme */
+}
+
+/* Radio buttons and checkboxes in the Blue colour group */
+.form-check-input {
+  border: 1px solid var(--dbim-grey-02);
+}
+.form-check-input:checked {
+  background-color: var(--dbim-powder-blue);
+  border-color: var(--dbim-powder-blue);
+}
+.form-check-input.is-invalid {
+  border-color: var(--dbim-error);
+}
+.form-check-input.is-invalid ~ .form-check-label {
+  color: var(
+    --dbim-deep-earthy-brown
+  ); /* label stays readable; the error text explains */
+}
+[data-theme="dark"] .form-check-input:checked {
+  background-color: var(--dbim-key);
+  border-color: var(--dbim-key);
+}

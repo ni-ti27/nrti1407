@@ -1,74 +1,113 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Policy</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-</head>
+{{-- ============================================================
+     Search for Department / Office / Sub-Office
+     (DBIM / GIGW 3.0, keyboard accessible)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
+@section('title', 'Search Public Authorities | RTI Online, Government of Goa')
 
-    .container.mt-5
-    {
-        /* border: 2px solid black; */
-        border-top:none;
-        margin-top:0 !important;
-    }
+@section('content')
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
 
-</style>
-<body>
-    @include('UsersView.header')
+            {{-- ===== Search form ===== --}}
+            <div class="card shadow-sm">
+                <h1 class="card-header h4 mb-0">Search for Department / Office / Sub-Office</h1>
 
-    <div class="container mt-5">
-        <br>
-        <h2>Search for Department / Office / Sub-Office</h2>
-        <br>
-        <div class="row justify-content-center">
-            <form method="POST" action="{{ route('department.show') }}">
-                @csrf
-                <label for="search">Enter Character to Search:</label>
-                <input type="text" id="search" name="search" class="form-control" value="{{ old('search', $search ?? '') }}" >
-                <button type="submit" style="display: block; margin: 20px auto;" class="btn btn-primary btn-lg">Search</button>
-            </form>
+                <div class="card-body">
+                    <form method="POST" action="{{ route('department.show') }}"
+                          role="search" aria-label="Search for department, office or sub-office">
+                        @csrf
 
+                        <div class="mb-3">
+                            <label for="search" class="form-label fw-bold">Enter characters to search</label>
+                            <input type="text" id="search" name="search" class="form-control"
+                                   value="{{ old('search', $search ?? '') }}"
+                                   placeholder="Enter characters of the department, office or sub-office name"
+                                   autocomplete="off">
+                        </div>
+
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="download-btn text-uppercase w-ft" title="Search">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- ===== Results ===== --}}
             @if(!empty($search))
-            <h3>Search Results for: "{{ $search }}"</h3>
-                @if($departments->isEmpty())
-                    <p>No departments found.</p>
-                @else
-                @if(!empty($hierarchy))
-                    <h3 class="mt-5">Detailed Hierarchy</h3>
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Department</th>
-                                    <th>Office</th>
-                                    <th>Sub-Office</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($hierarchy as $entry)
-                                    <tr>
-                                        <td>{{ $entry['dept_details']->department }}</td>
-                                        <td>{{ $entry['office_details']->office ?? '-' }}</td>
-                                        <td>{{ $entry['suboffice_details']->suboffice ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                <section class="mt-4" aria-labelledby="searchResultsHeading">
+                    <h2 id="searchResultsHeading" class="h4" tabindex="-1">Search results for: "{{ $search }}"</h2>
+
+                    @if($departments->isEmpty())
+                        <div class="alert alert-info" role="status">No departments found.</div>
+                    @else
+                        @if(!empty($hierarchy))
+                            <h3 class="h5 mt-4">Detailed Hierarchy</h3>
+
+                            {{-- scrollable on small screens; focusable so keyboard users can scroll it --}}
+                            <div class="table-responsive" role="region" tabindex="0"
+                                 aria-labelledby="searchResultsHeading">
+                                <table class="table table-bordered align-middle">
+                                    <caption class="visually-hidden">
+                                        Departments, offices and sub-offices matching "{{ $search }}"
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Department</th>
+                                            <th scope="col">Office</th>
+                                            <th scope="col">Sub-Office</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($hierarchy as $entry)
+                                            @php
+                                                $office    = $entry['office_details']->office ?? null;
+                                                $suboffice = $entry['suboffice_details']->suboffice ?? null;
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $entry['dept_details']->department }}</td>
+                                                <td>
+                                                    @if($office)
+                                                        {{ $office }}
+                                                    @else
+                                                        <span aria-hidden="true">-</span><span class="visually-hidden">Not applicable</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($suboffice)
+                                                        {{ $suboffice }}
+                                                    @else
+                                                        <span aria-hidden="true">-</span><span class="visually-hidden">Not applicable</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
                     @endif
-                @endif
+                </section>
             @endif
+
         </div>
-        <br>
     </div>
+</div>
+@endsection
 
-    @include('UsersView.footer')
-</body>
-</html>
-
-
-
-
-
-
+@if(!empty($search))
+    @push('scripts')
+    <script>
+        /* After a search, put keyboard / screen-reader focus on the results heading */
+        (function () {
+            var heading = document.getElementById('searchResultsHeading');
+            if (heading) { heading.focus(); }
+        })();
+    </script>
+    @endpush
+@endif

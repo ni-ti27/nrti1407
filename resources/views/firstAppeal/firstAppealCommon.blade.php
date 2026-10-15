@@ -14,32 +14,38 @@
 
             @include('partials.flash-messages')
 
-            <div class="card shadow-sm">
-                <h1 class="card-header h4 mb-0">Online RTI First Appeal Form</h1>
+         <div class="card dbim-form-card">
+      <h1 class="card-header h4 mb-0">Online RTI Second Appeal Form</h1>
 
-                <div class="card-body">
+    <div class="card-body">
 
-                    {{-- Error summary: filled by script or by the server; receives focus --}}
-                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
-                         @if(!$errors->any()) hidden @endif>
-                        <p class="fw-bold mb-2">Please correct the following:</p>
-                        <ul class="mb-0" id="errorSummaryList">
-                            @foreach($errors->all() as $message)
-                                <li>{{ $message }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+        {{-- Error summary: filled by script or by the server; receives focus --}}
+        <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                @if(!$errors->any()) hidden @endif>
+            <p class="fw-bold mb-2">Please correct the following:</p>
+            <ul class="mb-0" id="errorSummaryList">
+                @foreach($errors->all() as $message)
+                    <li>{{ $message }}</li>
+                @endforeach
+            </ul>
+        </div>
 
-                    <div class="alert alert-info" role="note">
-                        <strong>Note:</strong> First Appeal can be filed only after 30 days of e-filing of initial RTI Request,
-                        or it can be filed immediately if the reply received is incomplete or unsatisfactory.
-                    </div>
+        <div class="alert alert-info dbim-note" role="note">
+            <p>
+                <strong>Note:</strong> First Appeal can be filed only after 30 days of e-filing of initial RTI Request,
+                or it can be filed immediately if the reply received is incomplete or unsatisfactory.
+            </p>
+            <p>
+                Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+            </p>
+        </div>
+
 
                     <form id="firstAppealForm" method="post" enctype="multipart/form-data"
                           action="{{ route('first-appeal') }}" novalidate>
                         @csrf
 
-                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
+
 
                         {{-- Registration number --}}
                         <div class="mb-3">

@@ -6,6 +6,7 @@ use App\Models\online_payment_details;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use DataTables;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -13,6 +14,85 @@ class DashboardController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
+{
+    $request->validate([
+        'paymentMode' => ['nullable', 'in:Success,Failed,verfication_pending'],
+        'start_date'  => ['nullable', 'date'],
+        'end_date'    => ['nullable', 'date', 'after_or_equal:start_date'],
+        'q'           => ['nullable', 'string', 'max:100'],
+        'per_page'    => ['nullable', 'in:10,25,50,100'],
+    ]);
+
+    $mobile  = session('mobile_no');
+    $perPage = (int) $request->input('per_page', 10);
+
+    // Latest payment status per eChallan number, worked out INSIDE the main query
+    // (the old code ran one extra query for every row shown).
+    $paymentTable = (new online_payment_details)->getTable();
+    $latestStatus = online_payment_details::query()
+        ->select('status')
+        ->whereColumn($paymentTable . '.echallan_no', 'opd.echallan_no')
+        ->latest('created_at')
+        ->limit(1);
+
+    $query = DB::table('payment__details as opd')
+        ->leftJoin('submit_requests as sr', 'sr.reg_no', '=', 'opd.reg_no')
+        ->select(
+            'opd.id as id',
+            'sr.name as name',
+            'sr.reg_no as reg_no',
+            'opd.echallan_no as echallan_no',
+            'opd.total_amt',
+            'opd.trans_dt',
+            'opd.status as status',
+            'opd.created_at'
+        )
+        ->selectSub($latestStatus, 'latest_status')
+        // records of this applicant: made through a request or through registration
+        ->where(function ($q) use ($mobile) {
+            $q->whereIn('opd.reg_no', function ($sub) use ($mobile) {
+                $sub->select('reg_no')->from('submit_requests')->where('mobile_no', $mobile);
+            })->orWhereIn('opd.reg_no', function ($sub) use ($mobile) {
+                $sub->select('reg_no')->from('rti_applicant_regdata')->where('regmobile_no', $mobile);
+            });
+        });
+
+    // Payment mode
+    if ($request->paymentMode === 'Failed' || $request->paymentMode === 'Success') {
+        $query->where('opd.status', $request->paymentMode);
+    } elseif ($request->paymentMode === 'verfication_pending') {
+        $query->whereNull('opd.status');
+    }
+
+    // Dates (from only, to only, or both)
+    if ($request->filled('start_date') || $request->filled('end_date')) {
+        $from = $request->filled('start_date') ? Carbon::parse($request->start_date) : Carbon::parse($request->end_date);
+        $to   = $request->filled('end_date')   ? Carbon::parse($request->end_date)   : Carbon::parse($request->start_date);
+
+        $query->whereBetween('opd.trans_dt', [
+            $from->startOfDay()->format('Y-m-d H:i:s'),
+            $to->endOfDay()->format('Y-m-d H:i:s'),
+        ]);
+    }
+
+    // Search box (replaces the DataTables search)
+    if ($request->filled('q')) {
+        $term = '%' . $request->q . '%';
+        $query->where(function ($q) use ($term) {
+            $q->where('sr.name', 'like', $term)
+              ->orWhere('sr.reg_no', 'like', $term)
+              ->orWhere('opd.echallan_no', 'like', $term);
+        });
+    }
+
+    // The database returns only ONE page of rows (LIMIT / OFFSET)
+    $payments = $query->orderByDesc('opd.created_at')
+                      ->paginate($perPage)
+                      ->withQueryString();
+
+    return view('payment.dashboard', compact('payments'));
+}
+   /* public function index(Request $request)
     {
         //dd($request->all());
         $start_date = isset($request->start_date) ? \Carbon\Carbon::parse($request->start_date) : "";
@@ -109,7 +189,7 @@ class DashboardController extends Controller
         }
 
         return view('payment.dashboard');
-    }
+    }*/
 
     /**
      * Show the form for creating a new resource.

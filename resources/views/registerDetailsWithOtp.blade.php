@@ -44,7 +44,13 @@
                           action="{{ route('sessionForm.save') }}" novalidate>
                         @csrf
 
-                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
+                        <div class="alert alert-info dbim-note" role="note">
+                        <p>
+                            <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                        </p>
+
+                    </div>
+
 
                         {{-- Name --}}
                         <div class="mb-3">

@@ -16,7 +16,12 @@
     11. Tables
     12. FAQ page
     13. Text utilities
-   Dark theme is switched on with  <html data-theme="dark">
+    14. Pagination
+    15. Google Translate
+    16. Form / content card
+    17. Content page (About Us, Policy)
+    18. Form helpers (stepper, help text, disabled button)
+   Dark (high-contrast) theme is switched on with  <html data-theme="dark">
    ============================================================ */
 
 /* ============================================================
@@ -100,7 +105,7 @@
   }
 }
 
-/* Dark theme */
+/* Dark (high-contrast) theme */
 [data-theme="dark"] {
   --dbim-banner-transparency: rgba(38, 24, 0, 0.95);
   --dbim-wintergreen-dream: #0b0c0e;
@@ -110,7 +115,7 @@
   --dbim-azureish-white-bg: #bcb9c6;
 
   --dbim-deep-blue: #ffff00;
-  --dbim-bright-gray: #ebeaea;
+  --dbim-bright-gray: #000000; /* page background: was #ebeaea, which stayed light */
   --dbim-anti-flash-white: #ffff00;
   --dbim-rhythm: #ffff00;
   --dbim-white: #0b0c0e;
@@ -141,14 +146,23 @@
    2. BASE, TYPOGRAPHY, TABLES, BUTTONS
    Noto Sans | weights 400/500/600/700 | line-height 1.2-1.5
    ============================================================ */
+html,
 body {
+  min-height: 100%;
+}
+body {
+  /* column layout keeps the footer at the bottom (wrap content in .main-content) */
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  top: 0 !important; /* Google Translate pushes the page down otherwise */
   font-family: var(--dbim-font-family);
   font-size: var(--dbim-fs-p1);
   font-weight: 400;
   line-height: 1.5;
   text-align: left;
   color: var(--dbim-deep-earthy-brown);
-  background-color: var(--dbim-inclusive-white);
+  background-color: var(--dbim-bright-gray);
 }
 
 h1,
@@ -214,10 +228,13 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Visible keyboard focus (GIGW) */
+/* Visible keyboard focus (GIGW) - one rule for all controls */
 a:focus-visible,
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.btn:focus-visible {
   outline: 2px solid var(--dbim-focus-ring);
   outline-offset: 2px;
 }
@@ -267,15 +284,12 @@ td.text-number,
 .btn:hover {
   filter: brightness(0.88);
 }
-.btn:focus-visible {
-  outline: 2px solid var(--dbim-focus-ring);
-  outline-offset: 2px;
-}
 .btn:disabled,
 .btn.disabled {
   opacity: 0.5;
   cursor: not-allowed;
   filter: none;
+  border-color: var(--dbim-grey-01);
 }
 
 .btn-primary {
@@ -300,7 +314,7 @@ td.text-number,
    ============================================================ */
 .dbim-header {
   background: var(--dbim-inclusive-white);
-  border-bottom: 1px solid var(--dbim-linen);
+  border-bottom: 1px solid var(--dbim-key);
   color: var(--dbim-key);
 }
 
@@ -392,11 +406,6 @@ td.text-number,
 .dbim-header__search button:hover {
   background: var(--dbim-azureish-white-bg);
 }
-.dbim-header__search input:focus-visible,
-.dbim-header__search button:focus-visible {
-  outline: 2px solid var(--dbim-focus-ring);
-  outline-offset: -2px;
-}
 
 /* ---- Utility icons ---- */
 .dbim-header__tools {
@@ -425,13 +434,18 @@ td.text-number,
   height: 36px;
   border: 0;
   background: transparent;
-  color: var(--dbim-powder-blue);
+  color: var(--dbim-key); /* #162F6A in light theme, yellow in high contrast */
   border-radius: 4px;
 }
 .dbim-header__tools .tool > a svg,
 .dbim-header__tools .tool > button svg {
   width: 24px;
   height: 24px;
+}
+/* The icons in header.blade.php have fill="#162F6A" written in the SVG itself,
+   so they never followed the theme. A CSS fill beats that attribute. */
+.dbim-header__tools .tool svg path {
+  fill: currentColor;
 }
 .dbim-header__tools .tool > a:hover,
 .dbim-header__tools .tool > button:hover {
@@ -494,12 +508,6 @@ td.text-number,
   color: var(--dbim-key);
   text-decoration: none;
 }
-/* High-contrast theme: light fill would hide the yellow text, so underline instead */
-[data-theme="dark"] .dbim-header__nav .nav-link:hover {
-  background: none;
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
 /* Active page (DBIM): key colour #162F6A, bold 700, thick underline */
 .dbim-header__nav .nav-link.active {
   color: var(--dbim-key);
@@ -545,14 +553,37 @@ td.text-number,
   text-decoration: underline;
 }
 
-/* ---- Dark theme tweaks ---- */
-[data-theme="dark"] .dbim-header__user a {
-  color: var(--dbim-wintergreen-dream);
+/* ---- Header in the high-contrast theme ----
+   --dbim-powder-blue and --dbim-wintergreen-dream are near-black there, so every
+   header control that used them as text colour on a dark panel was unreadable. */
+[data-theme="dark"] .dbim-header__search button {
+  color: var(--dbim-key);
 }
-[data-theme="dark"] .dbim-header__search button,
-[data-theme="dark"] .dbim-header__tools .tool > a,
-[data-theme="dark"] .dbim-header__tools .tool > button {
-  color: var(--dbim-wintergreen-dream);
+[data-theme="dark"] .dbim-header__user {
+  background: var(--dbim-linen);
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__user a {
+  color: var(--dbim-key);
+}
+/* Light hover fill would hide yellow text: use the dark panel colour instead */
+[data-theme="dark"] .dbim-header__search button:hover,
+[data-theme="dark"] .dbim-header__tools .tool > a:hover,
+[data-theme="dark"] .dbim-header__tools .tool > button:hover,
+[data-theme="dark"] .dbim-header__tools .dropdown-item:hover,
+[data-theme="dark"] .dbim-header__tools .dropdown-item:focus,
+[data-theme="dark"] .dbim-header__tools .fs-group button:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__tools .dropdown-item.active {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-header__nav .nav-link:hover {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 6px;
 }
 
 /* ============================================================
@@ -563,7 +594,9 @@ main:focus {
   outline: none;
 }
 
-/* Keep focus ring visible inside menus and on nav links */
+/* Focus ring drawn INSIDE the element where it would otherwise be clipped */
+.dbim-header__search input:focus-visible,
+.dbim-header__search button:focus-visible,
 .dbim-header .dropdown-item:focus-visible,
 .dbim-header .nav-link:focus-visible,
 .dbim-header .fs-group button:focus-visible {
@@ -591,7 +624,6 @@ main:focus {
   top: 0;
   z-index: 1030; /* above page content, below modals (1055) */
   box-shadow: none; /* no shadow: a clean 1px line instead */
-  border-bottom: 1px solid var(--dbim-key);
 }
 
 /* Anchor jumps and keyboard focus must not hide behind the sticky header
@@ -639,29 +671,12 @@ html {
   color: #fff;
 }
 
-.btn:disabled,
-.btn.disabled {
-  border-color: var(--dbim-grey-01);
-}
-
 /* ============================================================
    7. FOOTER   (layout modelled on meity.gov.in)
    Uses the variables from section 1 only - no new variables.
    Background follows the theme: #162F6A (light) / #0B0C0E (dark).
    Markup: resources/views/partials/footer.blade.php (Bootstrap grid)
    ============================================================ */
-
-/* Keep the footer at the bottom on short pages
-   (wrap page content in <div class="main-content">) */
-html,
-body {
-  min-height: 100%;
-}
-body {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
 .main-content {
   flex: 1 0 auto;
 }
@@ -711,8 +726,8 @@ body {
   align-items: flex-start;
 }
 .footer-links li::before {
-  content: "\203A"; /* chevron, decorative */
-  content: "\203A"/ "";
+  content: "\203A"; /* chevron, decorative - fallback for browsers without alt-text syntax */
+  content: "\203A"/ ""; /* empty alt text: screen readers skip it */
   flex: 0 0 auto;
   padding-top: 4px;
   margin-right: 8px;
@@ -889,6 +904,8 @@ body {
    Usage: <button type="submit" class="download-btn text-uppercase w-ft">Submit</button>
    ============================================================ */
 .download-btn {
+  display: inline-block; /* also works on <a> links */
+  text-decoration: none;
   margin: 10px 0 0 0;
   padding: 8px 12px;
   border: 0;
@@ -904,6 +921,7 @@ body {
 .download-btn:hover {
   background: var(--dbim-azureish-white); /* #A3BBF3, same colour group */
   color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
 }
 .w-ft {
   width: -moz-fit-content;
@@ -912,6 +930,8 @@ body {
 /* Less prominent action (Reset, Cancel): outline version, same size as .download-btn
    Usage: <button type="reset" class="download-outline-btn text-uppercase w-ft">Reset</button> */
 .download-outline-btn {
+  display: inline-block;
+  text-decoration: none;
   margin: 10px 0 0 0;
   padding: 8px 12px;
   border: 1px solid var(--dbim-wintergreen-dream); /* #162F6A */
@@ -927,6 +947,17 @@ body {
 .download-outline-btn:hover {
   background: var(--dbim-azureish-white-bg); /* #D2DFFF */
   color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+
+/* High-contrast theme: DBIM key colour (yellow) with black text */
+[data-theme="dark"] .download-btn,
+[data-theme="dark"] .download-btn:hover {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .download-btn:hover {
+  text-decoration: underline;
 }
 [data-theme="dark"] .download-outline-btn {
   border-color: var(--dbim-key);
@@ -938,15 +969,16 @@ body {
   text-decoration: underline;
 }
 
-/* High-contrast theme: use the DBIM key colour with black text */
-[data-theme="dark"] .download-btn {
-  background: var(--dbim-key);
-  color: #000;
-}
-[data-theme="dark"] .download-btn:hover {
-  background: var(--dbim-key);
-  color: #000;
-  text-decoration: underline;
+/* Primary action stays disabled until the form is complete.
+   Placed after the dark rules above so it wins in both themes. */
+.download-btn:disabled,
+.download-btn:disabled:hover,
+[data-theme="dark"] .download-btn:disabled,
+[data-theme="dark"] .download-btn:disabled:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-grey-03);
+  cursor: not-allowed;
+  text-decoration: none;
 }
 
 /* ============================================================
@@ -979,7 +1011,7 @@ body {
   color: var(--dbim-error);
 }
 
-/* Cards: Linen outline + Linen header */
+/* Cards: Linen outline + Linen footer */
 .card {
   background: var(--dbim-inclusive-white);
   color: var(--dbim-deep-earthy-brown);
@@ -1111,4 +1143,420 @@ body {
 [data-theme="dark"] .form-check-input:checked {
   background-color: var(--dbim-key);
   border-color: var(--dbim-key);
+}
+
+/* ============================================================
+   14. PAGINATION   (resources/views/pagination.blade.php)
+   DBIM "Numbers" pattern: bold numbers and chevrons, no boxes,
+   current page in a round light-blue circle. Blue colour group.
+   Sizes use em, so they follow the text size (smaller on mobile, where
+   --dbim-fs-p1 is 14px) and A+ / A- text resizing. Gaps come from
+   Bootstrap classes (gap-1 gap-md-3) in the view.
+   ============================================================ */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--dbim-fs-p1);
+}
+.pagination .page-item .page-link,
+.pagination .button-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2em; /* 32px on desktop, 28px on mobile */
+  height: 2em;
+  margin: 0;
+  padding: 0 0.25em;
+  border: 0;
+  border-radius: 1em;
+  background: transparent;
+  color: var(--dbim-wintergreen-dream); /* #162F6A */
+  font-family: var(--dbim-font-family);
+  font-size: 1em;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pagination .page-item .page-link:hover,
+.pagination .button-item:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+/* current page: round light-blue circle */
+.pagination .page-item .page-link.active {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-wintergreen-dream);
+  cursor: default;
+}
+/* "..." between page numbers */
+.pagination .page-item .page-link.dots {
+  background: none;
+  cursor: default;
+}
+/* Previous / Next on the first / last page */
+.pagination .button-item:disabled {
+  background: none;
+  color: var(--dbim-grey-02);
+  cursor: not-allowed;
+}
+.pagination .button-item svg {
+  width: 1.25em;
+  height: 1.25em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3; /* bold chevron */
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .pagination .page-item .page-link,
+[data-theme="dark"] .pagination .button-item {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .pagination .page-item .page-link:hover,
+[data-theme="dark"] .pagination .button-item:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  text-decoration: underline;
+}
+[data-theme="dark"] .pagination .page-item .page-link.active {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .pagination .button-item:disabled {
+  background: none;
+  color: var(--dbim-grey-01);
+}
+
+/* ============================================================
+   15. GOOGLE TRANSLATE  (hide Google's own UI; the header menu is used)
+   (the "body { top: 0 !important }" fix lives in section 2)
+   ============================================================ */
+#google_translate_element,
+iframe.skiptranslate,
+.goog-te-banner-frame,
+.goog-tooltip {
+  display: none !important;
+}
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   16. FORM / CONTENT CARD  (.dbim-form-card)
+   Soft Blue-group header, rounded card, tinted footer.
+   Fonts come from existing .h2 / .h3 classes in the markup.
+   ============================================================ */
+.dbim-form-card {
+  border: 1px solid var(--dbim-linen);
+  border-radius: 8px;
+  overflow: hidden; /* clips header/footer to rounded corners */
+  box-shadow: 0 2px 8px rgba(22, 47, 106, 0.12);
+}
+
+.dbim-form-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(
+    90deg,
+    var(--dbim-azureish-white-bg) 0%,
+    var(--dbim-inclusive-white) 100%
+  );
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+  border-bottom: 1px solid var(--dbim-azureish-white);
+  border-left: 6px solid var(--dbim-powder-blue);
+}
+.dbim-form-card__header h1 {
+  margin: 0;
+  color: inherit;
+}
+.dbim-form-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--dbim-powder-blue); /* white icon on #214AAB, ~8:1 */
+  color: #fff;
+}
+.dbim-form-card__icon svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dbim-form-card .card-body {
+  padding: 20px 24px;
+}
+
+/* Combined note (info alert + "required fields" line) */
+.dbim-form-card .dbim-note p {
+  margin: 0;
+}
+.dbim-form-card .dbim-note p + p {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--dbim-linen);
+}
+
+/* Fields: light blue border + soft glow, as on the reference site.
+   Columbia blue (#5279D7) is ~4.1:1 on white, so it still passes the 3:1 rule. */
+.dbim-form-card .form-control:focus,
+.dbim-form-card .form-select:focus {
+  border-color: var(--dbim-columbia-blue);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* glow is decoration only */
+}
+/* Invalid field keeps the Coral Red indicator while focused */
+.dbim-form-card .form-control.is-invalid:focus,
+.dbim-form-card .form-select.is-invalid:focus {
+  border-color: var(--dbim-error);
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+/* Footer: light tint of the Blue group */
+.dbim-form-card .card-footer {
+  padding: 12px 24px;
+  background: var(--dbim-azureish-white-bg);
+  border-top: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-form-card .card-footer a {
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+  text-decoration: underline;
+}
+.dbim-form-card .card-footer a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .dbim-form-card {
+  border-color: var(--dbim-key);
+  box-shadow: none;
+}
+[data-theme="dark"] .dbim-form-card__header {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+  border-left: 6px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-form-card__icon {
+  background: none;
+  color: var(--dbim-key);
+  border: 1px solid var(--dbim-key);
+}
+/* A glow is hard to see on near-black, so use a real yellow outline */
+[data-theme="dark"] .dbim-form-card .form-control:focus,
+[data-theme="dark"] .dbim-form-card .form-select:focus {
+  border-color: var(--dbim-key);
+  outline: 2px solid var(--dbim-key);
+  box-shadow: none;
+}
+[data-theme="dark"] .dbim-form-card .form-control.is-invalid:focus,
+[data-theme="dark"] .dbim-form-card .form-select.is-invalid:focus {
+  border-color: var(--dbim-error);
+  outline-color: var(--dbim-error);
+}
+[data-theme="dark"] .dbim-form-card .card-footer {
+  background: var(--dbim-linen);
+  border-top-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-form-card .card-footer a {
+  color: var(--dbim-key);
+}
+
+@media (max-width: 575.98px) {
+  .dbim-form-card__header {
+    padding: 12px 16px;
+  }
+  .dbim-form-card .card-body {
+    padding: 16px;
+  }
+}
+@media (forced-colors: active) {
+  .dbim-form-card__header {
+    border-left: 6px solid CanvasText;
+  }
+}
+
+/* ============================================================
+   17. CONTENT PAGE  (.dbim-about)  e.g. About Us, Policy
+   Heading sizes/weights come from .h3 in the markup.
+   ============================================================ */
+.dbim-about section + section {
+  margin-top: 24px;
+}
+.dbim-about h2 {
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+  color: var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-linen);
+}
+.dbim-about p {
+  max-width: 75ch; /* comfortable line length */
+  margin: 0 0 12px;
+}
+
+/* Lists: outlined items with a Blue accent bar */
+.dbim-role-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-role-list li {
+  padding: 8px 12px;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-linen);
+  border-left: 4px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+}
+
+/* Support box */
+.dbim-support {
+  padding: 16px 20px;
+  background: var(--dbim-azureish-white-bg);
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+}
+.dbim-support h2 {
+  border-bottom-color: var(--dbim-azureish-white);
+  color: inherit;
+}
+.dbim-support a {
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: underline;
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .dbim-role-list li {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-support {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-support h2,
+[data-theme="dark"] .dbim-support a {
+  color: var(--dbim-key);
+  border-bottom-color: var(--dbim-key);
+}
+
+/* ============================================================
+   18. FORM HELPERS
+   Multi-step counter and progress, help text, radio legends,
+   short fields. Existing variables only.
+   (the disabled .download-btn rule is in section 8)
+   ============================================================ */
+.form-text {
+  color: var(--dbim-text-muted);
+  font-size: var(--dbim-fs-p2);
+}
+
+/* <legend> of a radio group looks like a normal label */
+.dbim-legend {
+  float: none;
+  width: auto;
+  margin: 0 0 0.5rem;
+  padding: 0;
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
+}
+
+/* Short inputs (pincode, mobile number, year) */
+.dbim-field-sm {
+  max-width: 14rem;
+}
+
+/* Numbered stepper:  (1) ---- (2) ---- (3) ---- (4)
+   Built by DbimForm.stepper() into <ol id="stepNav" class="dbim-stepper"> */
+.dbim-stepper {
+  display: flex;
+  align-items: center;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+.dbim-stepper__item {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+}
+.dbim-stepper__item:last-child {
+  flex: 0 0 auto;
+}
+.dbim-stepper__item::after {
+  content: "";
+  flex: 1 1 auto;
+  height: 2px;
+  margin: 0 8px;
+  background: var(--dbim-grey-01);
+}
+.dbim-stepper__item:last-child::after {
+  display: none;
+}
+.dbim-stepper__num {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--dbim-grey-02);
+  border-radius: 50%;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-grey-03);
+  font-weight: 600;
+}
+.dbim-stepper__item.is-done::after {
+  background: var(--dbim-powder-blue);
+}
+.dbim-stepper__item.is-done .dbim-stepper__num {
+  border-color: var(--dbim-powder-blue);
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-stepper__item.is-current .dbim-stepper__num {
+  border-color: var(--dbim-powder-blue);
+  background: var(--dbim-powder-blue);
+  color: #fff;
+}
+[data-theme="dark"] .dbim-stepper__item.is-done::after {
+  background: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-stepper__item.is-done .dbim-stepper__num {
+  border-color: var(--dbim-key);
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-stepper__item.is-current .dbim-stepper__num {
+  border-color: var(--dbim-key);
+  background: var(--dbim-key);
+  color: #000;
+}
+.dbim-step-count {
+  margin-bottom: 20px;
+  color: var(--dbim-key);
+  font-weight: 600;
 }

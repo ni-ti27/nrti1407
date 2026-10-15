@@ -16,6 +16,7 @@ use App\Http\Controllers\CaptchaController;
 use App\Http\Controllers\ReportsController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\PageHitController;
+use App\Http\Controllers\LanguageController;
 
 
 /*
@@ -33,7 +34,7 @@ Route::get('/', function () {
     return view('homePage');
     // return view('BreakDown');
 });
-
+Route::get('/lang/{locale}', [LanguageController::class, 'switch'])->name('lang.switch');
 Route::get('/page-hits', [PageHitController::class, 'index']);
 Route::post('/page-hits', [PageHitController::class, 'store']);
 Auth::routes();

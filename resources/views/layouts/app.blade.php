@@ -45,7 +45,6 @@
             JavaScript is turned off. Menus and accessibility options may not work.
         </div>
     </noscript>
-
     <div id="app">
 
         {{-- Common header (DBIM / GIGW): contains the skip links, banner and main navigation --}}
@@ -62,6 +61,8 @@
    @include('UsersView.footer')
 
     <script src="{{ asset('Compiled/js/compiled.bundle.min.js') }}"></script>
-    @stack('scripts')
+
+@include('partials.tanslate')
+ @stack('scripts')
 </body>
 </html>

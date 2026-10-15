@@ -1,172 +1,165 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Dashboard</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+{{-- ============================================================
+     Payment Verification  (DBIM / GIGW 3.0, keyboard + screen reader friendly)
+     resources/views/payment/dashboard.blade.php
+     Uses layouts/app.blade.php. Server-rendered (no jQuery, no DataTables):
+     the database returns only one page of rows at a time.
+     Pagination: resources/views/pagination.blade.php
+     ============================================================ --}}
+@extends('layouts.app')
 
-        <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title', 'Payment Verification | RTI Online, Government of Goa')
 
-    </head>
+@section('content')
+<div class="container-fluid px-3 px-lg-5 py-4">
 
-    <style>
+    <h1 class="h2 mb-4">Payment Verification</h1>
 
-        .container.mt-5
-        {
-            /* border: 2px solid black; */
-            /* border-top: none; */
-            border-bottom: none;
-            margin-top: 0 !important;
-        }
+    {{-- ===== Filters ===== --}}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
 
-    </style>
+            {{-- Error summary (server side validation) --}}
+            @if($errors->any())
+                <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1">
+                    <p class="fw-bold mb-2">Please correct the following:</p>
+                    <ul class="mb-0">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-    <body>
-        @include('UsersView.header')
-        <div class="container mt-5">
-            <br>
-            <h2>Payment Verification</h2>
+            <form method="GET" action="{{ route('dashboard') }}" aria-label="Filter payment records">
+                <div class="row g-3 align-items-end">
 
-            <div class="row">
-                <div class=" col-lg-4 col-md-4">
-                    <div class="form-group tab">
-                    <label>Payment Mode</label>
-                    <select class="form-control filter select_icondropdown_" id="paymentMode" name="paymentMode">
-                        <option value="" selected Disabled>Select Payment Mode</option>
-                        <option value="" >All</option>
-                        <option value="Success">Success</option>
-                        <option value="Failed">Failed</option>
-                        <option value="verfication_pending">Payment verification pending</option>
-                    </select>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="paymentMode" class="form-label fw-bold">Payment Mode</label>
+                        <select class="form-select @error('paymentMode') is-invalid @enderror" id="paymentMode" name="paymentMode"
+                                aria-describedby="paymentModeError">
+                            <option value="" {{ (request('paymentMode') == '') ? 'selected' : '' }}>All</option>
+                            <option value="Success" {{ (request('paymentMode') == 'Success') ? 'selected' : '' }}>Success</option>
+                            <option value="Failed" {{ (request('paymentMode') == 'Failed') ? 'selected' : '' }}>Failed</option>
+                            <option value="verfication_pending" {{ (request('paymentMode') == 'verfication_pending') ? 'selected' : '' }}>Payment verification pending</option>
+                        </select>
+                        <div id="paymentModeError" class="invalid-feedback @error('paymentMode') d-block @enderror">@error('paymentMode'){{ $message }}@enderror</div>
                     </div>
+
+                    <div class="col-12 col-md-6 col-lg-2">
+                        <label for="start_date" class="form-label fw-bold">From Date</label>
+                        <input type="date" class="form-control @error('start_date') is-invalid @enderror" id="start_date" name="start_date"
+                               value="{{ request('start_date') }}" aria-describedby="start_dateError">
+                        <div id="start_dateError" class="invalid-feedback @error('start_date') d-block @enderror">@error('start_date'){{ $message }}@enderror</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-2">
+                        <label for="end_date" class="form-label fw-bold">To Date</label>
+                        <input type="date" class="form-control @error('end_date') is-invalid @enderror" id="end_date" name="end_date"
+                               value="{{ request('end_date') }}" aria-describedby="end_dateError">
+                        <div id="end_dateError" class="invalid-feedback @error('end_date') d-block @enderror">@error('end_date'){{ $message }}@enderror</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <label for="q" class="form-label fw-bold">Search</label>
+                        <input type="search" class="form-control @error('q') is-invalid @enderror" id="q" name="q"
+                               value="{{ request('q') }}" placeholder="Name / Registration No / eChallan Number"
+                               autocomplete="off" aria-describedby="qError">
+                        <div id="qError" class="invalid-feedback @error('q') d-block @enderror">@error('q'){{ $message }}@enderror</div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-2">
+                        <label for="per_page" class="form-label fw-bold">Rows per page</label>
+                        <select class="form-select" id="per_page" name="per_page">
+                            @foreach([10, 25, 50, 100] as $size)
+                                <option value="{{ $size }}" {{ ((int) request('per_page', 10) === $size) ? 'selected' : '' }}>{{ $size }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
                 </div>
 
-                <div class="col-lg-2 cont">
-                    <div class="form-group tab1">
-                        <label>From Date</label>
-                        <input type="text" class="form-control datetimepicker-input reservationdate" name="start_date" id="start_date" placeholder="dd/mm/yyyy" data-target="#start_date" data-toggle="datetimepicker" autocomplete="off"/>
-                    </div>
+                <div class="d-flex justify-content-end gap-2 mt-3">
+                    <a href="{{ route('dashboard') }}" class="download-outline-btn text-uppercase w-ft mt-0">Clear</a>
+                    <button type="submit" class="download-btn text-uppercase w-ft mt-0" title="Search">Search</button>
                 </div>
-                <div class="col-lg-2">
-                    <div class="form-group tab2">
-                    <label>To Date</label>
-                    <input type="text" class="form-control datetimepicker-input reservationdate" name="end_date" id="end_date" placeholder="dd/mm/yyyy" data-target="#end_date" data-toggle="datetimepicker" autocomplete="off"/>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="col-lg-12 col-md-12">
-                <div class="card border-none bg-transparent box-showd-none">
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table" id="payment_verify_table">
-                                <thead>
-                                    <tr>
-                                        <th>Sr.</th>
-                                        <th>Name</th>
-                                        <th>Registration No</th>
-                                        <th>eChallan Number</th>
-                                        <th>Amount (Rs.)</th>
-                                        <th>Transaction Date</th>
-                                        <th>Payment Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br>
+            </form>
         </div>
-        @include('UsersView.footer')
-    </body>
-    <script src="{{ asset('jquery/jquery-3.6.4.min.js') }}"></script>
+    </div>
 
-    <script src="{{ asset('jquery/jquery.dataTables.min.js') }}"></script>
-    <!-- Custome javascript/jQuery functions -->
+    {{-- ===== Results ===== --}}
+    <section aria-labelledby="resultsHeading">
+        <h2 id="resultsHeading" class="h5">Payment records</h2>
 
+        @if($payments->count() == 0)
+            <div class="alert alert-info" role="status">No Data Present</div>
+        @else
+            <p class="mb-2">
+                Showing {{ $payments->firstItem() }} to {{ $payments->lastItem() }} of {{ $payments->total() }} records
+            </p>
 
-<script type="text/javascript">
-   $(function () {
-    var token = $('meta[name="csrf-token"]').attr('content');
-    $(function() {
-      $(".reservationdate").datepicker(
-        {
-            dateFormat: 'dd-mm-yy',
-        }
-      );
-    });
-        // $('.reservationdate').datetimepicker({
-        //     format: 'd-m-Y',
-        // });
+            <div class="table-responsive" role="region" tabindex="0" aria-labelledby="resultsHeading">
+                <table class="table table-striped table-bordered align-middle">
+                    <caption class="visually-hidden">Payment verification records</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Sr.</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Registration No</th>
+                            <th scope="col">eChallan Number</th>
+                            <th scope="col">Amount (Rs.)</th>
+                            <th scope="col">Transaction Date</th>
+                            <th scope="col">Payment Status</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($payments as $row)
+                            @php
+                                $statusClass = is_null($row->status) || $row->status == 'Failed'
+                                    ? 'dbim-status-error fw-bold'
+                                    : ($row->status == 'Success' ? 'dbim-status-success fw-bold' : '');
+                            @endphp
+                            <tr>
+                                <td>{{ $payments->firstItem() + $loop->index }}</td>
+                                <td>{{ $row->name }}</td>
+                                <td>{{ $row->reg_no }}</td>
+                                <td>{{ $row->echallan_no }}</td>
+                                <td class="text-end">{{ $row->total_amt }}</td>
+                                <td>{{ $row->trans_dt ? date('d-m-Y', strtotime($row->trans_dt)) : 'NA' }}</td>
+                                <td><span class="{{ $statusClass }}">{{ $row->status ?? 'Verify' }}</span></td>
+                                <td>
+                                    @if($row->latest_status == 'Success')
+                                        <a href="{{ route('payment-verify', $row->id) }}" class="download-outline-btn text-uppercase w-ft mt-0">
+                                            Payment Success<span class="visually-hidden"> for registration number {{ $row->reg_no }}, eChallan {{ $row->echallan_no }}</span>
+                                        </a>
+                                    @elseif($row->latest_status == 'Failed')
+                                        <a href="{{ route('payment-verify', $row->id) }}" class="download-outline-btn text-uppercase w-ft mt-0">
+                                            Payment Failed<span class="visually-hidden"> for registration number {{ $row->reg_no }}, eChallan {{ $row->echallan_no }}</span>
+                                        </a>
+                                    @else
+                                        <a href="{{ route('payment-verify', $row->id) }}" class="download-btn text-uppercase w-ft mt-0">
+                                            Payment Verify<span class="visually-hidden"> for registration number {{ $row->reg_no }}, eChallan {{ $row->echallan_no }}</span>
+                                        </a>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-        // $('.reservationdate').datetimepicker();
+            {{ $payments->onEachSide(1)->links('Pagination', ['label' => 'Payment records pages']) }}
+        @endif
+    </section>
 
-        paymentData();
-    });
+</div>
+@endsection
 
-    $('#paymentMode').on('change', function(){
-        paymentData();
-    });
-
-    $('#start_date').on('change', function(){
-        paymentData();
-    });
-
-    $('#end_date').on('change', function(){
-        paymentData();
-    });
-    function paymentData() {
-    $('#payment_verify_table').DataTable().destroy();
-    $('#payment_verify_table').DataTable({
-        processing: true,
-        serverSide: true,
-        paging: true,
-        lengthChange: true,
-        lengthMenu: [10, 50, 100, 250, 500, 1000],
-        searching: true,
-        info: true,
-        autoWidth: false,
-        // responsive: true,
-        // dom: "Bfrtip",
-        dom: "<'row'<'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
-        "order": [
-            [0, "asc"]
-        ],
-        "ajax": {
-            url: "{{ route('dashboard') }}",
-            data: function(d) {
-                d.paymentMode = $('#paymentMode').find('option:selected').val();
-                d.start_date = $('#start_date').val();
-                d.end_date = $('#end_date').val();
-            }
-        },
-        // "buttons": ["copy", "csv", "excel", "pdf", "print"],
-        columns: [
-            // {data: 'id', name: 'id'},
-            { data: 'DT_RowIndex', name: 'DT_RowIndex' },
-            { data: 'name', name: 'name' },
-            { data: 'reg_no', name: 'reg_no' },
-            { data: 'echallan_no', name: 'echallan_no' },
-            { data: 'total_amt', name: 'total_amt' },
-            { data: 'trans_dt', name: 'trans_dt' },
-            { data: 'status', name: 'status' },
-            { data: 'action', name: 'action' },
-        ],
-        // Apply Bootstrap classes to the DataTable elements
-        initComplete: function () {
-            // Add Bootstrap classes to the DataTable elements
-            var table = $('#payment_verify_table').DataTable();
-            $(table.table().container()).addClass('table-responsive');
-            $(table.table().container()).find('input[type="search"]').addClass('form-control');
-            $(table.table().container()).find('select[name="payment_verify_table_length"]').addClass('form-select');
-        }
-    });
-}
-</script>
-</html>
+@if($errors->any())
+    @push('scripts')
+    <script>
+        /* Validation errors from the server: move focus to the summary */
+        document.getElementById('errorSummary').focus();
+    </script>
+    @endpush
+@endif

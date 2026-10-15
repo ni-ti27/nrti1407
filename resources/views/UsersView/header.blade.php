@@ -97,11 +97,13 @@
 <path d="M52.3467 58.6664L49.136 50.4158H38.5707L35.3973 58.6664H32L42.416 31.8984H45.44L55.8187 58.6664H52.3467ZM48.128 47.4291L45.1413 39.3651C45.0667 39.1659 44.9421 38.8051 44.768 38.2824C44.5939 37.7598 44.4195 37.2246 44.2453 36.6771C44.096 36.1046 43.9715 35.6691 43.872 35.3704C43.6728 36.1419 43.4613 36.9011 43.2373 37.6478C43.0381 38.3696 42.864 38.9419 42.7147 39.3651L39.6907 47.4291H48.128Z" fill="#162F6A"/>
 </svg>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langMenuButton">
-                                <li><a class="dropdown-item active" href="#" lang="en" hreflang="en" aria-current="true">English</a></li>
-                                <li><a class="dropdown-item" href="#" lang="hi" hreflang="hi">हिन्दी</a></li>
-                            </ul>
+                                             <ul class="dropdown-menu dropdown-menu-end notranslate" aria-labelledby="langMenuButton">
+    @foreach(config('languages.supported') as $code => $name)
+        <li><a class="dropdown-item" href="#" data-lang="{{ $code }}" lang="{{ $code }}" hreflang="{{ $code }}">{{ $name }}</a></li>
+    @endforeach
+</ul>
                         </div>
+
 
                         {{-- Accessibility --}}
                         <div class="tool dropdown">

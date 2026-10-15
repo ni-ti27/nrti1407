@@ -1,0 +1,110 @@
+  background-color: #0b0c0e;
+  border-color: #ffff00;
+}
+
+html[data-theme="dark"] body a,
+html[data-theme="dark"] body a:hover,
+html[data-theme="dark"] body a:visited {
+  color: #ffff00;
+}
+
+html[data-theme="dark"] .dbim-header,
+html[data-theme="dark"] .dbim-header__top,
+html[data-theme="dark"] .dbim-header__nav,
+html[data-theme="dark"] .dbim-header__user,
+html[data-theme="dark"] .dbim-header__search,
+html[data-theme="dark"] .dbim-header__tools .dropdown-menu,
+html[data-theme="dark"] .dbim-header__nav .navbar-collapse {
+  background-color: #0b0c0e !important;
+  color: #ffff00 !important;
+  border-color: #ffff00;
+}
+
+html[data-theme="dark"] .dbim-header__brand,
+html[data-theme="dark"] .dbim-header__brand .gov,
+html[data-theme="dark"] .dbim-header__brand .name,
+html[data-theme="dark"] .dbim-header__brand .tag,
+html[data-theme="dark"] .dbim-header__brand .ver,
+html[data-theme="dark"] .dbim-header__nav .nav-link,
+html[data-theme="dark"] .dbim-header__nav .nav-link:hover,
+html[data-theme="dark"] .dbim-header__nav .nav-link.active,
+html[data-theme="dark"] .dbim-header__user a,
+html[data-theme="dark"] .dbim-header__search input,
+html[data-theme="dark"] .dbim-header__search input::placeholder,
+html[data-theme="dark"] .dbim-header__search button,
+html[data-theme="dark"] .dbim-header__tools .tool > a,
+html[data-theme="dark"] .dbim-header__tools .tool > button,
+html[data-theme="dark"] .dbim-header__tools .dropdown-item,
+html[data-theme="dark"] .dbim-header__tools .dropdown-item-text {
+  color: #ffff00 !important;
+}
+
+/* Header icons contain inline SVG paths with hard-coded #162F6A fills.
+   Override those attributes with CSS so they follow the active theme. */
+html[data-theme="dark"] .dbim-header__tools svg {
+  color: #ffff00 !important;
+}
+
+html[data-theme="dark"] .dbim-header__tools svg path,
+html[data-theme="dark"] .dbim-header__tools svg polygon {
+  fill: currentColor !important;
+}
+
+html[data-theme="dark"] .dbim-header__tools svg circle,
+html[data-theme="dark"] .dbim-header__tools svg line,
+html[data-theme="dark"] .dbim-header__tools svg polyline {
+  fill: none !important;
+  stroke: currentColor !important;
+}
+
+html[data-theme="dark"] .dbim-header__search button:hover,
+html[data-theme="dark"] .dbim-header__tools .tool > a:hover,
+html[data-theme="dark"] .dbim-header__tools .tool > button:hover,
+html[data-theme="dark"] .dbim-header__nav .nav-link:hover {
+  background-color: #23232a !important;
+}
+
+html[data-theme="dark"] .dbim-header__nav .nav-link.active {
+  border-bottom-color: #ffff00 !important;
+}
+
+html[data-theme="dark"] .dbim-header__nav .navbar-toggler {
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+html[data-theme="dark"] .dbim-header__nav .navbar-toggler-icon {
+  filter: invert(1) sepia(1) saturate(8) hue-rotate(5deg) !important;
+}
+
+html[data-theme="dark"] .dbim-header__search input,
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background-color: #0b0c0e !important;
+  color: #ffff00 !important;
+  border-color: #ffff00 !important;
+}
+
+html[data-theme="dark"] ::placeholder {
+  color: #ffff00 !important;
+  opacity: 1;
+}
+
+html[data-theme="dark"] :focus-visible {
+  outline-color: #ffff00 !important;
+}
+
+@media (forced-colors: active) {
+  html[data-theme="dark"] .dbim-header__tools svg path,
+  html[data-theme="dark"] .dbim-header__tools svg polygon {
+    fill: CanvasText !important;
+  }
+  html[data-theme="dark"] .dbim-header__tools svg circle,
+  html[data-theme="dark"] .dbim-header__tools svg line,
+  html[data-theme="dark"] .dbim-header__tools svg polyline {
+    stroke: CanvasText !important;
+  }
+}

@@ -615,7 +615,12 @@ main:focus {
     scroll-behavior: auto !important;
   }
 }
-
+/* Error summary receives focus from script so screen readers announce it;
+   the red bar already marks it, so no extra ring */
+.alert[tabindex="-1"]:focus,
+#errorSummary:focus {
+  outline: none;
+}
 /* ============================================================
    5. STICKY HEADER
    ============================================================ */
@@ -673,8 +678,12 @@ html {
 
 /* ============================================================
    7. FOOTER   (layout modelled on meity.gov.in)
+   REPLACE the whole old section 7 in public/css/dbim.css with this one.
    Uses the variables from section 1 only - no new variables.
-   Background follows the theme: #162F6A (light) / #0B0C0E (dark).
+   Light theme: #162F6A background, white / light-blue text.
+   High-contrast theme: #0B0C0E background, EVERY text, line, icon and
+   border in the DBIM key colour (yellow). Earlier the small texts used
+   --dbim-azureish-white-bg, which turns grey in that theme.
    Markup: resources/views/partials/footer.blade.php (Bootstrap grid)
    ============================================================ */
 .main-content {
@@ -685,27 +694,45 @@ html {
 }
 
 .footerbox {
-  padding: 40px 0 24px;
+  padding: 48px 0 24px;
   background: var(--dbim-wintergreen-dream);
+  border-top: 4px solid var(--dbim-columbia-blue); /* accent line above the footer */
   color: #fff;
   font-size: var(--dbim-fs-p1);
   line-height: 1.5;
 }
 [data-theme="dark"] .footerbox {
+  border-top-color: var(--dbim-key);
   color: var(--dbim-key);
 }
 
-/* Headings */
+/* ---- Headings: small accent bar under the title ---- */
 .footerbox .usefula {
-  margin: 0 0 16px;
+  position: relative;
+  margin: 0 0 20px;
+  padding-bottom: 10px;
   font-size: var(--dbim-fs-p1);
   font-weight: 600;
   line-height: 1.5;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
   color: inherit;
 }
+.footerbox .usefula::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 40px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--dbim-azureish-white);
+}
+[data-theme="dark"] .footerbox .usefula::after {
+  background: var(--dbim-key);
+}
 
-/* Links */
+/* ---- Links ---- */
 .footerbox a {
   color: inherit;
   text-decoration: none;
@@ -713,6 +740,7 @@ html {
 .footerbox a:hover {
   color: inherit;
   text-decoration: underline;
+  text-underline-offset: 4px;
 }
 .footerbox a:focus-visible,
 .dbim-footer button:focus-visible {
@@ -720,6 +748,10 @@ html {
   outline-offset: 3px;
   border-radius: 2px;
   text-decoration: none;
+}
+[data-theme="dark"] .footerbox a:focus-visible,
+[data-theme="dark"] .dbim-footer button:focus-visible {
+  outline-color: var(--dbim-key);
 }
 .footer-links li {
   display: flex;
@@ -731,6 +763,11 @@ html {
   flex: 0 0 auto;
   padding-top: 4px;
   margin-right: 8px;
+  font-weight: 700;
+  color: var(--dbim-azureish-white);
+}
+[data-theme="dark"] .footer-links li::before {
+  color: var(--dbim-key);
 }
 .footer-links a {
   display: inline-block;
@@ -738,14 +775,60 @@ html {
   text-wrap: balance; /* if a long link must wrap, split it evenly (no lone last word) */
 }
 
-/* Last updated */
-.footer-updated {
-  margin: 16px 0 0;
+/* ---- Support email + visitor counters (under the links) ---- */
+.footer-info {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--dbim-columbia-blue);
+}
+[data-theme="dark"] .footer-info {
+  border-top-color: var(--dbim-key);
+}
+
+.footer-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
   font-size: var(--dbim-fs-p2);
   color: var(--dbim-azureish-white-bg);
 }
+/* The email directive brings its own font size and colour: make it match the line */
+.footer-email span,
+.footer-email a {
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+.footer-email svg {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-/* Social icons */
+/* Visitor counters: plain text in a row */
+.footer-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+}
+.footer-stats p {
+  margin: 0;
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-azureish-white-bg);
+}
+.footer-stats strong {
+  margin-left: 4px;
+  color: #fff;
+}
+
+/* ---- Right column ---- */
 .sociala {
   list-style: none;
   margin: 0;
@@ -760,18 +843,24 @@ html {
   height: 44px;
   border: 1px solid var(--dbim-azureish-white);
   border-radius: 50%;
+  transition: background-color 0.15s, color 0.15s, transform 0.15s;
 }
 .sociala a:hover {
   background: var(--dbim-powder-blue);
   text-decoration: none;
-}
-[data-theme="dark"] .sociala a:hover {
-  background: var(--dbim-azureish-white);
+  transform: translateY(-2px);
 }
 .sociala svg {
   width: 22px;
   height: 22px;
   fill: currentColor;
+}
+[data-theme="dark"] .sociala a {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .sociala a:hover {
+  background: var(--dbim-key);
+  color: #000; /* black icon on yellow */
 }
 
 /* Right column: aligned to the right edge on large screens */
@@ -785,61 +874,60 @@ html {
   .footer-right .sociala {
     justify-content: flex-end;
   }
+  .footer-right .usefula::after {
+    left: auto;
+    right: 0;
+  }
 }
 
 /* NIC logo (above "Page Last Updated on") */
 .footer-logo-wrap {
   margin-top: 20px;
 }
-
-/* Support email + visitor counters (under the links) */
-.footer-info {
-  margin-top: 75px;
-}
 .footerbox a.footer-logo {
   display: inline-block;
   padding: 6px 10px;
   background: #fff;
+  border: 2px solid transparent;
   border-radius: 4px;
+}
+[data-theme="dark"] .footerbox a.footer-logo {
+  border-color: var(--dbim-key);
 }
 .footer-logo img {
   display: block;
   width: 150px;
   height: auto;
 }
-.footer-email {
-  margin: 0 0 8px;
+
+/* Last updated */
+.footer-updated {
+  margin: 16px 0 0;
   font-size: var(--dbim-fs-p2);
   color: var(--dbim-azureish-white-bg);
 }
 
-/* Visitor counters */
-.footer-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 24px;
-}
-.footer-stats p {
-  margin: 0;
-  font-size: var(--dbim-fs-p2);
-  color: var(--dbim-azureish-white-bg);
-}
-.footer-stats strong {
-  color: #fff;
-}
-[data-theme="dark"] .footer-stats strong {
-  color: var(--dbim-key);
-}
-
-/* Ownership / copyright line */
+/* ---- Ownership / copyright line ---- */
 .footer-below-text {
   padding-top: 20px;
-  border-top: 1px solid var(--dbim-azureish-white);
+  border-top: 1px solid var(--dbim-columbia-blue);
   font-size: var(--dbim-fs-p2);
   color: var(--dbim-azureish-white-bg);
 }
 
-/* Back to top */
+/* ---- High-contrast theme: every small text follows the key colour ---- */
+[data-theme="dark"] .footer-email,
+[data-theme="dark"] .footer-stats p,
+[data-theme="dark"] .footer-stats strong,
+[data-theme="dark"] .footer-updated,
+[data-theme="dark"] .footer-below-text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .footer-below-text {
+  border-top-color: var(--dbim-key);
+}
+
+/* ---- Back to top ---- */
 .footer-top-btn {
   position: fixed;
   right: 20px;
@@ -856,9 +944,16 @@ html {
   color: #fff;
   cursor: pointer;
 }
+.footer-top-btn:hover {
+  background: var(--dbim-powder-blue);
+}
 [data-theme="dark"] .footer-top-btn {
   border-color: var(--dbim-key);
   color: var(--dbim-key);
+}
+[data-theme="dark"] .footer-top-btn:hover {
+  background: var(--dbim-key);
+  color: #000;
 }
 .footer-top-btn.is-visible {
   display: inline-flex;
@@ -886,7 +981,7 @@ html {
 
 @media (max-width: 575.98px) {
   .footerbox {
-    padding: 32px 0 20px;
+    padding: 36px 0 20px;
   }
 }
 @media (forced-colors: active) {
@@ -1559,4 +1654,275 @@ iframe.skiptranslate,
   margin-bottom: 20px;
   color: var(--dbim-key);
   font-weight: 600;
+}
+/* ============================================================
+   19. CAPTCHA  (resources/views/partials/captcha.blade.php)
+   Image box, 44px icon buttons, countdown line. Existing variables only.
+   Append at the end of public/css/dbim.css
+   ============================================================ */
+.dbim-captcha__challenge {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+/* White behind the image in every theme, so the characters stay readable */
+.dbim-captcha__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  max-width: 100%;
+  height: 75px;
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 4px;
+}
+.dbim-captcha__image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Audio / refresh: same outline look as .download-outline-btn, 44px touch target */
+.dbim-captcha__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--dbim-wintergreen-dream);
+  border-radius: 4px;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-wintergreen-dream);
+  cursor: pointer;
+}
+.dbim-captcha__btn:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+.dbim-captcha__btn:disabled {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-grey-01);
+  color: var(--dbim-grey-03);
+  cursor: not-allowed;
+}
+.dbim-captcha__btn svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+.dbim-captcha__btn.is-spinning svg {
+  animation: dbim-captcha-spin 0.8s linear infinite; /* reduced-motion rule in section 4 covers this */
+}
+
+.dbim-captcha__btn svg,
+.dbim-captcha__btn svg path {
+  fill: currentColor;
+}
+@keyframes dbim-captcha-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Countdown */
+.dbim-captcha__timer {
+  margin: 4px 0 0;
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-text-muted);
+}
+.dbim-captcha__timer strong {
+  color: var(--dbim-deep-earthy-brown);
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .dbim-captcha__image {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-captcha__btn {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-captcha__btn:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-captcha__btn:disabled {
+  border-color: var(--dbim-grey-01);
+  color: var(--dbim-grey-01);
+}
+/* ============================================================
+   20. SITEMAP  (resources/views/Sitemap.blade.php)
+   Group headings come from .dbim-about h2. Each link has a chevron and a
+   Linen divider line, as on the MeitY sitemap. Existing variables only.
+   Append at the end of public/css/dbim.css
+   ============================================================ */
+.dbim-sitemap__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-sitemap__list > li {
+  border-bottom: 1px solid var(--dbim-linen);
+}
+.dbim-sitemap__list > li > a {
+  display: inline-flex;
+  align-items: flex-start;
+  min-height: 44px; /* touch target */
+  padding: 10px 0;
+  color: var(--dbim-key); /* #162F6A, yellow in the high-contrast theme */
+  font-weight: 600;
+  text-decoration: none;
+}
+.dbim-sitemap__list > li > a:hover {
+  text-decoration: underline;
+}
+/* chevron: decorative, empty alt text so screen readers skip it */
+.dbim-sitemap__list a::before {
+  content: "\203A"; /* fallback for browsers without alt-text syntax */
+  content: "\203A"/ "";
+  flex: 0 0 auto;
+  margin-right: 10px;
+  font-weight: 700;
+}
+
+/* Second level (for example the sections of the Policy page) */
+.dbim-sitemap__list--nested {
+  margin: 0 0 8px 24px;
+}
+.dbim-sitemap__list--nested > li {
+  border-bottom: 0;
+}
+.dbim-sitemap__list--nested > li > a {
+  min-height: 36px;
+  padding: 6px 0;
+  font-weight: 400;
+}
+/* Group headings: Deep Earthy Brown, so they differ from the blue links */
+.dbim-about.dbim-sitemap h2 {
+  color: var(--dbim-deep-earthy-brown);
+}
+/* ============================================================
+   21. RELATED LINKS  (resources/views/RelatedLinks.blade.php)
+   Search box with icon button, one row per link, "Visit Website" button.
+   Icons are inline SVG: size and colour come from here, so the width,
+   height and fill written in the SVG itself no longer matter.
+   Existing variables only. REPLACE the old section 21 in
+   public/css/dbim.css with this one.
+   ============================================================ */
+
+/* ---- Search: icon button on the left, field on the right ---- */
+.dbim-links-search {
+  max-width: 440px;
+  margin-bottom: 20px;
+}
+.dbim-links-search .input-group {
+  flex-wrap: nowrap;
+}
+.dbim-links-search__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--dbim-grey-02);
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+  cursor: pointer;
+}
+.dbim-links-search__btn:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+.dbim-links-search__btn svg {
+  width: 24px;
+  height: 24px;
+}
+.dbim-links-search .form-control {
+  height: 44px;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ---- List: one white row per link ---- */
+.dbim-linklist {
+  margin: 0 0 24px;
+  padding: 0;
+  list-style: none;
+}
+.dbim-linklist__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin-bottom: 8px;
+  padding: 8px 16px;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+.dbim-linklist__name {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+
+/* ---- "Visit Website" button: same look as .download-btn, with an icon ---- */
+.link-outline-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-wintergreen-dream); /* #162F6A */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-small); /* 12px */
+  font-style: normal;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: 0.12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.link-outline-btn:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+.link-outline-btn svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Icons follow the text colour in every theme ---- */
+.dbim-links-search__btn svg path,
+.link-outline-btn svg path {
+  fill: currentColor;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-links-search__btn:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .link-outline-btn,
+[data-theme="dark"] .link-outline-btn:hover {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .link-outline-btn:hover {
+  text-decoration: underline;
 }

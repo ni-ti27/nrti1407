@@ -45,11 +45,11 @@
 
                 {{-- Emblem + title (plain block, not a link) --}}
                 <div class="col-12 col-lg-5">
-                    <div class="dbim-header__brand d-flex align-items-center justify-content-start gap-2">
+                    <div class="dbim-header__brand d-flex align-items-center justify-content-start gap-4">
                         <img src="{{ asset('images/Emblem_of_Goa.png') }}" alt="Emblem of Goa" width="57" height="100">
                         <span>
                             <span class="gov">Government of Goa</span>
-                            <span class="name">RTI Online <span class="ver">v1.0</span></span>
+                            <span class="name">RTI Online </span>
                             <span class="tag d-none d-md-block">
                                 An Initiative of Department of Information &amp; Publicity, Govt. of Goa
                             </span>
@@ -116,7 +116,7 @@
                             </svg>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="a11yMenuButton">
-                                <li><hr class="dropdown-divider"></li>
+
                                 <li class="dropdown-item-text" id="textSizeLabel">Text size</li>
                                 <li class="dropdown-item-text fs-group" role="group" aria-labelledby="textSizeLabel">
                                     <button type="button" id="fontDecrease" aria-label="Decrease text size">A-</button>
@@ -199,11 +199,6 @@
                             <a class="nav-link {{ request()->is('contactUs') ? 'active' : '' }}"
                                href="{{ url('/contactUs') }}"
                                @if(request()->is('contactUs')) aria-current="page" @endif>Contact Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->is('FAQ') ? 'active' : '' }}"
-                               href="{{ url('/FAQ') }}"
-                               @if(request()->is('FAQ')) aria-current="page" @endif>FAQ</a>
                         </li>
                     </ul>
                 </div>

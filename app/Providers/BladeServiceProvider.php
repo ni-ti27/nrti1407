@@ -24,7 +24,8 @@ class BladeServiceProvider extends ServiceProvider
             return "<?php
                 \$email = (string) $expression;
                 \$maskedEmail = str_replace(['@', '.', '-'], [' [at] ', ' [dot] ', '-'], \$email);
-                echo '<span style=\"font-size: 1.3rem;\">' . \$maskedEmail . '</span>';
+                //echo '<span style=\"font-size: 1.3rem;\">' . \$maskedEmail . '</span>';
+                echo '<span>' . \$maskedEmail . '</span>';
             ?>";
         });
     }

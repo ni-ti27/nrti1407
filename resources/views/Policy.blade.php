@@ -13,7 +13,7 @@
         <div class="col-12 col-lg-9">
 
             <div class="card dbim-form-card">
-               <h1 class="card-header h4 mb-0">About Us</h1>
+               <h1 class="card-header h4 mb-0">Website Policies</h1>
                 <div class="card-body dbim-about">
 
                     <section aria-labelledby="policy-disclaimer">

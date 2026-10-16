@@ -164,6 +164,9 @@ Route::view('contactUs','Contact-Us');
 Route::view('FAQ','FAQ');
 Route::view('AboutUs','AboutUs');
 Route::view('Policy','Policy');
+Route::view('Help','Help');
+Route::view('Sitemap','Sitemap');
+Route::view('related-links','RelatedLinks');
 
 Route::post('/sessionForm', [SessionFormController::class, 'saveSessionData'])->name('sessionForm.save');
 Route::view('/registerDetailsWithOtp','registerDetailsWithOtp');

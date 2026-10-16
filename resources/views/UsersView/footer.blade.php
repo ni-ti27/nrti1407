@@ -15,21 +15,25 @@
 
                         <ul class="footer-links list-unstyled row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 gx-3 gy-1 mb-0">
                             <li class="col"><a href="/" target="_self">Home</a></li>
-                            <li class="col"><a class="external-link" href="https://www.goa.gov.in/" target="_blank" rel="noopener noreferrer">Govt. of Goa<span class="dbim-sr-only"> (opens in a new window)</span></a></li>
+                            <li class="col"><a href="/related-links" target="_self">Related Links</a></li>
+                            <!-- <li class="col"><a class="external-link" href="https://www.goa.gov.in/" target="_blank" rel="noopener noreferrer">Govt. of Goa<span class="dbim-sr-only"> (opens in a new window)</span></a></li>
                             <li class="col"><a class="external-link" href="https://www.india.gov.in/" target="_blank" rel="noopener noreferrer">National Portal of India<span class="dbim-sr-only"> (opens in a new window)</span></a></li>
-                            <li class="col"><a class="external-link" href="https://gsic.goa.gov.in/" target="_blank" rel="noopener noreferrer">Complaint &amp; Second Appeal to SIC<span class="dbim-sr-only"> (opens in a new window)</span></a></li>
+                            <li class="col"><a class="external-link" href="https://gsic.goa.gov.in/" target="_blank" rel="noopener noreferrer">Complaint &amp; Second Appeal to SIC<span class="dbim-sr-only"> (opens in a new window)</span></a></li>-->
+                            <li class="col"><a href="/Help" target="_self">Help</a></li>
                             <li class="col"><a href="/FAQ" target="_self">FAQ</a></li>
+                            <li class="col"><a href="/Policy" target="_self">Website Policies</a></li>
                             <li class="col"><a href="/AboutUs" target="_self">About Us</a></li>
-                            <li class="col"><a href="/Policy" target="_self">Policy</a></li>
+                            <li class="col"><a href="/Sitemap" target="_self">Sitemap</a></li>
                             <li class="col"><a href="/feedback" target="_self">Feedback</a></li>
                         </ul>
                     </nav>
 
                     <div class="footer-info">
                         <p class="footer-email">
-                            RTI Support Email Id: <span>@obfuscateEmail('support.rtionline@goa.gov.in')</span>
+                            <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                            <span>RTI Support Email Id: @obfuscateEmail('support.rtionline@goa.gov.in')</span>
                         </p>
-                        <div class="footer-stats">
+                        <div class="footer-stats" role="group" aria-label="Visitor statistics">
                             <p>Total Visitors: <strong>{{ $totalHits ?? 0 }}</strong></p>
                             <p>Today's Visitors: <strong>{{ $todayHits ?? 0 }}</strong></p>
                             <p>Today's Unique Visitors: <strong>{{ $todayUnique ?? 0 }}</strong></p>

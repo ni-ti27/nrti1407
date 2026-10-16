@@ -191,10 +191,7 @@
                                     <div id="issuing_authorityError" class="invalid-feedback @error('issuing_authority') d-block @enderror">@error('issuing_authority'){{ $message }}@enderror</div>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <x-captcha />
-                            </div>
+                            <x-captcha />
                         </section>
 
                         {{-- ===== Actions ===== --}}

@@ -1,281 +1,275 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password Form</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Add additional CSS or stylesheets here -->
-</head>
+{{-- ============================================================
+     Change Password  (DBIM / GIGW 3.0, keyboard accessible)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     Hints are in the placeholders; messages only appear under a
+     field when it has an error.
+     No inline styles, no inline event handlers.
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
-    .container.mt-5
-    {
-        /* border: 2px solid black; */
-        /* border-bottom: none; */
-        border-top:none;
-        margin-top:0 !important;
-    }
-</style>
+@section('title', 'Change Password | RTI Online, Government of Goa')
 
-<body>
-    @include('OfficerView.Header')
+@section('content')
+@php
+    // "Continue" goes to the dashboard of the officer's role
+    $continueUrl = match ((int) session('role')) {
+        4       => '/RTIMIS/dashboard/{new_FA}',
+        5, 6, 7 => '/RTIMIS/dashboard/{new_SA}',
+        default => '/RTIMIS/dashboard/',
+    };
+@endphp
 
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6" style="margin: 20px 20px">
-                <div class="row justify-content-center">
-                    <div style="margin: 20px">
-                        @if(session('success'))
-                            <div class="alert alert-success" id="successAlert">
-                                {{ nl2br(e(session('success'))) }}
-                            </div>
-                        @endif
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-6">
 
-                        @if(session('warning'))
-                            <div class="alert alert-warning" id="warningAlert">
-                                {{  nl2br(e(session('warning'))) }}
-                            </div>
-                        @endif
+            {{-- Messages from the server --}}
+            @include('partials.flash-messages')
 
-                        @if(session('error'))
-                            <div class="alert alert-danger" id="errorAlert">
-                                {{  nl2br(e(session('error'))) }}
-                            </div>
-                        @endif
+            <div class="card shadow-sm">
+                <h1 class="card-header h4 mb-0">Change Password</h1>
+
+                <div class="card-body">
+
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                </div>
 
-                <div class="card">
-                    <h5 class="card-header text-center text-white" style="background-color:#52a9e8;">Change Password</h5>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('changePassword') }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ old('username') ? old('username') : session('username') }}" required autofocus readonly>
-                                @error('username')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                    <form id="changePasswordForm" method="POST" action="{{ route('changePassword') }}" novalidate>
+                        @csrf
+
+                        <div class="alert alert-info dbim-note" role="note">
+                            <p>
+                                <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                            </p>
+                        </div>
+
+                        {{-- Username (read only) --}}
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-bold">Username</label>
+                            <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                   id="username" name="username"
+                                   value="{{ old('username') ? old('username') : session('username') }}"
+                                   autocomplete="username" readonly
+                                   aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                                   aria-describedby="usernameError">
+                            <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Previous password --}}
+                        <div class="mb-3">
+                            <label for="oldPass" class="form-label fw-bold">
+                                Previous Password <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('oldPass') is-invalid @enderror"
+                                       id="oldPass" name="oldPass"
+                                       placeholder="Enter your previous password"
+                                       autocomplete="current-password" required aria-required="true"
+                                       aria-invalid="{{ $errors->has('oldPass') ? 'true' : 'false' }}"
+                                       aria-describedby="oldPassError">
+                                <button type="button" class="download-outline-btn mt-0" data-toggle-password="oldPass"
+                                        aria-label="Show previous password" aria-pressed="false">
+                                    <img src="{{ asset('/images/closeeye.svg') }}" alt="" width="24" height="24">
+                                </button>
                             </div>
+                            <div id="oldPassError" class="invalid-feedback @error('oldPass') d-block @enderror">@error('oldPass'){{ $message }}@enderror</div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="oldPass" class="form-label">Enter Previous Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="oldPass" name="oldPass" placeholder="Enter your old password">
-                                    <button type="button" class="btn btn-outline-secondary" id="toggleOldPassword">
-                                    <img id="eyeIconSys" src="{{ asset('/images/closeeye.svg') }}" alt="Show password" width="24" height="24">
-                                    </button>
-                                </div>
-                                @error('oldPass')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                        {{-- New password --}}
+                        <div class="mb-3">
+                            <label for="newPassword1" class="form-label fw-bold">
+                                New Password <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('newPassword1') is-invalid @enderror"
+                                       id="newPassword1" name="newPassword1"
+                                       placeholder="Enter 8 to 20 characters, as per the rules below"
+                                       autocomplete="new-password" minlength="8" maxlength="20"
+                                       required aria-required="true"
+                                       aria-invalid="{{ $errors->has('newPassword1') ? 'true' : 'false' }}"
+                                       aria-describedby="passwordRules newPassword1Error">
+                                <button type="button" class="download-outline-btn mt-0" data-toggle-password="newPassword1"
+                                        aria-label="Show new password" aria-pressed="false">
+                                    <img src="{{ asset('/images/closeeye.svg') }}" alt="" width="24" height="24">
+                                </button>
                             </div>
+                            <div id="newPassword1Error" class="invalid-feedback @error('newPassword1') d-block @enderror">@error('newPassword1'){{ $message }}@enderror</div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="newPassword1" class="form-label">Enter New Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="newPassword1" name="newPassword1" placeholder="Enter your password" required maxlength='20' minlength='8' >
-                                    <button type="button" class="btn btn-outline-secondary" id="toggleNewPassword1">
-                                    <img id="eyeIconSys" src="{{ asset('/images/closeeye.svg') }}" alt="Show password" width="24" height="24">
-                                    </button>
-                                </div>
-                                @error('newPassword1')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                        {{-- Confirm password --}}
+                        <div class="mb-3">
+                            <label for="newPassword2" class="form-label fw-bold">
+                                Confirm Password <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control @error('newPassword2') is-invalid @enderror"
+                                       id="newPassword2" name="newPassword2"
+                                       placeholder="Enter the new password again"
+                                       autocomplete="new-password" minlength="8" maxlength="20"
+                                       required aria-required="true"
+                                       aria-invalid="{{ $errors->has('newPassword2') ? 'true' : 'false' }}"
+                                       aria-describedby="newPassword2Error">
+                                <button type="button" class="download-outline-btn mt-0" data-toggle-password="newPassword2"
+                                        aria-label="Show confirm password" aria-pressed="false">
+                                    <img src="{{ asset('/images/closeeye.svg') }}" alt="" width="24" height="24">
+                                </button>
                             </div>
+                            <div id="newPassword2Error" class="invalid-feedback @error('newPassword2') d-block @enderror">@error('newPassword2'){{ $message }}@enderror</div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="newPassword2" class="form-label">Confirm Password</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="newPassword2" name="newPassword2" placeholder="Enter your password again" required maxlength='20' minlength='8' >
-
-                                    <button type="button" class="btn btn-outline-secondary" id="toggleNewPassword2">
-                                        <img id="eyeIconSys" src="{{ asset('/images/closeeye.svg') }}" alt="Show password" width="24" height="24">
-                                    </button>
-                                </div>
-                                @error('newPassword2')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul class="mb-0">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-
-                            <br>
-
-                            <div class="row">
-                                <div class="col-6">
-                                    <button type="submit" class="btn btn-primary w-100" id="validateDetails">Change</button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="button" class="btn btn-success w-100" id="closeForm">Continue</button>
-                                </div>
-                            </div>
-
-                            <br>
-
-                            <div class="row justify-content-center">
-                                <h4>Rules for creating new password:</h4>
+                        {{-- Rules --}}
+                        <div id="passwordRules" class="mb-4">
+                            <h2 class="h6 fw-bold">Rules for creating a new password</h2>
+                            <ul class="mb-0">
                                 <li>Should contain minimum 8 characters</li>
                                 <li>Should contain maximum 20 characters</li>
-                                <li>Should contain minimum 1 upper characters</li>
-                                <li>Should contain minimum 1 lower characters</li>
+                                <li>Should contain minimum 1 upper case character</li>
+                                <li>Should contain minimum 1 lower case character</li>
                                 <li>Should contain 1 special character</li>
-                                <li>Should contain 1 minimum number</li>
+                                <li>Should contain minimum 1 number</li>
                                 <li>Should not contain consecutive numbers</li>
-                            </div>
-                        </form>
-                    </div>
+                            </ul>
+                        </div>
+
+                        <div class="d-flex flex-wrap justify-content-end gap-2">
+                            <a href="{{ $continueUrl }}" class="download-outline-btn text-uppercase w-ft">Continue</a>
+                            <button type="submit" id="validateDetails" class="download-btn text-uppercase w-ft" title="Change password">
+                                Change
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
+
         </div>
     </div>
+</div>
+@endsection
 
-    @include('UsersView.footer')
-</body>
+@push('scripts')
+<script>
+    (function () {
+        var form        = document.getElementById('changePasswordForm');
+        var summary     = document.getElementById('errorSummary');
+        var summaryList = document.getElementById('errorSummaryList');
 
-<script type="text/javascript">
+        var iconOpen  = @json(asset('/images/openeye.svg'));
+        var iconClose = @json(asset('/images/closeeye.svg'));
 
+        var fields = {
+            oldPass:      { id: 'oldPass',      errorId: 'oldPassError' },
+            newPassword1: { id: 'newPassword1', errorId: 'newPassword1Error' },
+            newPassword2: { id: 'newPassword2', errorId: 'newPassword2Error' }
+        };
 
-document.getElementById('closeForm').addEventListener('click', function()
-{
-    var userRole = @json(session('role'));
-    switch(userRole)
-    {
-        case 4:
-            window.location.href = '/RTIMIS/dashboard/{new_FA}';
-            break;
-        case 5:
-        case 6:
-        case 7:
-            window.location.href = '/RTIMIS/dashboard/{new_SA}';
-            break;
-        default:
-            window.location.href = '/RTIMIS/dashboard/';
-            break;
-    }
-});
+        function showError(f, message) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.add('is-invalid');
+            input.setAttribute('aria-invalid', 'true');
+            box.textContent = message;
+            box.classList.add('d-block');
+        }
 
+        function clearError(f) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-invalid', 'false');
+            box.textContent = '';
+            box.classList.remove('d-block');
+        }
 
-document.getElementById('toggleOldPassword').addEventListener('click', function ()
-{
-    var passwordInput = document.getElementById('oldPass');
-    var toggleButton = this;
+        /* Message for one field, or '' when valid */
+        function check(key) {
+            var v = document.getElementById(fields[key].id).value;
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/openeye.svg') }}" alt="Show password" width="24" height="24">`;
-    } else {
-        passwordInput.type = 'password';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/closeeye.svg') }}" alt="Hide password" width="24" height="24">`;
-    }
-});
+            if (key === 'oldPass' && v === '') { return 'Enter your previous password.'; }
 
-document.getElementById('toggleNewPassword1').addEventListener('click', function ()
-{
-    var passwordInput = document.getElementById('newPassword1');
-    var toggleButton = this;
+            if (key === 'newPassword1') {
+                if (v === '')                          { return 'Enter the new password.'; }
+                if (v.length < 8 || v.length > 20)     { return 'Password must be between 8 and 20 characters.'; }
+                if (!/[A-Z]/.test(v))                  { return 'Password must contain at least one uppercase letter.'; }
+                if (!/[a-z]/.test(v))                  { return 'Password must contain at least one lowercase letter.'; }
+                if (!/[0-9]/.test(v))                  { return 'Password must contain at least one number.'; }
+                if (!/[!@#$&().?:{}|<>]/.test(v))      { return 'Password must contain at least one special character.'; }
+                if (/(012|123|234|345|456|567|678|789)/.test(v)) { return 'Password cannot contain consecutive numbers.'; }
+            }
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/openeye.svg') }}" alt="Show password" width="24" height="24">`;
-    } else {
-        passwordInput.type = 'password';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/closeeye.svg') }}" alt="Hide password" width="24" height="24">`;
-    }
-});
+            if (key === 'newPassword2') {
+                if (v === '') { return 'Enter the new password again.'; }
+                if (v !== document.getElementById('newPassword1').value) {
+                    return 'Confirm password does not match the new password.';
+                }
+            }
+            return '';
+        }
 
+        /* Validates, shows inline errors and the summary. Returns true when valid. */
+        function validate() {
+            var problems = [];
+            Object.keys(fields).forEach(function (key) {
+                var message = check(key);
+                if (message) { showError(fields[key], message); problems.push({ key: key, message: message }); }
+                else { clearError(fields[key]); }
+            });
 
-document.getElementById('toggleNewPassword2').addEventListener('click', function ()
-{
-    var passwordInput = document.getElementById('newPassword2');
-    var toggleButton = this;
+            if (problems.length === 0) { summary.hidden = true; return true; }
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/openeye.svg') }}" alt="Show password" width="24" height="24">`;
-    } else {
-        passwordInput.type = 'password';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/closeeye.svg') }}" alt="Hide password" width="24" height="24">`;
-    }
-});
+            summaryList.textContent = '';
+            problems.forEach(function (p) {
+                var li = document.createElement('li');
+                var a  = document.createElement('a');
+                a.href = '#' + fields[p.key].id;
+                a.textContent = p.message;
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById(fields[p.key].id).focus();
+                });
+                li.appendChild(a);
+                summaryList.appendChild(li);
+            });
+            summary.hidden = false;
+            summary.focus();             /* announced by screen readers; keyboard users start here */
+            return false;
+        }
 
+        form.addEventListener('submit', function (event) {
+            if (!validate()) { event.preventDefault(); }
+        });
 
-document.getElementById('toggleSysPassword').addEventListener('click', function ()
-{
-    var toggleButton = this;
+        /* Clear an error as soon as the user fixes the field */
+        Object.keys(fields).forEach(function (key) {
+            document.getElementById(fields[key].id).addEventListener('input', function () {
+                if (!check(key)) { clearError(fields[key]); }
+            });
+        });
 
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/openeye.svg') }}" alt="Show password" width="24" height="24">`;
-    } else {
-        passwordInput.type = 'password';
-        toggleButton.innerHTML = `<img id="eyeIcon" src="{{ asset('/images/closeeye.svg') }}" alt="Hide password" width="24" height="24">`;
-    }
-});
+        /* Show / hide password: one handler for all three buttons */
+        document.querySelectorAll('[data-toggle-password]').forEach(function (btn) {
+            var input = document.getElementById(btn.getAttribute('data-toggle-password'));
+            var img   = btn.querySelector('img');
+            var label = btn.getAttribute('aria-label').replace(/^Show /, '');
 
+            btn.addEventListener('click', function () {
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                img.src = show ? iconOpen : iconClose;
+                btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+                btn.setAttribute('aria-label', (show ? 'Hide ' : 'Show ') + label);
+            });
+        });
 
-document.getElementById('validateDetails').addEventListener('click', function ()
-{
-    var passwordInput1 = document.getElementById('newPassword1');
-    var passwordInput2 = document.getElementById('newPassword2');
-
-    if(passwordInput1.value != passwordInput2.value)
-    {
-        alert('Entered Password does not match with the confirm password field');
-        event.preventDefault();
-        return false;
-    }
-});
-
-
-document.getElementById('newPassword1').addEventListener('change', function()
-{
-    var passwordInput1 = document.getElementById('newPassword1');
-
-    if (passwordInput1.length < 8 || passwordInput1.length > 20)
-    {
-        alert("Password must be between 8 and 20 characters.");
-        event.preventDefault();
-        return false;
-    }
-
-    if (!/[A-Z]/.test(passwordInput1.value))
-    {
-        alert("Password must contain at least one uppercase letter.");
-        event.preventDefault();
-        return false;
-    }
-
-    if (!/[a-z]/.test(passwordInput1.value)) {
-        alert("Password must contain at least one lowercase letter.");
-        event.preventDefault();
-        return false;
-    }
-
-    if (!/[!@#$&().?:{}|<>]/.test(passwordInput1.value)) {
-        alert("Password must contain at least one special character.");
-        event.preventDefault();
-        return false;
-    }
-
-    if (/(012|123|234|345|456|567|678|789)/.test(passwordInput1.value)) {
-        alert("Password cannot contain consecutive numbers.");
-        event.preventDefault();
-        return false;
-    }
-
-});
-
-
+        /* Errors sent back by the server: move focus to the summary */
+        if (!summary.hidden) { summary.focus(); }
+    })();
 </script>
-
-</html>
+@endpush

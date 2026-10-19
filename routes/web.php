@@ -114,8 +114,8 @@ Route::middleware('auth.check')->group(function () {
     Route::get('/RTIMIS/departmentStatusFA', [SubmitRequestController::class, 'departmentStatusFA'])->name('fetchDetailAppData.deptFullData');
     Route::get('/RTIMIS/appStatusNR', [SubmitRequestController::class, 'appStatusNR']);
     Route::get('/RTIMIS/appStatusFA', [SubmitRequestController::class, 'appStatusFA']);
-    Route::get('/RTIMIS/statusNR', [SubmitRequestController::class, 'statusNR'])->name('fetchDetailAppData.receivedAppData');
-    Route::get('/RTIMIS/statusFA', [SubmitRequestController::class, 'statusFA'])->name('fetchDetailAppData.receivedAppData');
+    Route::get('/RTIMIS/statusNR', [SubmitRequestController::class, 'statusNR']);
+    Route::get('/RTIMIS/statusFA', [SubmitRequestController::class, 'statusFA']);
     // Route::get('/dashboardHeader', function(){ return view('dashboardHeader');});
     Route::get('/RTIMIS/submit_req/{id}', [SubmitRequestController::class, 'submitRequestDetailedView'])->name('detailedFormRoute');
     Route::get('/RTIMIS/closed_req/{id}', [SubmitRequestController::class, 'closedRequestDetailedView'])->name('closedRequest');

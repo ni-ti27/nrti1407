@@ -1,466 +1,463 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Update</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
-    <!-- Add additional CSS or stylesheets here -->
-</head>
+{{-- ============================================================
+     Officer Profile Update  (DBIM / GIGW 3.0, keyboard accessible)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     Step 1: verify mobile number with OTP.  Step 2: update profile.
+     Hints are in the placeholders; messages only appear under a
+     field when it has an error.
+     No inline styles, no inline event handlers.
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
-    .container.mt-5 {
-        /* border: 2px solid black; */
-        border-bottom: none;
-        /* border-top:none; */
-        margin-top: 0 !important;
-    }
+@section('title', 'Officer Profile Update | RTI Online, Government of Goa')
 
-    .custom-margin {
-        margin-left: 10px; /* Adjust margin as needed */
-    }
-
-    .datepicker {
-    width: 280px !important;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    font-size: 14px;
-}
-
-/* Header styling (month/year) */
-.datepicker table tr td.day,
-.datepicker table tr td.disabled,
-.datepicker table tr td.today,
-.datepicker table tr td.active {
-    width: 36px;
-    height: 36px;
-    line-height: 36px;
-    border-radius: 50%;
-}
-
-/* Highlight today */
-.datepicker table tr td.today {
-    background-color: #e0f7fa;
-    color: #007bff;
-}
-
-/* Highlight selected day */
-.datepicker table tr td.active {
-    background-color: #007bff;
-    color: #fff;
-}
-
-/* Navigation arrows bigger */
-.datepicker .prev, .datepicker .next {
-    font-size: 16px;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-}
-
-/* Responsive on small screens */
-@media (max-width: 576px) {
-    .datepicker {
-        width: 90vw !important;
-    }
-}
-</style>
-<!-- jQuery (required) -->
-
-<body>
-    @include('OfficerView.Header')
-    <div class="container mt-5">
-        <br>
-        <h4>Officer's Profile Update</h4><br>
-        <div class="row justify-content-center">
-            <div class="col-md-9">
-                <div class="row justify-content-center">
-                    <div>
-                        @if(session('success'))
-                            <br>
-                            <div class="alert alert-success text-center">
-                                {{ session('success') }}
-                            </div>
-                        @endif
-                        @if(session('warning'))
-                            <br>
-                            <div class="alert alert-warning text-center">
-                                {{ session('warning') }}
-                            </div>
-                        @endif
-                        @if(session('error'))
-                            <br>
-                            <div class="alert alert-danger text-center">
-                                {{ session('error') }}
-                            </div>
-                        @endif
-                    </div>
-
-                    @if(session('VerifiedOTP') != true)
-                    <div class="card">
-                        <h5 class="card-header">Verify Registered Mobile Number:</h5>
-
-                        <div class="card-body">
-                            <div class="row justify-content-center">
-                                <form method="POST" action="{{ route('officerVerifyOtp') }}" id="sendOTPForm" name="sendOTPForm">
-                                    @csrf
-                                    <div class="row justify-content-center">
-                                        <div class="form-group offset-md-3 col-md-3">
-                                            <label for="mobile_no">Officer Mobile Number<span class="text-danger">*</span></label><br>
-                                            <span style="color: blue; font-size: 12px">(For receiving SMS alerts)</span>
-                                            <input type="text" class="form-control @error('mobile_no') is-invalid @enderror" name="mobile_no" id="mobile_no" value="{{ old('mobile_no', $mobileTest ?? '') }}">
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            <br><br>
-                                            <button type="button" class="btn btn-secondary" id="sendOTP">Send OTP</button>
-                                            <button type="button" class="btn btn-secondary" style="display:none" id="resendOTP">Re Send</button>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row justify-content-center">
-                                        <div class="row justify-content-center verifyOtpBlock">
-                                            <div class="form-group col-md-3">
-                                                <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP">
-                                                @if($errors->has('otp'))
-                                                    <br>
-                                                    <div class="col-md-5">
-                                                        @error('otp')
-                                                            <span style="color:red" class="invalid feedback">
-                                                                <strong>{{ $message }}</strong>
-                                                            </span>
-                                                        @enderror
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <div class="form-group col-md-3">
-                                                <button type="button" class="btn btn-secondary" id="verifyOtp">Verify</button>
-                                            </div>
-                                        </div>
-                                        <div class="row justify-content-end" style="margin-top:20px">
-                                            <div class="col-auto">
-                                                <button type="button" class="btn btn-success w-100" id="closeForm">Ask Later</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    @endif
-
-                    @if(session('VerifiedOTP') == true)
-                    <div class="row justify-content-center">
-                        <div class="col-md-12" style="margin: 20px 20px">
-                            <form method="POST" action="{{ route('updateOfficerData') }}" id="profileUpdate" name="profileUpdate">
-                                @csrf
-                                @if($errors->has('address_length_error'))
-                                    <div class="alert alert-danger">
-                                        {{ $errors->first('address_length_error') }}
-                                    </div>
-                                @endif
-                                <div class="card">
-                                    <h5 class="card-header">Department Details:</h5>
-                                    <div class="card-body">
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-2">
-                                                <p><strong>Department: </strong></p>
-                                                <p><strong>Office: </strong></p>
-                                                <p><strong>Sub Office: </strong></p>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <p>{{ Session::get('department_name') }}</p>
-                                                <p>{{ Session::get('subDepartment_name') }}</p>
-                                                <p>{{ Session::get('officeDepartment_name') }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-
-                                <div class="card">
-                                    <h5 class="card-header">Personal Details:</h5>
-                                    <div class="card-body">
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <p><strong>UserName: </strong>{{ Session::get('username') }}</p>
-                                            </div>
-                                            <div class="form-group col-md-6">
-                                                <p><strong>Role: </strong>{{ Session::get('roleName') }}</p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <label for="officerName">Officer Name<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control @error('officerName') is-invalid @enderror" name="officerName" id="officerName" value="{{ old('officerName', $getUserDetails->name ?? '') }}">
-                                                @error('officerName')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="gender">Gender</label>
-                                                <select class="form-control" name="gender" id="gender">
-                                                    <option value="M" {{old('gender', $getUserDetails->gender ?? '') == 'M' ? 'selected' : '' }}>Male</option>
-                                                    <option value="F" {{old('gender', $getUserDetails->gender ?? '')== 'F' ? 'selected' : '' }}>Female</option>
-                                                    <option value="O" {{ old('gender', $getUserDetails->gender ?? '')== 'O' ? 'selected' : '' }}>Other</option>
-                                                </select>
-                                                @error('gender')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <br>
-
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <label for="designation">Official Designation<span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control @error('designation') is-invalid @enderror" name="designation" id="designation" value="{{ old('designation', $getUserDetails->designation ?? '') }}">
-                                                @error('designation')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="email_address">Email Address<span class="text-danger">*</span></label>
-                                                <span style="color: blue; font-size: 12px">(For receiving alerts)</span>
-                                                <input type="text" class="form-control @error('email_address') is-invalid @enderror" name="email_address" id="email_address" value="{{ old('email_address', $getUserDetails->email ?? '') }}">
-                                                @error('email_address')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <br>
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-3">
-                                                <label for="mobile_no">Officer Mobile Number</label><br>
-                                                <span style="color: blue; font-size: 12px">(For receiving SMS alerts)</span>
-                                                <input type="text" class="form-control @error('officerMobileNumber') is-invalid @enderror" name="mobile_no" id="mobile_no" value="{{ session::get('officerMobileNumber') }}" readonly>
-                                            </div>
-                                        </div>
-
-                                        <br>
-                                    </div>
-                                </div>
-                                <br>
-
-                                <div class="card">
-                                    <h5 class="card-header">Additional Details:</h5>
-                                    <div class="card-body">
-                                        <!-- Added new fields -->
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <label for="address1">Official Address Line 1</label>
-                                                <input type="text" class="form-control @error('address1') is-invalid @enderror" name="address1" id="address1" value="{{ old('address1', $getUserDetails->address1 ?? '') }}">
-                                                @error('address1')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="address2">Official Address Line 2</label>
-                                                <input type="text" class="form-control @error('address2') is-invalid @enderror" name="address2" id="address2" value="{{ old('address2', $getUserDetails->address2 ?? '') }}">
-                                                @error('address2')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <br>
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <label for="address3">Official Address Line 3</label>
-                                                <input type="text" class="form-control @error('address3') is-invalid @enderror" name="address3" id="address3" value="{{ old('address3', $getUserDetails->address3 ?? '') }}">
-                                                @error('address3')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="service_retirement_dt">Service Retirement Date</label>
-                                                <input type="text"
-       class="form-control @error('service_retirement_dt') is-invalid @enderror"
-       name="service_retirement_dt"
-       id="service_retirement_dt"
-       value="{{ old('service_retirement_dt', $getUserDetails->service_retirement_dt ? \Carbon\Carbon::parse($getUserDetails->service_retirement_dt)->format('d-m-Y') : '') }}">
-                                                @error('service_retirement_dt')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <br>
-                                        <div class="row justify-content-center">
-                                            <div class="form-group col-md-6">
-                                                <label for="phone_no">Office Phone Number</label><br>
-                                                <input type="text" class="form-control @error('phone_no') is-invalid @enderror" name="phone_no" id="phone_no" value="{{ old('phone_no', $getUserDetails->phone_no ?? '') }}">
-                                                @error('phone_no')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="form-group col-md-6">
-                                                <label for="state">State</label>
-
-                                                <select class="form-control @error('state') is-invalid @enderror" id="state_display" disabled>
-                                                    @foreach($states as $state)
-                                                        <option value="{{ $state->id }}" {{ $state->id == $goaId ? 'selected' : '' }}>
-                                                            {{ $state->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-
-                                                <input type="hidden" name="state" value="{{ $goaId }}">
-
-                                                @error('state')
-                                                    <span class="invalid-feedback" role="alert">
-                                                        <strong>{{ $message }}</strong>
-                                                    </span>
-                                                @enderror
-                                            </div>
-
-                                        </div>
-                                        <br>
-                                    </div>
-                                </div>
-
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="col-md-6">
-                                        <div class="form-group text-center">
-                                            <button type="button" class="btn btn-primary" id="submitData" name="submitData" onclick="validate()">Submit</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    @endif
-                    <br><br>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    @include('UsersView.footer')
-</body>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript">
-
-$(document).ready(function(){
-    $('#service_retirement_dt').datepicker({
-        format: 'dd-mm-yyyy',   // Display format
-        autoclose: true,        // Close picker when date is selected
-        todayHighlight: true    // Highlight today
-    });
-});
-document.addEventListener("DOMContentLoaded", function() {
-
-    var closeFormButton = document.getElementById('closeForm');
-
-    if (closeFormButton) {
-        closeFormButton.addEventListener('click', function() {
-            var userRole = @json(session('role'));
-            switch(userRole) {
-                case 4:
-                    window.location.href = '/RTIMIS/dashboard/{new_FA}';
-                    break;
-                case 5:
-                case 6:
-                case 7:
-                    window.location.href = '/RTIMIS/dashboard/{new_SA}';
-                    break;
-                default:
-                    window.location.href = '/RTIMIS/dashboard/';
-                    break;
-            }
-        });
-    }
-
-    var sendOTPButton = document.getElementById('sendOTP');
-    var verifyOtpButton = document.getElementById('verifyOtp');
-
-    // Check if the elements exist before attaching event listeners
-    if (sendOTPButton) {
-        sendOTPButton.addEventListener('click', handleSubmitForm);
-    }
-
-    if (verifyOtpButton) {
-        verifyOtpButton.addEventListener('click', handleSubmitForm);
-    }
-});
-
-    function validate() {
-        var form = document.getElementById('profileUpdate');
-        var emailId = document.getElementById('email_address');
-        var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        var mobile_no = document.getElementById('mobile_no');
-        var designation = document.getElementById('designation');
-        var officerName = document.getElementById('officerName');
-
-        if (officerName.value.trim() == '') {
-            alert("Invalid Officer Name");
-            officerName.focus();
-            event.preventDefault();
-            return;
-        }
-
-        if (designation.value.trim() == '') {
-            alert("Invalid Designation");
-            designation.focus();
-            event.preventDefault();
-            return;
-        }
-
-        if (regex.test(emailId.value) != true) {
-            alert("Invalid Email Id");
-            emailId.focus();
-            event.preventDefault();
-            return;
-        }
-
-        form.submit();
+@section('content')
+@php
+    // "Ask Later" goes to the dashboard of the officer's role
+    $askLaterUrl = match ((int) session('role')) {
+        4       => '/RTIMIS/dashboard/{new_FA}',
+        5, 6, 7 => '/RTIMIS/dashboard/{new_SA}',
+        default => '/RTIMIS/dashboard/',
     };
 
-    function handleSubmitForm() {
-        var form = document.getElementById('sendOTPForm');
-        var mobileNo = document.getElementById('mobile_no');
-        var verifyCode = document.getElementById('otp');
+    $retirementDate = '';
+    if (!empty($getUserDetails->service_retirement_dt ?? null)) {
+        $retirementDate = \Carbon\Carbon::parse($getUserDetails->service_retirement_dt)->format('d-m-Y');
+    }
+@endphp
 
-        var regex = /^\d{10}$/;
-        if (regex.test(mobileNo.value) != true) {
-            alert("Invalid Mobile Number");
-            mobileNo.focus();
-            event.preventDefault();
-            return;
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+
+            <h1 class="h2 mb-4">Officer's Profile Update</h1>
+
+            {{-- Messages from the server --}}
+            @include('partials.flash-messages')
+
+            {{-- Error summary: filled by script or by the server; receives focus --}}
+            <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                 @if(!$errors->any()) hidden @endif>
+                <p class="fw-bold mb-2">Please correct the following:</p>
+                <ul class="mb-0" id="errorSummaryList">
+                    @foreach($errors->all() as $message)
+                        <li>{{ $message }}</li>
+                    @endforeach
+                </ul>
+            </div>
+
+            {{-- =====================================================
+                 STEP 1: Verify registered mobile number
+                 ===================================================== --}}
+            @if(session('VerifiedOTP') != true)
+                <div class="card shadow-sm mb-4">
+                    <h2 class="card-header h4 mb-0">Verify Registered Mobile Number</h2>
+
+                    <div class="card-body">
+                        <form id="sendOTPForm" name="sendOTPForm" method="POST"
+                              action="{{ route('officerVerifyOtp') }}" novalidate>
+                            @csrf
+
+                            <div class="alert alert-info dbim-note" role="note">
+                                <p>
+                                    <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                                </p>
+                            </div>
+
+                            {{-- Mobile + Send OTP --}}
+                            <div class="mb-3">
+                                <label for="mobile_no" class="form-label fw-bold">
+                                    Officer Mobile Number <span class="dbim-required" aria-hidden="true">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="tel" class="form-control @error('mobile_no') is-invalid @enderror"
+                                           id="mobile_no" name="mobile_no"
+                                           value="{{ old('mobile_no', $mobileTest ?? '') }}"
+                                           placeholder="Enter 10 digit mobile (for receiving SMS alerts)"
+                                           inputmode="numeric" maxlength="10" autocomplete="tel-national"
+                                           required aria-required="true"
+                                           aria-invalid="{{ $errors->has('mobile_no') ? 'true' : 'false' }}"
+                                           aria-describedby="mobileNoError">
+                                    <button type="button" id="sendOTP" class="download-btn text-uppercase w-ft mt-0"
+                                            title="Send OTP to this mobile number">
+                                        Send OTP
+                                    </button>
+                                </div>
+                                <div id="mobileNoError" class="invalid-feedback @error('mobile_no') d-block @enderror">@error('mobile_no'){{ $message }}@enderror</div>
+                            </div>
+
+                            {{-- OTP + Verify --}}
+                            <div class="mb-3">
+                                <label for="otp" class="form-label fw-bold">
+                                    OTP <span class="dbim-required" aria-hidden="true">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control @error('otp') is-invalid @enderror"
+                                           id="otp" name="otp"
+                                           placeholder="Enter the OTP received on your mobile"
+                                           inputmode="numeric" autocomplete="one-time-code" aria-required="true"
+                                           aria-invalid="{{ $errors->has('otp') ? 'true' : 'false' }}"
+                                           aria-describedby="otpError">
+                                    <button type="button" id="verifyOtp" class="download-btn text-uppercase w-ft mt-0"
+                                            title="Verify the OTP">
+                                        Verify
+                                    </button>
+                                </div>
+                                <div id="otpError" class="invalid-feedback @error('otp') d-block @enderror">@error('otp'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <a href="{{ $askLaterUrl }}" class="download-outline-btn text-uppercase w-ft">Ask Later</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            @endif
+
+            {{-- =====================================================
+                 STEP 2: Profile form (after OTP is verified)
+                 ===================================================== --}}
+            @if(session('VerifiedOTP') == true)
+                <form id="profileUpdate" name="profileUpdate" method="POST"
+                      action="{{ route('updateOfficerData') }}" novalidate>
+                    @csrf
+
+                    <div class="alert alert-info dbim-note" role="note">
+                        <p>
+                            <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                        </p>
+                    </div>
+
+                    {{-- Department details (read only) --}}
+                    <div class="card shadow-sm mb-4">
+                        <h2 class="card-header h4 mb-0">Department Details</h2>
+                        <div class="card-body">
+                            <dl class="row mb-0">
+                                <dt class="col-sm-3">Department</dt>
+                                <dd class="col-sm-9">{{ Session::get('department_name') }}</dd>
+                                <dt class="col-sm-3">Office</dt>
+                                <dd class="col-sm-9">{{ Session::get('subDepartment_name') }}</dd>
+                                <dt class="col-sm-3">Sub Office</dt>
+                                <dd class="col-sm-9 mb-0">{{ Session::get('officeDepartment_name') }}</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    {{-- Personal details --}}
+                    <div class="card shadow-sm mb-4">
+                        <h2 class="card-header h4 mb-0">Personal Details</h2>
+                        <div class="card-body">
+                            <dl class="row mb-3">
+                                <dt class="col-sm-3">Username</dt>
+                                <dd class="col-sm-9 col-md-3">{{ Session::get('username') }}</dd>
+                                <dt class="col-sm-3">Role</dt>
+                                <dd class="col-sm-9 col-md-3 mb-0">{{ Session::get('roleName') }}</dd>
+                            </dl>
+
+                            <div class="row">
+                                {{-- Officer name --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="officerName" class="form-label fw-bold">
+                                        Officer Name <span class="dbim-required" aria-hidden="true">*</span>
+                                    </label>
+                                    <input type="text" class="form-control @error('officerName') is-invalid @enderror"
+                                           id="officerName" name="officerName"
+                                           value="{{ old('officerName', $getUserDetails->name ?? '') }}"
+                                           placeholder="Enter your name" autocomplete="name"
+                                           required aria-required="true"
+                                           aria-invalid="{{ $errors->has('officerName') ? 'true' : 'false' }}"
+                                           aria-describedby="officerNameError">
+                                    <div id="officerNameError" class="invalid-feedback @error('officerName') d-block @enderror">@error('officerName'){{ $message }}@enderror</div>
+                                </div>
+
+                                {{-- Gender --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="gender" class="form-label fw-bold">Gender</label>
+                                    <select class="form-select @error('gender') is-invalid @enderror"
+                                            id="gender" name="gender"
+                                            aria-invalid="{{ $errors->has('gender') ? 'true' : 'false' }}"
+                                            aria-describedby="genderError">
+                                        @php $genderValue = old('gender', $getUserDetails->gender ?? ''); @endphp
+                                        <option value="M" @selected($genderValue == 'M')>Male</option>
+                                        <option value="F" @selected($genderValue == 'F')>Female</option>
+                                        <option value="O" @selected($genderValue == 'O')>Other</option>
+                                    </select>
+                                    <div id="genderError" class="invalid-feedback @error('gender') d-block @enderror">@error('gender'){{ $message }}@enderror</div>
+                                </div>
+
+                                {{-- Designation --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="designation" class="form-label fw-bold">
+                                        Official Designation <span class="dbim-required" aria-hidden="true">*</span>
+                                    </label>
+                                    <input type="text" class="form-control @error('designation') is-invalid @enderror"
+                                           id="designation" name="designation"
+                                           value="{{ old('designation', $getUserDetails->designation ?? '') }}"
+                                           placeholder="Enter your official designation" autocomplete="organization-title"
+                                           required aria-required="true"
+                                           aria-invalid="{{ $errors->has('designation') ? 'true' : 'false' }}"
+                                           aria-describedby="designationError">
+                                    <div id="designationError" class="invalid-feedback @error('designation') d-block @enderror">@error('designation'){{ $message }}@enderror</div>
+                                </div>
+
+                                {{-- Email --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="email_address" class="form-label fw-bold">
+                                        Email Address <span class="dbim-required" aria-hidden="true">*</span>
+                                    </label>
+                                    <input type="email" class="form-control @error('email_address') is-invalid @enderror"
+                                           id="email_address" name="email_address"
+                                           value="{{ old('email_address', $getUserDetails->email ?? '') }}"
+                                           placeholder="Enter email, for example name@example.com (for alerts)"
+                                           autocomplete="email"
+                                           required aria-required="true"
+                                           aria-invalid="{{ $errors->has('email_address') ? 'true' : 'false' }}"
+                                           aria-describedby="emailAddressError">
+                                    <div id="emailAddressError" class="invalid-feedback @error('email_address') d-block @enderror">@error('email_address'){{ $message }}@enderror</div>
+                                </div>
+
+                                {{-- Mobile (verified, read only) --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="mobile_no" class="form-label fw-bold">Officer Mobile Number</label>
+                                    <input type="tel" class="form-control"
+                                           id="mobile_no" name="mobile_no"
+                                           value="{{ session('officerMobileNumber') }}"
+                                           placeholder="Verified mobile number (for receiving SMS alerts)"
+                                           readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Additional details --}}
+                    <div class="card shadow-sm mb-4">
+                        <h2 class="card-header h4 mb-0">Additional Details</h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="address1" class="form-label fw-bold">Official Address Line 1</label>
+                                    <input type="text" class="form-control @error('address1') is-invalid @enderror"
+                                           id="address1" name="address1"
+                                           value="{{ old('address1', $getUserDetails->address1 ?? '') }}"
+                                           placeholder="Enter official address line 1"
+                                           autocomplete="address-line1"
+                                           aria-invalid="{{ $errors->has('address1') ? 'true' : 'false' }}"
+                                           aria-describedby="address1Error">
+                                    <div id="address1Error" class="invalid-feedback @error('address1') d-block @enderror">@error('address1'){{ $message }}@enderror</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="address2" class="form-label fw-bold">Official Address Line 2</label>
+                                    <input type="text" class="form-control @error('address2') is-invalid @enderror"
+                                           id="address2" name="address2"
+                                           value="{{ old('address2', $getUserDetails->address2 ?? '') }}"
+                                           placeholder="Enter official address line 2"
+                                           autocomplete="address-line2"
+                                           aria-invalid="{{ $errors->has('address2') ? 'true' : 'false' }}"
+                                           aria-describedby="address2Error">
+                                    <div id="address2Error" class="invalid-feedback @error('address2') d-block @enderror">@error('address2'){{ $message }}@enderror</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="address3" class="form-label fw-bold">Official Address Line 3</label>
+                                    <input type="text" class="form-control @error('address3') is-invalid @enderror"
+                                           id="address3" name="address3"
+                                           value="{{ old('address3', $getUserDetails->address3 ?? '') }}"
+                                           placeholder="Enter official address line 3"
+                                           autocomplete="address-line3"
+                                           aria-invalid="{{ $errors->has('address3') ? 'true' : 'false' }}"
+                                           aria-describedby="address3Error">
+                                    <div id="address3Error" class="invalid-feedback @error('address3') d-block @enderror">@error('address3'){{ $message }}@enderror</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="service_retirement_dt" class="form-label fw-bold">Service Retirement Date</label>
+                                    <input type="text" class="form-control @error('service_retirement_dt') is-invalid @enderror"
+                                           id="service_retirement_dt" name="service_retirement_dt"
+                                           value="{{ old('service_retirement_dt', $retirementDate) }}"
+                                           placeholder="Enter date as dd-mm-yyyy"
+                                           inputmode="numeric" maxlength="10" autocomplete="off"
+                                           aria-invalid="{{ $errors->has('service_retirement_dt') ? 'true' : 'false' }}"
+                                           aria-describedby="serviceRetirementDtError">
+                                    <div id="serviceRetirementDtError" class="invalid-feedback @error('service_retirement_dt') d-block @enderror">@error('service_retirement_dt'){{ $message }}@enderror</div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone_no" class="form-label fw-bold">Office Phone Number</label>
+                                    <input type="tel" class="form-control @error('phone_no') is-invalid @enderror"
+                                           id="phone_no" name="phone_no"
+                                           value="{{ old('phone_no', $getUserDetails->phone_no ?? '') }}"
+                                           placeholder="Enter office phone number"
+                                           autocomplete="tel"
+                                           aria-invalid="{{ $errors->has('phone_no') ? 'true' : 'false' }}"
+                                           aria-describedby="phoneNoError">
+                                    <div id="phoneNoError" class="invalid-feedback @error('phone_no') d-block @enderror">@error('phone_no'){{ $message }}@enderror</div>
+                                </div>
+
+                                {{-- State: fixed to Goa, shown read only, value sent by the hidden field --}}
+                                <div class="col-md-6 mb-3">
+                                    <label for="state_display" class="form-label fw-bold">State</label>
+                                    <select class="form-select @error('state') is-invalid @enderror"
+                                            id="state_display" disabled aria-describedby="stateError">
+                                        @foreach($states as $state)
+                                            <option value="{{ $state->id }}" @selected($state->id == $goaId)>{{ $state->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <input type="hidden" name="state" value="{{ $goaId }}">
+                                    <div id="stateError" class="invalid-feedback @error('state') d-block @enderror">@error('state'){{ $message }}@enderror</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" id="submitData" name="submitData"
+                                class="download-btn text-uppercase w-ft" title="Submit profile">
+                            Update Profile
+                        </button>
+                    </div>
+                </form>
+            @endif
+
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('scripts')
+<script>
+    (function () {
+        var summary     = document.getElementById('errorSummary');
+        var summaryList = document.getElementById('errorSummaryList');
+
+        function showError(f, message) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.add('is-invalid');
+            input.setAttribute('aria-invalid', 'true');
+            box.textContent = message;
+            box.classList.add('d-block');
         }
 
-        form.submit();
-    }
+        function clearError(f) {
+            var input = document.getElementById(f.id);
+            var box   = document.getElementById(f.errorId);
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-invalid', 'false');
+            box.textContent = '';
+            box.classList.remove('d-block');
+        }
 
+        /* Validates the given fields, shows inline errors and the summary.
+           Returns true when all are valid. */
+        function validate(fields, keys) {
+            var problems = [];
+            keys.forEach(function (key) {
+                var message = fields[key].check();
+                if (message) { showError(fields[key], message); problems.push({ key: key, message: message }); }
+                else { clearError(fields[key]); }
+            });
+
+            if (problems.length === 0) { summary.hidden = true; return true; }
+
+            summaryList.textContent = '';
+            problems.forEach(function (p) {
+                var li = document.createElement('li');
+                var a  = document.createElement('a');
+                a.href = '#' + fields[p.key].id;
+                a.textContent = p.message;
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.getElementById(fields[p.key].id).focus();
+                });
+                li.appendChild(a);
+                summaryList.appendChild(li);
+            });
+            summary.hidden = false;
+            summary.focus();             /* announced by screen readers; keyboard users start here */
+            return false;
+        }
+
+        function value(id) { return document.getElementById(id).value.trim(); }
+
+        function mobileMessage() {
+            var v = value('mobile_no');
+            if (v === '') { return 'Enter your mobile number.'; }
+            if (!/^[0-9]{10}$/.test(v)) { return 'Enter a 10-digit mobile number, using digits only.'; }
+            return '';
+        }
+
+        function clearOnInput(fields) {
+            Object.keys(fields).forEach(function (key) {
+                document.getElementById(fields[key].id).addEventListener('input', function () {
+                    if (!fields[key].check()) { clearError(fields[key]); }
+                });
+            });
+        }
+
+        /* ---------- Step 1: mobile + OTP ---------- */
+        var otpForm = document.getElementById('sendOTPForm');
+        if (otpForm) {
+            var otpFields = {
+                mobile_no: { id: 'mobile_no', errorId: 'mobileNoError', check: mobileMessage },
+                otp: { id: 'otp', errorId: 'otpError', check: function () {
+                    return value('otp') === '' ? 'Enter the OTP sent to your mobile number.' : '';
+                } }
+            };
+
+            document.getElementById('sendOTP').addEventListener('click', function () {
+                if (validate(otpFields, ['mobile_no'])) { otpForm.submit(); }
+            });
+            document.getElementById('verifyOtp').addEventListener('click', function () {
+                if (validate(otpFields, ['mobile_no', 'otp'])) { otpForm.submit(); }
+            });
+            /* Enter key = verify */
+            otpForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                if (validate(otpFields, ['mobile_no', 'otp'])) { otpForm.submit(); }
+            });
+            clearOnInput(otpFields);
+        }
+
+        /* ---------- Step 2: profile form ---------- */
+        var profileForm = document.getElementById('profileUpdate');
+        if (profileForm) {
+            var profileFields = {
+                officerName: { id: 'officerName', errorId: 'officerNameError', check: function () {
+                    return value('officerName') === '' ? 'Enter the officer name.' : '';
+                } },
+                designation: { id: 'designation', errorId: 'designationError', check: function () {
+                    return value('designation') === '' ? 'Enter the official designation.' : '';
+                } },
+                email_address: { id: 'email_address', errorId: 'emailAddressError', check: function () {
+                    var input = document.getElementById('email_address');
+                    if (input.value.trim() === '') { return 'Enter your email address.'; }
+                    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim())) {
+                        return 'Enter a valid email address, for example name@example.com.';
+                    }
+                    return '';
+                } },
+                service_retirement_dt: { id: 'service_retirement_dt', errorId: 'serviceRetirementDtError', check: function () {
+                    var v = value('service_retirement_dt');
+                    if (v === '') { return ''; }                      /* optional */
+                    var m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(v);
+                    if (!m) { return 'Enter the date as dd-mm-yyyy, for example 31-03-2035.'; }
+                    var d = new Date(+m[3], +m[2] - 1, +m[1]);
+                    if (d.getFullYear() !== +m[3] || d.getMonth() !== +m[2] - 1 || d.getDate() !== +m[1]) {
+                        return 'Enter a valid date as dd-mm-yyyy.';
+                    }
+                    return '';
+                } }
+            };
+            var profileKeys = Object.keys(profileFields);
+
+            profileForm.addEventListener('submit', function (event) {
+                if (!validate(profileFields, profileKeys)) { event.preventDefault(); }
+            });
+            clearOnInput(profileFields);
+        }
+
+        /* Errors sent back by the server: move focus to the summary */
+        if (!summary.hidden) { summary.focus(); }
+    })();
 </script>
-</html>
+@endpush

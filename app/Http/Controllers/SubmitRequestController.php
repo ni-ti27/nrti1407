@@ -1710,7 +1710,7 @@ class SubmitRequestController extends Controller
         return view('DeptApplicationStatus', compact('status', 'category', 'currentPage', 'perPage'));
     }
 
-    public function statusNR(Request $request)
+    /*public function statusNR(Request $request)
     {
         $search = $request->input('search');
         $deptOfficer = dept_officers_master::where('username', session('username'))->where('is_active', 1)->first();
@@ -1739,6 +1739,43 @@ class SubmitRequestController extends Controller
         })->paginate(10);
 
         return view('AppStatus',compact('status','category'));
+    }*/
+
+    public function statusNR(Request $request)
+    {
+        $search = trim((string) $request->input('search', ''));
+
+        $deptOfficer = dept_officers_master::where('username', session('username'))
+            ->where('is_active', 1)
+            ->firstOrFail();
+
+        $category = 'Received Applications Status';
+        $filter   = 'NR';
+
+        $status = rti_received_application_status::query()
+            ->where(function ($query) use ($deptOfficer) {
+                if ($deptOfficer->role == 1) {
+                    $query->where('applied_dept', ltrim(substr(session('deptId'), 0, 2), '0'));
+                } else {
+                    $query->where('dept_id', session('deptId'));
+                }
+            })
+            ->where(function ($query) use ($deptOfficer) {
+                $query->where('assigned_off1', $deptOfficer->id)
+                    ->orWhere('assigned_off2', $deptOfficer->id);
+            })
+            ->where('reg_no', 'LIKE', '%' . $filter . '%')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('reg_no', 'like', "%{$search}%")
+                    ->orWhere('applicant_name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('date_of_efiling', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('AppStatus', compact('status', 'category'));
     }
 
     public function statusFA(Request $request)

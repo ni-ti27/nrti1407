@@ -38,6 +38,13 @@
 
     @stack('styles')
 </head>
+@php
+    // Officer logins set session('role') (the dashboard already relies on it).
+    // Change this condition if your applicant/officer check is different,
+    // e.g. auth()->guard('officer')->check().
+    $isOfficer = session()->has('role');
+@endphp
+
 <body>
     {{-- Shown only if JavaScript is switched off (menus and text-size tools need it) --}}
     <noscript>
@@ -49,7 +56,11 @@
 
         {{-- Common header (DBIM / GIGW): contains the skip links, banner and main navigation --}}
         @php($dbimAssetsLoaded = true)
-        @include('UsersView.header')
+        @if($isOfficer)
+            @include('OfficerView.Header')
+        @else
+            @include('UsersView.header')
+        @endif
 
         {{-- Target of "Skip to main content". tabindex=-1 lets it receive focus from the skip link. --}}
         <main id="main-content" tabindex="-1" class="py-4">

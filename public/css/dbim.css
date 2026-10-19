@@ -500,7 +500,8 @@ td.text-number,
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.5;
-  color: var(--dbim-key);
+  /* color: var(--dbim-key); */
+  color: var(--dbim-deep-earthy-brown);
   border-bottom: 8px solid transparent;
 }
 .dbim-header__nav .nav-link:hover {
@@ -1925,4 +1926,244 @@ iframe.skiptranslate,
 }
 [data-theme="dark"] .link-outline-btn:hover {
   text-decoration: underline;
+}
+/* ============================================================
+   22. APPLICATION STATS
+   Category list, count badges, report cards.
+   Blue colour group only; high-contrast theme uses the key colour (yellow).
+   Existing variables only. REPLACE the whole old section 22 with this one.
+   ============================================================ */
+
+/* ---- Report cards: plain white card with a clear grey outline,
+        so they stand out from the grey page background ---- */
+.dbim-report-card {
+  overflow: hidden; /* header and rows follow the rounded corners */
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 6px;
+}
+[data-theme="dark"] .dbim-report-card {
+  border-color: var(--dbim-key);
+}
+
+/* ---- Category card header: key colour (#162F6A), white text ---- */
+.card-header.dbim-category-head {
+  padding: 12px 16px;
+  background: var(--dbim-powder-blue);
+  color: #fff; /* 13:1 on #162F6A */
+  border-bottom: 0;
+}
+.dbim-category-head h2 {
+  color: inherit;
+}
+[data-theme="dark"] .card-header.dbim-category-head {
+  background: var(--dbim-linen); /* #23232A panel */
+  color: var(--dbim-key);
+  border-bottom: 2px solid var(--dbim-key);
+}
+
+/* ---- Category list ---- */
+.dbim-category-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px; /* touch target */
+  padding: 10px 16px;
+  background: var(--dbim-inclusive-white);
+  border-bottom: 1px solid var(--dbim-linen);
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  text-decoration: none;
+}
+.dbim-category-list li:last-child .dbim-category-item {
+  border-bottom: 0;
+}
+.dbim-category-item:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+.dbim-category-item:focus-visible {
+  outline-offset: -2px; /* ring stays inside the list */
+}
+
+/* Important: light tint of the Blue group (#D2DFFF), 9.5:1 with the text */
+.dbim-category-item.is-important {
+  background: var(--dbim-azureish-white-bg);
+  border-bottom-color: var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-category-item.is-important:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+  color: var(--dbim-wintergreen-dream);
+}
+
+/* Selected: strong Blue fill (#214AAB), white text, 8:1. Wins over important + hover. */
+.dbim-category-list .dbim-category-item.is-active,
+.dbim-category-list .dbim-category-item.is-active:hover {
+  background: var(--dbim-columbia-blue);
+  border-bottom-color: var(--dbim-columbia-blue);
+  color: #fff;
+}
+
+/* ---- Count badge ---- */
+.dbim-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 2.25em;
+  padding: 2px 10px;
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 1em;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.dbim-category-item.is-important .dbim-count {
+  background: var(--dbim-wintergreen-dream); /* #162F6A, white text 13:1 */
+  border-color: var(--dbim-wintergreen-dream);
+  color: #fff;
+}
+.dbim-category-list .dbim-category-item.is-active .dbim-count {
+  background: #fff;
+  border-color: #fff;
+  color: var(--dbim-wintergreen-dream);
+}
+/* Total records badge in a card header */
+.dbim-count--solid {
+  background: var(--dbim-powder-blue);
+  border-color: var(--dbim-powder-blue);
+  color: #fff;
+}
+
+/* Legend under the list */
+.dbim-category-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 16px;
+  border-top: 1px solid var(--dbim-linen);
+  background: var(--dbim-inclusive-white);
+  font-size: var(--dbim-fs-p2);
+  color: var(--dbim-text-muted);
+}
+.dbim-category-legend__swatch {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 3px;
+  background: var(--dbim-azureish-white-bg);
+}
+
+/* ---- Filter button lines up with the 38px date fields ---- */
+.dbim-filter-btn {
+  min-height: 38px;
+  margin: 0;
+}
+
+/* ---- Results table: no inner scrollbar when everything fits ---- */
+.dbim-report-table {
+  overflow-y: hidden;
+}
+
+/* ---- Empty state icon ---- */
+.dbim-report-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-report-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============ High-contrast theme ============
+   --dbim-wintergreen-dream and --dbim-powder-blue are near-black here, so every
+   rule that used them as a fill or text colour is redone with the key colour (yellow). */
+[data-theme="dark"] .dbim-category-item {
+  border-bottom-color: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-category-item:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  text-decoration: underline;
+}
+/* Important: dark panel tint (#23232A) with a yellow divider */
+[data-theme="dark"] .dbim-category-item.is-important,
+[data-theme="dark"] .dbim-category-item.is-important:hover {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+/* Selected: yellow fill, black text (children set too, so it can never be yellow on yellow) */
+[data-theme="dark"] .dbim-category-list .dbim-category-item.is-active,
+[data-theme="dark"] .dbim-category-list .dbim-category-item.is-active:hover,
+[data-theme="dark"]
+  .dbim-category-list
+  .dbim-category-item.is-active.is-important,
+[data-theme="dark"]
+  .dbim-category-list
+  .dbim-category-item.is-active.is-important:hover {
+  background: var(--dbim-key);
+  border-bottom-color: var(--dbim-key);
+  color: #000;
+  text-decoration: none;
+}
+[data-theme="dark"] .dbim-category-list .dbim-category-item.is-active > span {
+  color: #000;
+}
+
+[data-theme="dark"] .dbim-count {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-category-item.is-important .dbim-count,
+[data-theme="dark"] .dbim-count--solid {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"]
+  .dbim-category-list
+  .dbim-category-item.is-active
+  .dbim-count {
+  background: #000;
+  border-color: #000;
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-category-legend {
+  border-top-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-category-legend__swatch {
+  border-color: var(--dbim-key);
+  background: var(--dbim-linen);
+}
+[data-theme="dark"] .dbim-report-icon {
+  background: none;
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
 }

@@ -31,7 +31,12 @@
                     <form id="loginForm" method="POST" action="{{ route('login') }}" novalidate>
                         @csrf
 
-                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
+                     <div class="alert alert-info dbim-note" role="note">
+                        <p>
+                            <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                        </p>
+
+                    </div>
 
                         {{-- Username --}}
                         <div class="mb-3">
@@ -82,7 +87,7 @@
                                    aria-describedby="passwordError">
                             <div id="passwordError" class="invalid-feedback @error('password') d-block @enderror">@error('password'){{ $message }}@enderror</div>
                         </div>
-
+                        <x-captcha/>
                         {{-- Forgot Password on the left, Login on the right (same order as Tab order).
                              The visually hidden Login button comes first in the form, so pressing
                              Enter in a field still logs in instead of starting a password reset. --}}

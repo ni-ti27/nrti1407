@@ -45,6 +45,14 @@ Route::get('/test-500', function () {
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::middleware(['throttle:captcha_refresh'])->group(function () {
+    Route::get('/security-code/refresh', [CaptchaController::class, 'refresh'])->name('security.refresh');
+});
+
+Route::middleware(['throttle:captcha_audio'])->group(function () {
+    Route::get('/security-code/audio/{key}', [CaptchaController::class, 'audio'])->name('security.audio');
+});
+
 Route::middleware('checkSessionValues')->group(function () {
 
 // First form
@@ -57,14 +65,6 @@ Route::put('/submiteditform/{id}', [userRequestController::class, 'editFormSubmi
 
 Route::get('/submitreqform',[userRequestController::class,'newForm'])->name('submitreqform');;
 Route::post('/submitreqform',[userRequestController::class,'newFormSubmit'])->name('validate.form');
-
-Route::middleware(['throttle:captcha_refresh'])->group(function () {
-    Route::get('/security-code/refresh', [CaptchaController::class, 'refresh'])->name('security.refresh');
-});
-
-Route::middleware(['throttle:captcha_audio'])->group(function () {
-    Route::get('/security-code/audio/{key}', [CaptchaController::class, 'audio'])->name('security.audio');
-});
 
 });
 

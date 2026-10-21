@@ -16,6 +16,7 @@ use Exception;
 use App\Http\Controllers\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use App\Models\State;
+use App\Rules\CaptchaValid;
 
 class AuthNewController extends Controller
 {
@@ -27,6 +28,7 @@ class AuthNewController extends Controller
             'username'   => 'required|string',
             'systemPass' => 'required_if:action,!=forgot_password|string|nullable',
             'password'   => 'required_if:action,!=forgot_password|string|nullable',
+            'captcha'   => ['required', new CaptchaValid]
         ]);
 
         $credentials = $request->only('username', 'password','systemPass');

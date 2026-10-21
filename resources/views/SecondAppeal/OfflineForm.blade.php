@@ -1,1201 +1,876 @@
-<!DOCTYPE html>
-    <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+{{-- ============================================================
+     Second Appeal Form (Offline Request)  (DBIM / GIGW 3.0, keyboard accessible, six steps)
+     Uses layouts/app.blade.php for <head>, header, <main>, footer
+     (the footer now comes from the layout, UsersView.footer).
+     Same pattern as the RTI New Request form: dbim-form-card, error summary,
+     stepper, UsersView.partials.dbim-form-scripts. No inline styles, no jQuery.
+     All original fields, names and ids are kept.
+     ============================================================ --}}
+@extends('layouts.app')
 
-        <title>First Form Submission</title>
+@section('title', 'Second Appeal (Offline Request) | RTI Online, Government of Goa')
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    </head>
+@section('content')
+@php
+    $star = '<span class="dbim-required" aria-hidden="true">*</span>';
+@endphp
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-6">
 
-    <style>
-        .mainContainer
-        {
-            /* border : 2px solid black; */
-            border-top: none;
-        }
-    </style>
+            @include('partials.flash-messages')
 
-    <body>
-    @include('UsersView.header')
-    <div class="container mt-5" style="margin-top: 0 !important">
-        <div class="mainContainer row justify-content-center">
-            <div class="col-md-10" style="margin: 20px 20px">
-                <h4>Second Appeal Form (Offline Request)</h4><br>
-                @if(Session::has('success'))
-                    <div class="alert alert-success text-center">
-                        {{Session::get('success')}}
+            <div class="card dbim-form-card">
+                <h1 class="card-header h4 mb-0">Second Appeal Form (Offline Request)</h1>
+
+                <div class="card-body">
+
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->all() as $message)
+                                <li>{{ $message }}</li>
+                            @endforeach
+                        </ul>
                     </div>
-                @endif
 
-                @if(Session::has('warning'))
-                    <div class="alert alert-warning text-center">
-                        {{Session::get('warning')}}
+                    <div class="alert alert-info dbim-note" role="note">
+                        <p>
+                            <strong>Note:</strong> Fill in this form in six steps. Use <strong>Next</strong> and
+                            <strong>Back</strong> to move between steps; what you have entered is kept.
+                        </p>
+                        <p>
+                            Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
+                            The Submit button is enabled only when all required fields are complete.
+                        </p>
                     </div>
-                @endif
 
-                @if(Session::has('error'))
-                    <div class="alert alert-error text-center">
-                        {{Session::get('error')}}
-                    </div>
-                @endif
+                    <ol id="stepNav" class="dbim-stepper" aria-hidden="true"></ol>
+                    <p id="stepCount" class="dbim-step-count" aria-live="polite"></p>
 
-                <form method="post" enctype="multipart/form-data" action="{{ route('secondAppealOfflineSave') }}" novalidate>
-                @csrf
+                    <form id="secondAppealOfflineForm" method="post" enctype="multipart/form-data"
+                          action="{{ route('secondAppealOfflineSave') }}" novalidate>
+                        @csrf
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Public Authority Details:</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-4 mb-2 ">
-                                        <label>Select Department/Public Authority<span class="text-danger">*</span></label>
-                                        <select name="applied_dept" class="form-control" id="applied_dept">
-                                            <option value="">Select Department</option>
-                                            @foreach ($deptData as $id => $department)
-                                                <option value="{{ $department->dept_code }}" {{ old('applied_dept') == $department->dept_code ? 'selected' : '' }}>
-                                                    {{ $department->department }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        @error('applied_dept')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                        {{-- ===== Step 1: Public Authority Details ===== --}}
+                        <section data-step aria-labelledby="step1Title">
+                            <h2 id="step1Title" class="h5 dbim-text-key mb-3" tabindex="-1">Public authority details</h2>
 
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="applied_subdept">Select Office<span class="text-danger">*</span></label>
-                                        <select name="applied_subdept" class="form-control" id="applied_subdept">
-                                            <option value="">Select Office</option>
-                                        </select>
-                                        @error('applied_subdept')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="applied_office">Select Sub Office<span class="text-danger">*</span></label>
-                                        <select name="applied_office" class="form-control" id="applied_office">
-                                            <option value="">Select Sub Office</option>
-                                        </select>
-                                        @error('applied_office')
-                                        <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label for="applied_dept" class="form-label fw-bold">Select Department/Public Authority {!! $star !!}</label>
+                                <select id="applied_dept" name="applied_dept"
+                                        class="form-select @error('applied_dept') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a department or public authority."
+                                        required aria-required="true" aria-describedby="applied_deptError">
+                                    <option value="">Select Department</option>
+                                    @foreach ($deptData as $id => $department)
+                                        <option value="{{ $department->dept_code }}" {{ (string) old('applied_dept') === (string) $department->dept_code ? 'selected' : '' }}>{{ $department->department }}</option>
+                                    @endforeach
+                                </select>
+                                <div id="applied_deptError" class="invalid-feedback @error('applied_dept') d-block @enderror">@error('applied_dept'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Personal Details of RTI Applicant</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="name">Applicant Name<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="name" id="name" placeholder="Firstname Lastname">
-                                    </div>
 
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="gender">Gender<span class="text-danger">*</span></label>
-                                        <select class="form-control" name="gender" id="gender">
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="other">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <label for="address_line1">Address<span class="text-danger">*</span></label>
-                                    <div class="form-group col-md-4 mb-2">
-                                        <input type="text" class="form-control" name="address_line1" id="address_line1" placeholder="Address Line 1">
-                                    </div>
-                                    <div class="form-group col-md-4 mb-2">
-                                        <input type="text" class="form-control" name="address_line2" id="address_line2" placeholder="Address Line 2">
-                                    </div>
-                                    <div class="form-group col-md-4 mb-2">
-                                        <input type="text" class="form-control" name="address_line3" id="address_line3" placeholder="Address Line 3">
-                                    </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="pincode">Pincode<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="pincode" id="pincode" placeholder="Pin Code">
-                                    </div>
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="country">Country</label>
-                                        <select class="form-control @error('country') is-invalid @enderror" name="country" id="country">
-                                            <option value="1">India</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="state">State<span class="text-danger">*</span></label>
-                                        <select name="state" class="form-control" id="state">
-                                            <option value="6">Goa</option>
-                                            <option value="0">Other</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="district">District<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('district') is-invalid @enderror" name="district" id="district">
-                                        <option value="">Select District</option>
-                                        </select>
-                                        @error('district')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="taluka">Taluka<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('taluka') is-invalid @enderror" name="taluka" id="taluka">
-                                            <option value="">Select Taluka</option>
-                                        </select>
-                                        @error('taluka')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label for="village">Village<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('village') is-invalid @enderror" name="village" id="village">
-                                            <option value="">Select Village</option>
-                                        </select>
-                                        @error('village')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="form-group mb-2 col-md-4">
-                                        <label>Phone Number</label>
-                                        <input type="text" class="form-control" name="phone_no" id="phone_no" placeholder="0832 2347874">
-                                    </div>
-
-                                    <div class="form-group mb-2 col-md-4">
-                                        <label>Mobile Number<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="mobile_no" id="mobile_no" placeholder="+91 9865478864">
-                                    </div>
-
-                                    <div class="form-group mb-2 col-md-4">
-                                        <label>Email Address<span class="text-danger">*</span></label>
-                                        <input type="email" class="form-control" name="email_id" id="email_id">
-                                    </div>
-                                </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label>Citizenship</label>
-                                        <input type="text" readonly class="form-control" name="origin_country" id="origin_country" value="Indian" placeholder="Bharat">
-                                    </div>
-
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label>Education<span class="text-danger">*</span></label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="edu_status" id="edu_status1" value="1">
-                                            <label class="form-check-label" for="edu_status1">Educated</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="edu_status" id="edu_status2" value="0">
-                                            <label class="form-check-label" for="edu_status2">Non-Educated</label>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-md-4 mb-2">
-                                        <label>Is Applicant Below Poverty Line?<span class="text-danger">*</span></label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="is_bpl" id="is_not_bpl" value="0">
-                                            <label class="form-check-label" for="is_not_bpl">No</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="is_bpl" id="is_bpl" value="1">
-                                            <label class="form-check-label" for="is_bpl">Yes</label>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label for="applied_subdept" class="form-label fw-bold">Select Office {!! $star !!}</label>
+                                <select id="applied_subdept" name="applied_subdept"
+                                        class="form-select @error('applied_subdept') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select an office."
+                                        required aria-required="true" aria-describedby="applied_subdeptError">
+                                    <option value="">Select Office</option>
+                                </select>
+                                <div id="applied_subdeptError" class="invalid-feedback @error('applied_subdept') d-block @enderror">@error('applied_subdept'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <br>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Details of RTI Application</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="reg_no">RTI Request Registration Number<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="reg_no" id="reg_no" placeholder="Requested Registration Number">
-                                        @error('reg_no')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="reg_date">RTI Request Filed on (Date)<span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control reservationdate" name="reg_date" id="reg_date" data-toggle="datetimepicker" max="{{ date('Y-m-d') }}">
-                                        @error('reg_date')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="pio_name">PIO Name<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('pio_name') is-invalid @enderror" name="pio_name" id="pio_name">
-                                        <option value="">Select Pio User</option>
-                                        </select>
-                                        @error('pio_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="pio_address">PIO Address</label>
-                                        <select class="form-control @error('pio_address') is-invalid @enderror" name="pio_address" id="pio_address">
-                                        <option value="">Select Pio User</option>
-                                        </select>
-                                        @error('pio_address')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="pio_response_display">Nature of Response of PIO (Ground for Appeal)<span class="text-danger">*</span></label>
-                                        <select name="pio_response_display" class="form-control" id="pio_response_display">
-                                            <option value="">Select Department</option>
-                                            @foreach ($natureOfResponse as $id => $resp)
-                                                <option value="{{ $resp->id }}" {{ old('pio_response_display') == $resp->reason ? 'selected' : '' }}>
-                                                    {{ $resp->reason }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label>Copy of RTI Application (Only Pdf)<span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control @error('rti_application_doc') is-invalid @enderror" name="rti_application_doc" id="rti_application_doc" placeholder="Choose file" value="{{old('rti_application_doc')}}">
-                                        @error('rti_application_doc')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-8 mb-2">
-                                    <label for="user_text">Requested Text<span class="text-danger">*</span></label>
-                                    <textarea class="form-control" name="user_text" id="user_text" style="height: 180px"></textarea>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label for="applied_office" class="form-label fw-bold">Select Sub Office {!! $star !!}</label>
+                                <select id="applied_office" name="applied_office"
+                                        class="form-select @error('applied_office') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a sub office."
+                                        required aria-required="true" aria-describedby="applied_officeError">
+                                    <option value="">Select Sub Office</option>
+                                </select>
+                                <div id="applied_officeError" class="invalid-feedback @error('applied_office') d-block @enderror">@error('applied_office'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
+                        </section>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Details of First Appeal Application</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="fa_reg_no">RTI First Appeal Registration Number<span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control" name="fa_reg_no" id="fa_reg_no" placeholder="Requested Registration Number">
-                                    </div>
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="fa_reg_date">RTI FA Request Filed on (Date)<span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" name="fa_reg_date" id="fa_reg_date" data-toggle="datetimepicker">
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="faa_name">FAA User Name<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('faa_name') is-invalid @enderror" name="faa_name" id="faa_name">
-                                        <option value="">Select FAA User</option>
-                                        </select>
-                                        @error('faa_name')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
+                        {{-- ===== Step 2: Personal Details of RTI Applicant ===== --}}
+                        <section data-step aria-labelledby="step2Title" hidden>
+                            <h2 id="step2Title" class="h5 dbim-text-key mb-3" tabindex="-1">Personal details of RTI applicant</h2>
 
-                                    </div>
-                                    <div class="form-group col-md-6 mb-2">
-                                        <label for="faa_address">FAA User Address<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('faa_address') is-invalid @enderror" name="faa_address" id="faa_address">
-                                        <option value="">Select FAA User</option>
-                                        </select>
-                                        @error('faa_address')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-offset-4 col-md-4 col-offset-4 mb-2">
-                                        <label>Copy of Reply of FA (Only Pdf)<span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control @error('fa_application_doc') is-invalid @enderror" name="fa_application_doc" id="fa_application_doc" placeholder="Choose file" value="{{old('fa_application_doc')}}">
-                                        @error('fa_application_doc')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-8 mb-2">
-                                        <label for="faa_requested_text">Requested Text<span class="text-danger">*</span></label>
-                                        <textarea class="form-control" name="faa_requested_text" id="faa_requested_text" style="height: 140px"></textarea>
-                                    </div>
-                                </div>
-                                <br>
-
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-bold">Applicant Name {!! $star !!}</label>
+                                <input type="text" id="name" name="name" value="{{ old('name') }}"
+                                       placeholder="Firstname Lastname" autocomplete="name"
+                                       class="form-control @error('name') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the applicant name."
+                                       required aria-required="true" aria-describedby="nameError">
+                                <div id="nameError" class="invalid-feedback @error('name') d-block @enderror">@error('name'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Second Appeal Details</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Nature of Response of FAA (Ground for Appeal)<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('faa_resp_dropdown') is-invalid @enderror" name="faa_resp_dropdown" id="faa_resp_dropdown">
-                                            <option value="">Select Response</option>
-                                            <option value="1" {{ old('faa_resp_dropdown') == '1' ? 'selected' : '' }}>Refused access to the Information Requested</option>
-                                            <option value="2" {{ old('faa_resp_dropdown') == '2' ? 'selected' : '' }}>No Response within the Time Limit</option>
-                                            <option value="3" {{ old('faa_resp_dropdown') == '3' ? 'selected' : '' }}>Unreasonable Amount of Fee is Required to Pay</option>
-                                            <option value="4" {{ old('faa_resp_dropdown') == '4' ? 'selected' : '' }}>Provided Incomplete, Misleading or False Information</option>
-                                            <option value="5" {{ old('faa_resp_dropdown') == '5' ? 'selected' : '' }}>Any Other Ground</option>
-                                        </select>
-                                        @error('faa_resp_dropdown')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                            <div class="mb-3">
+                                <label for="gender" class="form-label fw-bold">Gender {!! $star !!}</label>
+                                <select id="gender" name="gender"
+                                        class="form-select @error('gender') is-invalid @enderror"
+                                        required aria-required="true" aria-describedby="genderError">
+                                    <option value="male" {{ old('gender', 'male') === 'male' ? 'selected' : '' }}>Male</option>
+                                    <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
+                                    <option value="other" {{ old('gender') === 'other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                                <div id="genderError" class="invalid-feedback @error('gender') d-block @enderror">@error('gender'){{ $message }}@enderror</div>
+                            </div>
 
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Copy of Reply of FA (Only Pdf)<span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control @error('sa_application_doc') is-invalid @enderror" name="sa_application_doc" id="sa_application_doc" placeholder="Choose file" value="{{old('sa_application_doc')}}">
-                                        @error('sa_application_doc')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                            <fieldset class="mb-3">
+                                <legend class="dbim-legend fw-bold">Address {!! $star !!}</legend>
+
+                                <div class="mb-2">
+                                    <label for="address_line1" class="visually-hidden">Address Line 1</label>
+                                    <input type="text" id="address_line1" name="address_line1" value="{{ old('address_line1') }}"
+                                           placeholder="Address Line 1" autocomplete="address-line1"
+                                           class="form-control @error('address_line1') is-invalid @enderror"
+                                           data-validate data-required="true" data-msg="Enter Address Line 1."
+                                           required aria-required="true" aria-describedby="address_line1Error">
+                                    <div id="address_line1Error" class="invalid-feedback @error('address_line1') d-block @enderror">@error('address_line1'){{ $message }}@enderror</div>
                                 </div>
-                                <br>
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Supporting Document 1</label>
-                                        <span for="sa_document1" style="color: blue; font-size: 12px">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</span>
-                                        <input type="file" class="form-control @error('sa_document1') is-invalid @enderror" name="sa_document1" id="sa_document1" placeholder="Choose file" value="{{old('sa_document1')}}">
-                                        @error('sa_document1')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Supporting Document 2</label>
-                                        <span for="sa_document2" style="color: blue; font-size: 12px">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</span>
-                                        <input type="file" class="form-control @error('sa_document2') is-invalid @enderror" name="sa_document2" id="sa_document2" placeholder="Choose file" value="{{old('sa_document2')}}">
-                                        @error('sa_document2')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                                <div class="mb-2">
+                                    <label for="address_line2" class="visually-hidden">Address Line 2</label>
+                                    <input type="text" id="address_line2" name="address_line2" value="{{ old('address_line2') }}"
+                                           placeholder="Address Line 2" autocomplete="address-line2"
+                                           class="form-control @error('address_line2') is-invalid @enderror"
+                                           data-validate data-required="true" data-msg="Enter Address Line 2."
+                                           required aria-required="true" aria-describedby="address_line2Error">
+                                    <div id="address_line2Error" class="invalid-feedback @error('address_line2') d-block @enderror">@error('address_line2'){{ $message }}@enderror</div>
                                 </div>
-                                <br>
-                                <!-- _supporting_text -->
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Supporting Text for Document 1</label>
-                                        <br>
-                                        <span style="font-size: 12px; color: blue;" for="">Only alphabets A-Z a-z number 0-9 and special characters , . - _ ( ) / @ : & \ % are allowed in Text for RTI Request application</span>
-                                        <textarea style="height: 100px" value="{{ old('sa_document1_supporting_text')}}" class="form-control @error('sa_document1_supporting_text') is-invalid @enderror" maxlength="3000" name="sa_document1_supporting_text" id="sa_document1_supporting_text"></textarea>
-                                        @error('sa_document1_supporting_text')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Supporting Text for Document 2</label>
-                                        <br>
-                                        <span style="font-size: 12px; color: blue;" for="">Only alphabets A-Z a-z number 0-9 and special characters , . - _ ( ) / @ : & \ % are allowed in Text for RTI Request application</span>
-                                        <textarea style="height: 100px" value="{{ old('sa_document2_supporting_text')}}" class="form-control @error('sa_document2_supporting_text') is-invalid @enderror" maxlength="3000" name="sa_document2_supporting_text" id="sa_document2_supporting_text"></textarea>
-                                        @error('sa_document2_supporting_text')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
+                                <div class="mb-0">
+                                    <label for="address_line3" class="visually-hidden">Address Line 3</label>
+                                    <input type="text" id="address_line3" name="address_line3" value="{{ old('address_line3') }}"
+                                           placeholder="Address Line 3" autocomplete="address-line3"
+                                           class="form-control @error('address_line3') is-invalid @enderror"
+                                           data-validate data-required="true" data-msg="Enter Address Line 3."
+                                           required aria-required="true" aria-describedby="address_line3Error">
+                                    <div id="address_line3Error" class="invalid-feedback @error('address_line3') d-block @enderror">@error('address_line3'){{ $message }}@enderror</div>
                                 </div>
+                            </fieldset>
+
+                            <div class="mb-3">
+                                <label for="pincode" class="form-label fw-bold">Pincode {!! $star !!}</label>
+                                <input type="text" id="pincode" name="pincode" value="{{ old('pincode') }}"
+                                       placeholder="Pin Code" inputmode="numeric" autocomplete="postal-code"
+                                       class="form-control @error('pincode') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the pincode."
+                                       required aria-required="true" aria-describedby="pincodeError">
+                                <div id="pincodeError" class="invalid-feedback @error('pincode') d-block @enderror">@error('pincode'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Applicant Personal Information</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>Id Proof<span class="text-danger">*</span></label>
-                                        <select class="form-control @error('id_proof') is-invalid @enderror" name="id_proof" id="id_proof">
-                                            <option value="">Select Document</option>
-                                            <!-- <option value="1" {{ old('id_proof') == '1' ? 'selected' : '' }}>Aadhar Card</option> -->
-                                            <option value="2" {{ old('id_proof') == '2' ? 'selected' : '' }}>Pan Card</option>
-                                            <option value="3" {{ old('id_proof') == '3' ? 'selected' : '' }}>Driving Liscence</option>
-                                            <option value="4" {{ old('id_proof') == '4' ? 'selected' : '' }}>Ration Card</option>
-                                            <option value="5" {{ old('id_proof') == '5' ? 'selected' : '' }}>Govt. Id Card (if any)</option>
-                                            <option value="5" {{ old('id_proof') == '6' ? 'selected' : '' }}>Other</option>
-                                        </select>
-                                        @error('id_proof')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-5 mb-2">
-                                        <label>ID Proof File<span class="text-danger">*</span></label>
-                                        <span for="id_proof_file" style="color: blue; font-size: 12px">(File Type .pdf, .jpg, .jpeg)</span>
-                                        <input type="file" class="form-control @error('id_proof_file') is-invalid @enderror" name="id_proof_file" id="id_proof_file" placeholder="Choose file" value="{{old('id_proof_file')}}">
-                                        @error('id_proof_file')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                </div>
+
+                            <div class="mb-3">
+                                <label for="country" class="form-label fw-bold">Country</label>
+                                <select id="country" name="country" class="form-select @error('country') is-invalid @enderror"
+                                        aria-describedby="countryError">
+                                    <option value="1">India</option>
+                                </select>
+                                <div id="countryError" class="invalid-feedback @error('country') d-block @enderror">@error('country'){{ $message }}@enderror</div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <h5 class="card-header">Declaration</h5>
-                            <div class="card-body">
-                                <div class="row justify-content-center">
-                                    <div class="form-group col-md-7 mb-2">
-                                        <input type="checkbox" id="declaration" name="declaration" class="custom-control-input" onclick="enableSubmit()">
-                                        <label class="custom-control-label" for="declaration">The Information as provided above is true to the best of my knowledge</label>
-                                    </div>
-                                </div>
+
+                            <div class="mb-3">
+                                <label for="state" class="form-label fw-bold">State {!! $star !!}</label>
+                                <select id="state" name="state" class="form-select @error('state') is-invalid @enderror"
+                                        required aria-required="true" aria-describedby="stateError">
+                                    <option value="6" {{ (string) old('state', '6') === '6' ? 'selected' : '' }}>Goa</option>
+                                    <option value="0" {{ (string) old('state') === '0' ? 'selected' : '' }}>Other</option>
+                                </select>
+                                <div id="stateError" class="invalid-feedback @error('state') d-block @enderror">@error('state'){{ $message }}@enderror</div>
                             </div>
+
+                            <div class="mb-3">
+                                <label for="district" class="form-label fw-bold">District {!! $star !!}</label>
+                                <select id="district" name="district" class="form-select @error('district') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a district."
+                                        required aria-required="true" aria-describedby="districtError">
+                                    <option value="">Select District</option>
+                                </select>
+                                <div id="districtError" class="invalid-feedback @error('district') d-block @enderror">@error('district'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="taluka" class="form-label fw-bold">Taluka {!! $star !!}</label>
+                                <select id="taluka" name="taluka" class="form-select @error('taluka') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a taluka."
+                                        required aria-required="true" aria-describedby="talukaError">
+                                    <option value="">Select Taluka</option>
+                                </select>
+                                <div id="talukaError" class="invalid-feedback @error('taluka') d-block @enderror">@error('taluka'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="village" class="form-label fw-bold">Village {!! $star !!}</label>
+                                <select id="village" name="village" class="form-select @error('village') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a village."
+                                        required aria-required="true" aria-describedby="villageError">
+                                    <option value="">Select Village</option>
+                                </select>
+                                <div id="villageError" class="invalid-feedback @error('village') d-block @enderror">@error('village'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="phone_no" class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" id="phone_no" name="phone_no" value="{{ old('phone_no') }}"
+                                       placeholder="0832 2347874" autocomplete="tel"
+                                       class="form-control @error('phone_no') is-invalid @enderror"
+                                       aria-describedby="phone_noError">
+                                <div id="phone_noError" class="invalid-feedback @error('phone_no') d-block @enderror">@error('phone_no'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="mobile_no" class="form-label fw-bold">Mobile Number {!! $star !!}</label>
+                                <input type="tel" id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
+                                       placeholder="+91 9865478864" autocomplete="tel"
+                                       class="form-control @error('mobile_no') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the mobile number."
+                                       required aria-required="true" aria-describedby="mobile_noError">
+                                <div id="mobile_noError" class="invalid-feedback @error('mobile_no') d-block @enderror">@error('mobile_no'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email_id" class="form-label fw-bold">Email Address {!! $star !!}</label>
+                                <input type="email" id="email_id" name="email_id" value="{{ old('email_id') }}"
+                                       placeholder="name@example.com" autocomplete="email"
+                                       class="form-control @error('email_id') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the email address."
+                                       required aria-required="true" aria-describedby="email_idError">
+                                <div id="email_idError" class="invalid-feedback @error('email_id') d-block @enderror">@error('email_id'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="origin_country" class="form-label fw-bold">Citizenship</label>
+                                <input type="text" id="origin_country" name="origin_country" value="Indian"
+                                       readonly aria-readonly="true" class="form-control">
+                            </div>
+
+                            <fieldset class="mb-3">
+                                <legend class="dbim-legend fw-bold">Education {!! $star !!}</legend>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="edu_status" id="edu_status" value="1"
+                                           data-validate aria-describedby="edu_statusError" {{ (string) old('edu_status') === '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="edu_status">Educated</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="edu_status" id="edu_status2" value="0"
+                                           {{ (string) old('edu_status') === '0' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="edu_status2">Non-Educated</label>
+                                </div>
+                                <div id="edu_statusError" class="invalid-feedback @error('edu_status') d-block @enderror">@error('edu_status'){{ $message }}@enderror</div>
+                            </fieldset>
+
+                            <fieldset class="mb-3">
+                                <legend class="dbim-legend fw-bold">Is Applicant Below Poverty Line? {!! $star !!}</legend>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="is_bpl" id="is_not_bpl" value="0"
+                                           data-validate aria-describedby="is_not_bplError" {{ (string) old('is_bpl') === '0' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_not_bpl">No</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="is_bpl" id="is_bpl" value="1"
+                                           {{ (string) old('is_bpl') === '1' ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_bpl">Yes</label>
+                                </div>
+                                <div id="is_not_bplError" class="invalid-feedback @error('is_bpl') d-block @enderror">@error('is_bpl'){{ $message }}@enderror</div>
+                            </fieldset>
+                        </section>
+
+                        {{-- ===== Step 3: Details of RTI Application ===== --}}
+                        <section data-step aria-labelledby="step3Title" hidden>
+                            <h2 id="step3Title" class="h5 dbim-text-key mb-3" tabindex="-1">Details of RTI application</h2>
+
+                            <div class="mb-3">
+                                <label for="reg_no" class="form-label fw-bold">RTI Request Registration Number {!! $star !!}</label>
+                                <input type="text" id="reg_no" name="reg_no" value="{{ old('reg_no') }}"
+                                       placeholder="Requested Registration Number"
+                                       class="form-control @error('reg_no') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the RTI request registration number."
+                                       required aria-required="true" aria-describedby="reg_noError">
+                                <div id="reg_noError" class="invalid-feedback @error('reg_no') d-block @enderror">@error('reg_no'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="reg_date" class="form-label fw-bold">RTI Request Filed on (Date) {!! $star !!}</label>
+                                <input type="date" id="reg_date" name="reg_date" value="{{ old('reg_date') }}" max="{{ date('Y-m-d') }}"
+                                       class="form-control @error('reg_date') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the date the RTI request was filed."
+                                       required aria-required="true" aria-describedby="reg_dateError">
+                                <div id="reg_dateError" class="invalid-feedback @error('reg_date') d-block @enderror">@error('reg_date'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pio_name" class="form-label fw-bold">PIO Name {!! $star !!}</label>
+                                {{-- Shown as a read-only box; the id the server expects goes in the hidden field --}}
+                                <input type="hidden" id="pio_name_value" name="pio_name" value="{{ old('pio_name') }}">
+                                <input type="text" id="pio_name" readonly aria-readonly="true"
+                                       placeholder="Filled in automatically from the selected office"
+                                       class="form-control @error('pio_name') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="No PIO found for the selected office."
+                                       required aria-required="true" aria-describedby="pio_nameError">
+                                <div id="pio_nameError" class="invalid-feedback @error('pio_name') d-block @enderror">@error('pio_name'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pio_address" class="form-label fw-bold">PIO Address</label>
+                                <input type="hidden" id="pio_address_value" name="pio_address" value="{{ old('pio_address') }}">
+                                <input type="text" id="pio_address" readonly aria-readonly="true"
+                                       placeholder="Filled in automatically from the selected office"
+                                       class="form-control @error('pio_address') is-invalid @enderror"
+                                       aria-describedby="pio_addressError">
+                                <div id="pio_addressError" class="invalid-feedback @error('pio_address') d-block @enderror">@error('pio_address'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="pio_response_display" class="form-label fw-bold">Nature of Response of PIO (Ground for Appeal) {!! $star !!}</label>
+                                <select id="pio_response_display" name="pio_response_display"
+                                        class="form-select @error('pio_response_display') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select the ground for appeal for the RTI application."
+                                        required aria-required="true" aria-describedby="pio_response_displayError">
+                                    <option value="">Select Department</option>
+                                    @foreach ($natureOfResponse as $id => $resp)
+                                        <option value="{{ $resp->id }}" {{ (string) old('pio_response_display') === (string) $resp->id ? 'selected' : '' }}>{{ $resp->reason }}</option>
+                                    @endforeach
+                                </select>
+                                <div id="pio_response_displayError" class="invalid-feedback @error('pio_response_display') d-block @enderror">@error('pio_response_display'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="rti_application_doc" class="form-label fw-bold">Copy of RTI Application (Only Pdf) {!! $star !!}</label>
+                                <input type="file" id="rti_application_doc" name="rti_application_doc" accept="application/pdf,.pdf"
+                                       class="form-control @error('rti_application_doc') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Choose the RTI application PDF."
+                                       required aria-required="true" aria-describedby="rti_application_docHelp rti_application_docError">
+                                <div id="rti_application_docHelp" class="form-text">Only PDF files up to 5 MB are accepted.</div>
+                                <div id="rti_application_docError" class="invalid-feedback @error('rti_application_doc') d-block @enderror">@error('rti_application_doc'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="user_text" class="form-label fw-bold">Requested Text {!! $star !!}</label>
+                                <textarea id="user_text" name="user_text" rows="7"
+                                          class="form-control @error('user_text') is-invalid @enderror"
+                                          data-validate data-required="true" data-msg="Enter the supporting text for the RTI application."
+                                          required aria-required="true" aria-describedby="user_textError">{{ old('user_text') }}</textarea>
+                                <div id="user_textError" class="invalid-feedback @error('user_text') d-block @enderror">@error('user_text'){{ $message }}@enderror</div>
+                            </div>
+                        </section>
+
+                        {{-- ===== Step 4: Details of First Appeal Application ===== --}}
+                        <section data-step aria-labelledby="step4Title" hidden>
+                            <h2 id="step4Title" class="h5 dbim-text-key mb-3" tabindex="-1">Details of first appeal application</h2>
+
+                            <div class="mb-3">
+                                <label for="fa_reg_no" class="form-label fw-bold">RTI First Appeal Registration Number {!! $star !!}</label>
+                                <input type="text" id="fa_reg_no" name="fa_reg_no" value="{{ old('fa_reg_no') }}"
+                                       placeholder="Requested Registration Number"
+                                       class="form-control @error('fa_reg_no') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the first appeal registration number."
+                                       required aria-required="true" aria-describedby="fa_reg_noError">
+                                <div id="fa_reg_noError" class="invalid-feedback @error('fa_reg_no') d-block @enderror">@error('fa_reg_no'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fa_reg_date" class="form-label fw-bold">RTI FA Request Filed on (Date) {!! $star !!}</label>
+                                <input type="date" id="fa_reg_date" name="fa_reg_date" value="{{ old('fa_reg_date') }}"
+                                       class="form-control @error('fa_reg_date') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Enter the date the first appeal was filed."
+                                       required aria-required="true" aria-describedby="fa_reg_dateError">
+                                <div id="fa_reg_dateError" class="invalid-feedback @error('fa_reg_date') d-block @enderror">@error('fa_reg_date'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="faa_name" class="form-label fw-bold">FAA User Name {!! $star !!}</label>
+                                {{-- Shown as a read-only box; the id the server expects goes in the hidden field --}}
+                                <input type="hidden" id="faa_name_value" name="faa_name" value="{{ old('faa_name') }}">
+                                <input type="text" id="faa_name" readonly aria-readonly="true"
+                                       placeholder="Filled in automatically from the selected office"
+                                       class="form-control @error('faa_name') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="No FAA user found for the selected office."
+                                       required aria-required="true" aria-describedby="faa_nameError">
+                                <div id="faa_nameError" class="invalid-feedback @error('faa_name') d-block @enderror">@error('faa_name'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="faa_address" class="form-label fw-bold">FAA User Address {!! $star !!}</label>
+                                <input type="hidden" id="faa_address_value" name="faa_address" value="{{ old('faa_address') }}">
+                                <input type="text" id="faa_address" readonly aria-readonly="true"
+                                       placeholder="Filled in automatically from the selected office"
+                                       class="form-control @error('faa_address') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="No FAA user address found for the selected office."
+                                       required aria-required="true" aria-describedby="faa_addressError">
+                                <div id="faa_addressError" class="invalid-feedback @error('faa_address') d-block @enderror">@error('faa_address'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fa_application_doc" class="form-label fw-bold">Copy of Reply of FA (Only Pdf) {!! $star !!}</label>
+                                <input type="file" id="fa_application_doc" name="fa_application_doc" accept="application/pdf,.pdf"
+                                       class="form-control @error('fa_application_doc') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Choose the reply of FA PDF."
+                                       required aria-required="true" aria-describedby="fa_application_docHelp fa_application_docError">
+                                <div id="fa_application_docHelp" class="form-text">Only PDF files up to 5 MB are accepted.</div>
+                                <div id="fa_application_docError" class="invalid-feedback @error('fa_application_doc') d-block @enderror">@error('fa_application_doc'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="faa_requested_text" class="form-label fw-bold">Requested Text {!! $star !!}</label>
+                                <textarea id="faa_requested_text" name="faa_requested_text" rows="6"
+                                          class="form-control @error('faa_requested_text') is-invalid @enderror"
+                                          data-validate data-required="true" data-msg="Enter the requested text."
+                                          required aria-required="true" aria-describedby="faa_requested_textError">{{ old('faa_requested_text') }}</textarea>
+                                <div id="faa_requested_textError" class="invalid-feedback @error('faa_requested_text') d-block @enderror">@error('faa_requested_text'){{ $message }}@enderror</div>
+                            </div>
+                        </section>
+
+                        {{-- ===== Step 5: Second Appeal Details + Applicant Personal Information ===== --}}
+                        <section data-step aria-labelledby="step5Title" hidden>
+                            <h2 id="step5Title" class="h5 dbim-text-key mb-3" tabindex="-1">Second appeal details</h2>
+
+                            <div class="mb-3">
+                                <label for="faa_resp_dropdown" class="form-label fw-bold">Nature of Response of FAA (Ground for Appeal) {!! $star !!}</label>
+                                <select id="faa_resp_dropdown" name="faa_resp_dropdown"
+                                        class="form-select @error('faa_resp_dropdown') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select a response from the list."
+                                        required aria-required="true" aria-describedby="faa_resp_dropdownError">
+                                    <option value="">Select Response</option>
+                                    <option value="1" {{ old('faa_resp_dropdown') == '1' ? 'selected' : '' }}>Refused access to the Information Requested</option>
+                                    <option value="2" {{ old('faa_resp_dropdown') == '2' ? 'selected' : '' }}>No Response within the Time Limit</option>
+                                    <option value="3" {{ old('faa_resp_dropdown') == '3' ? 'selected' : '' }}>Unreasonable Amount of Fee is Required to Pay</option>
+                                    <option value="4" {{ old('faa_resp_dropdown') == '4' ? 'selected' : '' }}>Provided Incomplete, Misleading or False Information</option>
+                                    <option value="5" {{ old('faa_resp_dropdown') == '5' ? 'selected' : '' }}>Any Other Ground</option>
+                                </select>
+                                <div id="faa_resp_dropdownError" class="invalid-feedback @error('faa_resp_dropdown') d-block @enderror">@error('faa_resp_dropdown'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sa_application_doc" class="form-label fw-bold">Copy of Reply of FA (Only Pdf) {!! $star !!}</label>
+                                <input type="file" id="sa_application_doc" name="sa_application_doc" accept="application/pdf,.pdf"
+                                       class="form-control @error('sa_application_doc') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Choose the PDF file."
+                                       required aria-required="true" aria-describedby="sa_application_docHelp sa_application_docError">
+                                <div id="sa_application_docHelp" class="form-text">Only PDF files up to 5 MB are accepted.</div>
+                                <div id="sa_application_docError" class="invalid-feedback @error('sa_application_doc') d-block @enderror">@error('sa_application_doc'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sa_document1" class="form-label fw-bold">Supporting Document 1</label>
+                                <input type="file" id="sa_document1" name="sa_document1"
+                                       class="form-control @error('sa_document1') is-invalid @enderror"
+                                       data-validate aria-describedby="sa_document1Help sa_document1Error">
+                                <div id="sa_document1Help" class="form-text">File type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg</div>
+                                <div id="sa_document1Error" class="invalid-feedback @error('sa_document1') d-block @enderror">@error('sa_document1'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sa_document2" class="form-label fw-bold">Supporting Document 2</label>
+                                <input type="file" id="sa_document2" name="sa_document2"
+                                       class="form-control @error('sa_document2') is-invalid @enderror"
+                                       data-validate aria-describedby="sa_document2Help sa_document2Error">
+                                <div id="sa_document2Help" class="form-text">File type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg</div>
+                                <div id="sa_document2Error" class="invalid-feedback @error('sa_document2') d-block @enderror">@error('sa_document2'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sa_document1_supporting_text" class="form-label fw-bold">Supporting Text for Document 1</label>
+                                <div id="sa_document1_supporting_textHelp" class="form-text mb-1">Only alphabets A-Z a-z, numbers 0-9 and special characters , . - _ ( ) / @ : &amp; \ % are allowed in Text for RTI Request application. Required when Supporting Document 1 is attached.</div>
+                                <textarea id="sa_document1_supporting_text" name="sa_document1_supporting_text" rows="4" maxlength="3000"
+                                          class="form-control @error('sa_document1_supporting_text') is-invalid @enderror"
+                                          data-validate
+                                          aria-describedby="sa_document1_supporting_textHelp sa_document1_supporting_textError">{{ old('sa_document1_supporting_text') }}</textarea>
+                                <div id="sa_document1_supporting_textError" class="invalid-feedback @error('sa_document1_supporting_text') d-block @enderror">@error('sa_document1_supporting_text'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sa_document2_supporting_text" class="form-label fw-bold">Supporting Text for Document 2</label>
+                                <div id="sa_document2_supporting_textHelp" class="form-text mb-1">Only alphabets A-Z a-z, numbers 0-9 and special characters , . - _ ( ) / @ : &amp; \ % are allowed in Text for RTI Request application. Required when Supporting Document 2 is attached.</div>
+                                <textarea id="sa_document2_supporting_text" name="sa_document2_supporting_text" rows="4" maxlength="3000"
+                                          class="form-control @error('sa_document2_supporting_text') is-invalid @enderror"
+                                          data-validate
+                                          aria-describedby="sa_document2_supporting_textHelp sa_document2_supporting_textError">{{ old('sa_document2_supporting_text') }}</textarea>
+                                <div id="sa_document2_supporting_textError" class="invalid-feedback @error('sa_document2_supporting_text') d-block @enderror">@error('sa_document2_supporting_text'){{ $message }}@enderror</div>
+                            </div>
+
+                            <h3 class="h6 dbim-text-key mt-4 mb-3">Applicant personal information</h3>
+
+                            <div class="mb-3">
+                                <label for="id_proof" class="form-label fw-bold">Id Proof {!! $star !!}</label>
+                                <select id="id_proof" name="id_proof" class="form-select @error('id_proof') is-invalid @enderror"
+                                        data-validate data-required="true" data-msg="Select the ID proof document type."
+                                        required aria-required="true" aria-describedby="id_proofError">
+                                    <option value="">Select Document</option>
+                                    <option value="2" {{ old('id_proof') == '2' ? 'selected' : '' }}>Pan Card</option>
+                                    <option value="3" {{ old('id_proof') == '3' ? 'selected' : '' }}>Driving Licence</option>
+                                    <option value="4" {{ old('id_proof') == '4' ? 'selected' : '' }}>Ration Card</option>
+                                    <option value="5" {{ old('id_proof') == '5' ? 'selected' : '' }}>Govt. Id Card (if any)</option>
+                                    <option value="5" {{ old('id_proof') == '6' ? 'selected' : '' }}>Other</option>
+                                </select>
+                                <div id="id_proofError" class="invalid-feedback @error('id_proof') d-block @enderror">@error('id_proof'){{ $message }}@enderror</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="id_proof_file" class="form-label fw-bold">ID Proof File {!! $star !!}</label>
+                                <input type="file" id="id_proof_file" name="id_proof_file" accept=".pdf,.jpg,.jpeg"
+                                       class="form-control @error('id_proof_file') is-invalid @enderror"
+                                       data-validate data-required="true" data-msg="Choose the ID proof file."
+                                       required aria-required="true" aria-describedby="id_proof_fileHelp id_proof_fileError">
+                                <div id="id_proof_fileHelp" class="form-text">File type .pdf, .jpg, .jpeg</div>
+                                <div id="id_proof_fileError" class="invalid-feedback @error('id_proof_file') d-block @enderror">@error('id_proof_file'){{ $message }}@enderror</div>
+                            </div>
+                        </section>
+
+                        {{-- ===== Step 6: Declaration ===== --}}
+                        <section data-step aria-labelledby="step6Title" hidden>
+                            <h2 id="step6Title" class="h5 dbim-text-key mb-3" tabindex="-1">Declaration</h2>
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" id="declaration" name="declaration" class="form-check-input"
+                                       data-validate aria-describedby="declarationError">
+                                <label class="form-check-label" for="declaration">The Information as provided above is true to the best of my knowledge {!! $star !!}</label>
+                                <div id="declarationError" class="invalid-feedback @error('declaration') d-block @enderror">@error('declaration'){{ $message }}@enderror</div>
+                            </div>
+
+                            <x-captcha />
+                        </section>
+
+                        {{-- ===== Actions ===== --}}
+                        <div class="d-flex justify-content-end flex-wrap gap-2">
+                            <button type="reset" class="download-outline-btn text-uppercase w-ft" title="Reset">Reset</button>
+                            <button type="button" id="btnBack" class="download-outline-btn text-uppercase w-ft" title="Back" hidden>Back</button>
+                            <button type="button" id="btnNext" class="download-btn text-uppercase w-ft" title="Next">Next</button>
+                            <button type="submit" id="submit_button" name="submit_button" class="download-btn text-uppercase w-ft" title="Submit" hidden>Submit</button>
                         </div>
-                    </div>
+                        <p id="submitStatus" class="text-p2 text-end mt-2 mb-0" role="status"></p>
+                    </form>
+
                 </div>
-                <br>
-                <x-captcha />
-                <div class="row justify-content-center">
-                    <button type="submit" id="submit_button" name="submit_button" class="btn btn-dark btn-block" disabled>Submit</button>
-                </div>
-                </form>
-                <br>
             </div>
+
         </div>
     </div>
-    <br>
+</div>
+@endsection
 
-    </body>
+@push('scripts')
+@include('UsersView.partials.dbim-form-scripts')
+<script>
+(function () {
+    'use strict';
 
-    <script type="text/javascript">
+    var $ = function (id) { return document.getElementById(id); };
+    var form = $('secondAppealOfflineForm');
+    var backBtn = $('btnBack'), nextBtn = $('btnNext'), submitBtn = $('submit_button');
+    var statusEl = $('submitStatus');
+    var summary = $('errorSummary');
+    var busy = false;
 
-    function enableSubmit()
-    {
-        let declarationCheckBox = document.querySelector('#declaration');
-        let submit_button = document.querySelector('#submit_button');
+    /* ---------- field rules ---------- */
+    var TEXT_ALLOWED = /^[A-Za-z0-9\s,.\-_()\/\u0040:&\\%]+$/;
+    var TEXT_MSG = 'The text has characters that are not allowed. Use only letters, numbers, spaces and , . - _ ( ) / @ : & \\ %';
 
-        // console.log('Checkbox checked: ' + declarationCheckBox.checked);
+    function fileRule(extensions, maxMb, typeMsg) {
+        return function (el) {
+            var file = el.files && el.files[0];
+            if (!file) { return ''; }
+            var ext = file.name.split('.').pop().toLowerCase();
+            if (extensions.indexOf(ext) === -1) { return typeMsg; }
+            if (maxMb && file.size > maxMb * 1024 * 1024) { return 'File size should not exceed ' + maxMb + 'MB.'; }
+            return '';
+        };
+    }
 
-        if (declarationCheckBox.checked) {
-            console.log('Enabling the submit button');
-            submit_button.disabled = false; // Enable the submit button
+    var pdfRule = fileRule(['pdf'], 5, 'Only PDF files are allowed.');
+    $('rti_application_doc').dataCheck = pdfRule;
+    $('fa_application_doc').dataCheck = pdfRule;
+    $('sa_application_doc').dataCheck = pdfRule;
+
+    var supportRule = fileRule(['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'jpeg'], 0,
+        'Only PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, and JPEG files are allowed.');
+    $('sa_document1').dataCheck = supportRule;
+    $('sa_document2').dataCheck = supportRule;
+
+    $('id_proof_file').dataCheck = fileRule(['pdf', 'jpg', 'jpeg'], 0, 'Only PDF, JPG, and JPEG files are allowed.');
+
+    function supportingText(docId, number) {
+        return function (el) {
+            var hasFile = $(docId).files && $(docId).files[0];
+            if (hasFile && el.value.trim() === '') { return 'Enter text for Supporting Document ' + number + '.'; }
+            if (el.value.trim() !== '' && !TEXT_ALLOWED.test(el.value)) { return TEXT_MSG; }
+            return '';
+        };
+    }
+    $('sa_document1_supporting_text').dataCheck = supportingText('sa_document1', 1);
+    $('sa_document2_supporting_text').dataCheck = supportingText('sa_document2', 2);
+
+    $('edu_status').dataCheck = function () {
+        return form.querySelector('input[name="edu_status"]:checked') ? '' : 'Select your education status.';
+    };
+    $('is_not_bpl').dataCheck = function () {
+        return form.querySelector('input[name="is_bpl"]:checked') ? '' : 'Select your financial status.';
+    };
+    $('declaration').dataCheck = function (el) {
+        return el.checked ? '' : 'Confirm the declaration.';
+    };
+
+    /* ---------- dropdown helpers ---------- */
+    var initialPending = {
+        sub: @json((string) old('applied_subdept')),
+        office: @json((string) old('applied_office')),
+        pio: @json((string) old('pio_name')),
+        faa: @json((string) old('faa_name')),
+        district: @json((string) old('district')),
+        taluka: @json((string) old('taluka')),
+        village: @json((string) old('village'))
+    };
+    var pending = Object.assign({}, initialPending);
+
+    function option(value, text) {
+        var o = document.createElement('option');
+        o.value = value;
+        o.textContent = text;
+        return o;
+    }
+    function fail(err) { console.error('Dropdown request failed', err); }
+
+    function fill(selectId, rows, valueKey, textKey, selectedValue) {
+        var sel = $(selectId);
+        sel.textContent = '';
+        Object.keys(rows).forEach(function (k) {
+            var o = option(rows[k][valueKey], rows[k][textKey]);
+            if (selectedValue && String(rows[k][valueKey]) === selectedValue) { o.selected = true; }
+            sel.appendChild(o);
+        });
+    }
+    function reset(selectId, text) {
+        var sel = $(selectId);
+        sel.textContent = '';
+        sel.appendChild(option('', text));
+    }
+
+    /* ---------- authority dropdowns ---------- */
+    function loadPioAndFaa() {
+        var deptId = $('applied_dept').value, subId = $('applied_subdept').value;
+        if (!deptId || !subId) {
+            setPio(null);
+            setFaa(null);
+            syncButtons();
+            return;
+        }
+        DbimForm.getJSON('/pioDropdown/' + deptId + '/' + subId).then(function (rows) {
+            var keys = Object.keys(rows);
+            var chosen = null;
+            keys.forEach(function (k) {
+                if (pending.pio && String(rows[k].id) === pending.pio) { chosen = rows[k]; }
+            });
+            if (!chosen && keys.length) { chosen = rows[keys[0]]; }   /* otherwise the first PIO */
+            setPio(chosen);
+            pending.pio = '';
+            syncButtons();
+        }).catch(fail);
+
+        DbimForm.getJSON('/faaDropdown/' + deptId + '/' + subId).then(function (rows) {
+            var keys = Object.keys(rows);
+            var chosen = null;
+            keys.forEach(function (k) {
+                if (pending.faa && String(rows[k].id) === pending.faa) { chosen = rows[k]; }
+            });
+            if (!chosen && keys.length) { chosen = rows[keys[0]]; }   /* otherwise the first FAA user */
+            setFaa(chosen);
+            pending.faa = '';
+            syncButtons();
+        }).catch(fail);
+    }
+
+    /* PIO name and address are read-only boxes; the hidden fields carry the id */
+    function setPio(row) {
+        $('pio_name_value').value    = row ? row.id : '';
+        $('pio_address_value').value = row ? row.id : '';
+        $('pio_name').value          = row ? row.name : '';
+        $('pio_address').value       = row ? row.address1 : '';
+    }
+
+    /* FAA name and address are read-only boxes; the hidden fields carry the id */
+    function setFaa(row) {
+        $('faa_name_value').value    = row ? row.id : '';
+        $('faa_address_value').value = row ? row.id : '';
+        $('faa_name').value          = row ? row.name : '';
+        $('faa_address').value       = row ? row.address1 : '';
+    }
+
+    function loadOffices() {
+        var deptId = $('applied_dept').value, subId = $('applied_subdept').value;
+        if (deptId && subId) {
+            DbimForm.getJSON('/officeDropdown/' + deptId + '/' + subId).then(function (rows) {
+                fill('applied_office', rows, 'suboffice_code', 'department', pending.office);
+                pending.office = '';
+                loadPioAndFaa();
+            }).catch(fail);
         } else {
-            console.log('Disabling the submit button');
-            submit_button.disabled = true;  // Disable the submit button
+            reset('applied_office', 'Select Sub Office');
+            loadPioAndFaa();
         }
     }
 
-    $(document).ready(function()
-    {
-        $('select[name="applied_dept"]').on('change', function() {
-            populateSubDeptDropdown();
-        });
-
-        // Event listener for District dropdown change
-        $('select[name="applied_subdept"]').on('change', function() {
-            populateOfficeDropdown();
-        });
-
-        populateSubDeptDropdown();
-        populateDistrictDropdown();
-
-        // Event listener for State dropdown change
-        $('select[name="state"]').on('change', function() {
-            populateDistrictDropdown();
-        });
-
-        // Event listener for District dropdown change
-        $('select[name="district"]').on('change', function() {
-            populateTalukaDropdown();
-        });
-
-        $('select[name="taluka"]').on('change', function() {
-            populateVillageDropdown();
-        });
-
-        $('select[name="applied_subdept"]').on('change', function() {
-            populatePioDropdown();
-            populateFaaDropdown();
-        });
-
-        // Function to populate Sub Department dropdown
-        function populateSubDeptDropdown() {
-            var deptId = $('select[name="applied_dept"]').val();
-            if (deptId) {
-                $.ajax({
-                    url: '/subDeptDropdown/' + deptId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        // alert(JSON.stringify(data));
-                        var oldSubDept = '{{ old("applied_subdept") }}';
-                        $('select[name="applied_subdept"]').empty();
-                        $.each(data, function(key, value) {
-                            var option = $('<option value="' + value.office_code + '">' + value.department + '</option>');
-                            // Check if the option matches the old input value
-                            if (value.office_code == oldSubDept) {
-                                option.prop('selected', true);
-                            }
-
-                            $('select[name="applied_subdept"]').append(option);
-                        });
-                        populateOfficeDropdown();
-                    }
-                });
-            } else {
-                var subDeptSelect = $('select[name="applied_subdept"]');
-                subDeptSelect.empty().append('<option value="">Select Office</option>');
-            }
+    function loadSubDepts() {
+        var deptId = $('applied_dept').value;
+        if (deptId) {
+            DbimForm.getJSON('/subDeptDropdown/' + deptId).then(function (rows) {
+                fill('applied_subdept', rows, 'office_code', 'department', pending.sub);
+                pending.sub = '';
+                loadOffices();
+            }).catch(fail);
+        } else {
+            reset('applied_subdept', 'Select Office');
+            loadOffices();
         }
+    }
 
-        function populatePioDropdown()
-        {
-            var deptId = $('select[name="applied_dept"]').val();
-            var subDeptId = $('select[name="applied_subdept"]').val();
+    $('applied_dept').addEventListener('change', loadSubDepts);
+    $('applied_subdept').addEventListener('change', loadOffices);
 
-            $.ajax({
-                url: '/pioDropdown/' + deptId +'/'+ subDeptId,
-                type: "GET",
-                dataType: "json",
-                success: function(data)
-                {
-                    var oldPioname = '{{ old("pio_name") }}';
-                    $('select[name="pio_name"]').empty();
-                    $('select[name="pio_address"]').empty();
-
-                    $.each(data, function(key, value)
-                    {
-                        var option = $('<option value="' + value.id + '">' + value.name + '</option>');
-                        var addoption = $('<option value="' + value.id + '">' + value.address1 + '</option>');
-                        // Check if the option matches the old input value
-                        if (value.name == oldPioname) {
-                            option.prop('selected', true);
-                        }
-
-                        $('select[name="pio_name"]').append(option);
-                        $('select[name="pio_address"]').append(addoption);
-                    });
-                }
-            });
+    /* ---------- location dropdowns ---------- */
+    function loadVillages() {
+        var talukaId = $('taluka').value;
+        if (talukaId === '0') {
+            $('village').textContent = '';
+            $('village').appendChild(option('0', 'Others'));
+            syncButtons();
+        } else if (talukaId) {
+            DbimForm.getJSON('/villageDropdown/' + talukaId).then(function (rows) {
+                fill('village', rows, 'id', 'name', pending.village);
+                pending.village = '';
+                syncButtons();
+            }).catch(fail);
+        } else {
+            $('village').textContent = '';
+            syncButtons();
         }
+    }
 
-
-        function populateFaaDropdown()
-        {
-            var deptId = $('select[name="applied_dept"]').val();
-            var subDeptId = $('select[name="applied_subdept"]').val();
-
-            $.ajax({
-                url: '/faaDropdown/' + deptId +'/'+ subDeptId,
-                type: "GET",
-                dataType: "json",
-                success: function(data)
-                {
-                    var oldFaaname = '{{ old("faa_name") }}';
-
-                    $('select[name="faa_name"]').empty();
-                    $('select[name="faa_address"]').empty();
-                    $.each(data, function(key, value)
-                    {
-                        var option = $('<option value="' + value.id + '">' + value.name + '</option>');
-                        var addoption = $('<option value="' + value.id + '">' + value.address1 + '</option>');
-                        // Check if the option matches the old input value
-                        if (value.name == oldFaaname) {
-                            option.prop('selected', true);
-                        }
-
-                        $('select[name="faa_name"]').append(option);
-                        $('select[name="faa_address"]').append(addoption);
-                    });
-                }
-            });
+    function loadTalukas() {
+        var districtId = $('district').value;
+        if (districtId === '0') {
+            $('taluka').textContent = '';
+            $('taluka').appendChild(option('0', 'Others'));
+            loadVillages();
+        } else if (districtId) {
+            DbimForm.getJSON('/talukaDropdown/' + districtId).then(function (rows) {
+                fill('taluka', rows, 'id', 'name', pending.taluka);
+                pending.taluka = '';
+                loadVillages();
+            }).catch(fail);
+        } else {
+            $('taluka').textContent = '';
+            loadVillages();
         }
+    }
 
-        // Function to populate Sub Department dropdown
-        function populateOfficeDropdown() {
-            var deptId = $('select[name="applied_dept"]').val();
-            var subDeptId = $('select[name="applied_subdept"]').val();
-            if (subDeptId) {
-                $.ajax({
-                    url: '/officeDropdown/' + deptId +'/'+ subDeptId,
-                    type: "GET",
-                    dataType: "json",
-
-                    success: function(data) {
-                        // alert(JSON.stringify(data));
-                        var oldOffice = '{{ old("applied_office") }}';
-                        $('select[name="applied_office"]').empty();
-                        $.each(data, function(key, value) {
-                            var option = $('<option value="' + value.suboffice_code + '">' + value.department + '</option>');
-                            // Check if the option matches the old input value
-                            if (value.suboffice_code == oldOffice) {
-                                option.prop('selected', true);
-                            }
-
-                            $('select[name="applied_office"]').append(option);
-                        });
-                        populatePioDropdown();
-                        populateFaaDropdown();
-                    }
-                });
-            } else {
-                $('select[name="applied_office"]').append('<option value="0">Sub Office</option>');
-            }
+    function loadDistricts() {
+        var stateId = $('state').value;
+        if (stateId === '0') {
+            $('district').textContent = '';
+            $('district').appendChild(option('0', 'Others'));
+            loadTalukas();
+        } else if (stateId) {
+            DbimForm.getJSON('/districtDropdown/' + stateId).then(function (rows) {
+                fill('district', rows, 'id', 'name', pending.district);
+                pending.district = '';
+                loadTalukas();
+            }).catch(fail);
+        } else {
+            reset('district', 'Select District');
+            loadTalukas();
         }
+    }
 
-        // Function to populate District dropdown
-        function populateDistrictDropdown() {
-            var stateId = $('select[name="state"]').val();
-            if (stateId == 0)
-            {
-                var district = $('select[name="district"]');
-                district.empty().append('<option value="0">Others</option>');
-                populateTalukaDropdown();
-            }
-            else if (stateId) {
-                $.ajax({
-                    url: '/districtDropdown/' + stateId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        var oldDistrict = '{{ old("district") }}';
-                        $('select[name="district"]').empty();
-                        $.each(data, function(key, value) {
-                            var option = $('<option value="' + value.id + '">' + value.name + '</option>');
+    $('state').addEventListener('change', loadDistricts);
+    $('district').addEventListener('change', loadTalukas);
+    $('taluka').addEventListener('change', loadVillages);
 
-                            if(value.id == oldDistrict)
-                            {
-                                option.prop('selected', true);
-                            }
-                            $('select[name="district"]').append(option);
-                        });
-                        populateTalukaDropdown();
-                    }
-                });
-            } else {
-                var district = $('select[name="district"]');
-                district.empty().append('<option value="">Select District</option>');
-            }
+    /* ---------- steps and buttons ---------- */
+    var stepper = DbimForm.stepper(form, function () { syncButtons(); });
+
+    function syncButtons() {
+        var last = stepper.current === stepper.steps.length - 1;
+        backBtn.hidden = stepper.current === 0;
+        nextBtn.hidden = last;
+        submitBtn.hidden = !last;
+
+        if (busy) { return; }
+        var remaining = DbimForm.validate(form, false).length;
+        submitBtn.disabled = remaining > 0;
+        statusEl.textContent = !last ? '' :
+            (remaining ? 'Complete all required fields to enable the Submit button. ' + remaining + ' remaining.'
+                       : 'All required fields are complete.');
+    }
+
+    function setBusy(on) {
+        busy = on;
+        if (on) {
+            submitBtn.dataset.label = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting…';
+            submitBtn.disabled = true;
+            statusEl.textContent = 'Submitting your appeal. Please wait.';
+        } else {
+            if (submitBtn.dataset.label) { submitBtn.textContent = submitBtn.dataset.label; }
+            syncButtons();
         }
+    }
 
-        // Function to populate Taluka dropdown
-        function populateTalukaDropdown() {
-            var districtId = $('select[name="district"]').val();
-            if (districtId == 0)
-            {
-                var taluka = $('select[name="taluka"]');
-                taluka.empty().append('<option value="0">Others</option>');
-                populateVillageDropdown();
-            }
-            else if (districtId) {
-                $.ajax({
-                    url: '/talukaDropdown/' + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        var oldTaluka = '{{ old("taluka") }}';
-                        $('select[name="taluka"]').empty();
-                        $.each(data, function(key, value) {
-                            var option = $('<option value="' + value.id + '">' + value.name + '</option>');
-                            if(value.id == oldTaluka)
-                            {
-                                option.prop('selected', true);
-                            }
-                            $('select[name="taluka"]').append(option);
-                        });
-                        populateVillageDropdown();
-                    }
-                });
-            } else {
-                $('select[name="taluka"]').empty();
-            }
-        }
-
-        // Function to populate Village dropdown
-        function populateVillageDropdown() {
-            var talukaId = $('select[name="taluka"]').val();
-            if (talukaId == 0)
-            {
-                var village = $('select[name="village"]');
-                village.empty().append('<option value="0">Others</option>');
-            }
-            else if (talukaId) {
-                $.ajax({
-                    url: '/villageDropdown/' + talukaId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function(data) {
-                        var oldVillage = '{{ old("village") }}';
-                        $('select[name="village"]').empty();
-                        $.each(data, function(key, value) {
-                            // $('select[name="village"]').append('<option value="' + value.id + '">' + value.name + '</option>');
-                            var option = $('<option value="' + value.id + '">' + value.name + '</option>');
-                            if(value.id == oldVillage)
-                            {
-                                option.prop('selected', true);
-                            }
-                            $('select[name="village"]').append(option);
-                        });
-                    }
-                });
-            } else {
-                $('select[name="village"]').empty();
-            }
-        }
-
-        $('#submit_button').click(function(e)
-        {
-            e.preventDefault();
-
-            $('.invalid-feedback').remove();
-            $('.form-control').removeClass('is-invalid');
-
-            var isValid = true;
-
-            if($('#applied_dept').val() === "")
-            {
-                isValid = false;
-                $('#applied_dept').addClass('is-invalid');
-                $('#applied_dept').after('<span class="invalid-feedback">Please select Department from the dropdown.</span>');
-            }
-
-            if($('#applied_subdept').val() === "")
-            {
-                isValid = false;
-                $('#applied_subdept').addClass('is-invalid');
-                $('#applied_subdept').after('<span class="invalid-feedback">Please select Office from the dropdown.</span>');
-            }
-
-            if($('#applied_office').val() === "")
-            {
-                isValid = false;
-                $('#applied_office').addClass('is-invalid');
-                $('#applied_office').after('<span class="invalid-feedback">Please select Sub Office from the dropdown.</span>');
-            }
-
-            if(($('#name').val() === ""))
-            {
-                isValid = false;
-                $('#name').addClass('is-invalid');
-                $('#name').after('<span class="invalid-feedback">Please enter Full Name.</span>');
-            }
-
-            if(($('#address_line1').val() === ""))
-            {
-                isValid = false;
-                $('#address_line1').addClass('is-invalid');
-                $('#address_line1').after('<span class="invalid-feedback">Please enter Address 1.</span>');
-            }
-
-            if(($('#address_line2').val() === ""))
-            {
-                isValid = false;
-                $('#address_line2').addClass('is-invalid');
-                $('#address_line2').after('<span class="invalid-feedback">Please enter Address 2.</span>');
-            }
-
-            if(($('#address_line3').val() === ""))
-            {
-                isValid = false;
-                $('#address_line3').addClass('is-invalid');
-                $('#address_line3').after('<span class="invalid-feedback">Please enter Address 3.</span>');
-            }
-
-            if(($('#pincode').val() === ""))
-            {
-                isValid = false;
-                $('#pincode').addClass('is-invalid');
-                $('#pincode').after('<span class="invalid-feedback">Please enter Pincode.</span>');
-            }
-
-            if(($('#mobile_no').val() === ""))
-            {
-                isValid = false;
-                $('#mobile_no').addClass('is-invalid');
-                $('#mobile_no').after('<span class="invalid-feedback">Please enter Mobile Number.</span>');
-            }
-
-            if(($('#email_id').val() === ""))
-            {
-                isValid = false;
-                $("#email_id").addClass('is-invalid');
-                $('#email_id').after('<span class="invalid-feedback">Please enter EmailId.</span>');
-            }
-
-            if ($('input[name="edu_status"]:checked').length === 0)
-            {
-                isValid = false;
-                $("input[name='edu_status']").addClass('is-invalid');
-                $('input[name="edu_status"]').after('<span class="invalid-feedback">Please select your Education Status.</span>');
-            }
-
-            if ($('input[name="is_bpl"]:checked').length === 0)
-            {
-                isValid = false;
-                $("input[name='is_bpl']").addClass('is-invalid');
-                $('input[name="is_bpl"]').after('<span class="invalid-feedback">Please select your Financial Status.</span>');
-            }
-
-            if(($('#reg_no').val() === ""))
-            {
-                isValid = false;
-                $("#reg_no").addClass('is-invalid');
-                $('#reg_no').after('<span class="invalid-feedback">Please enter Registration Number.</span>');
-            }
-
-            if(($('#reg_date').val() === ""))
-            {
-                isValid = false;
-                $("#reg_date").addClass('is-invalid');
-                $('#reg_date').after('<span class="invalid-feedback">Please enter Registration Date.</span>');
-            }
-
-            if ($('#pio_name').val() === "")
-            {
-                isValid = false;
-                $('#pio_name').addClass('is-invalid');
-                $('#pio_name').after('<span class="invalid-feedback">Please select a Pio Name from the dropdown.</span>');
-            }
-
-            if ($('#pio_adress').val() === "")
-            {
-                isValid = false;
-                $('#pio_adress').addClass('is-invalid');
-                $('#pio_adress').after('<span class="invalid-feedback">Please select a Pio Address from the dropdown.</span>');
-            }
-
-            if ($('#pio_response_display').val() === "")
-            {
-                isValid = false;
-                $('#pio_response_display').addClass('is-invalid');
-                $('#pio_response_display').after('<span class="invalid-feedback">Please select Ground For Appeal for RTI Application.</span>');
-            }
-
-            if ($('#user_text').val() === "")
-            {
-                isValid = false;
-                $('#user_text').addClass('is-invalid');
-                $('#user_text').after('<span class="invalid-feedback">Please Enter supported text for RTI Application.</span>');
-            }
-
-            if($('#fa_reg_no').val() === "")
-            {
-                isValid = false;
-                $('#fa_reg_no').addClass('is-invalid');
-                $('#fa_reg_no').after('<span class="invalid-feedback">Please Enter First Appeal Number.</span>');
-            }
-
-            if(($('#fa_reg_date').val() === ""))
-            {
-                isValid = false;
-                $("#fa_reg_date").addClass('is-invalid');
-                $('#fa_reg_date').after('<span class="invalid-feedback">Please enter First Appeal Request Date.</span>');
-            }
-
-            if($('#faa_name').val() === "")
-            {
-                isValid = false;
-                $("#faa_name").addClass('is-invalid');
-                $('#faa_name').after('<span class="invalid-feedback">Please Select First Appeal Name.</span>');
-            }
-
-            if($('#faa_address').val() === "")
-            {
-                isValid = false;
-                $("#faa_address").addClass('is-invalid');
-                $('#faa_address').after('<span class="invalid-feedback">Please Select First Appeal User Address.</span>');
-            }
-
-            if($('#faa_requested_text').val() === "")
-            {
-                isValid = false;
-                $("#faa_requested_text").addClass('is-invalid');
-                $('#faa_requested_text').after('<span class="invalid-feedback">Please Enter Requested Text.</span>');
-            }
-
-            if ($('#faa_resp_dropdown').val() === "")
-            {
-                isValid = false;
-                $('#faa_resp_dropdown').addClass('is-invalid');
-                $('#faa_resp_dropdown').after('<span class="invalid-feedback">Please select a response from the dropdown.</span>');
-            }
-
-            var rtiReplyDocument = $('#rti_application_doc')[0].files[0];
-            if (!rtiReplyDocument)
-            {
-                isValid = false;
-                $('#rti_application_doc').addClass('is-invalid');
-                $('#rti_application_doc').after('<span class="invalid-feedback">This field is required.</span>');
-            }
-            else
-            {
-                var fileSize = rtiReplyDocument.size / 1024 / 1024; // in MB
-                var fileExtension = rtiReplyDocument.name.split('.').pop().toLowerCase();
-
-                if (fileExtension !== 'pdf')
-                {
-                    isValid = false;
-                    $('#rti_application_doc').addClass('is-invalid');
-                    $('#rti_application_doc').after('<span class="invalid-feedback">Only PDF files are allowed.</span>');
-                }
-
-                if (fileSize > 5)
-                {
-                    isValid = false;
-                    $('#rti_application_doc').addClass('is-invalid');
-                    $('#rti_application_doc').after('<span class="invalid-feedback">File size should not exceed 5MB.</span>');
-                }
-            }
-
-            var faaReplyDocument = $('#fa_application_doc')[0].files[0];
-            if (!faaReplyDocument)
-            {
-                isValid = false;
-                $('#fa_application_doc').addClass('is-invalid');
-                $('#fa_application_doc').after('<span class="invalid-feedback">This field is required.</span>');
-            }
-            else
-            {
-                var fileSize = faaReplyDocument.size / 1024 / 1024; // in MB
-                var fileExtension = faaReplyDocument.name.split('.').pop().toLowerCase();
-
-                if (fileExtension !== 'pdf')
-                {
-                    isValid = false;
-                    $('#fa_application_doc').addClass('is-invalid');
-                    $('#fa_application_doc').after('<span class="invalid-feedback">Only PDF files are allowed.</span>');
-                }
-
-                if (fileSize > 5)
-                {
-                    isValid = false;
-                    $('#fa_application_doc').addClass('is-invalid');
-                    $('#fa_application_doc').after('<span class="invalid-feedback">File size should not exceed 5MB.</span>');
-                }
-            }
-
-            var faaReplyDocument = $('#sa_application_doc')[0].files[0];
-            if (!faaReplyDocument)
-            {
-                isValid = false;
-                $('#sa_application_doc').addClass('is-invalid');
-                $('#sa_application_doc').after('<span class="invalid-feedback">This field is required.</span>');
-            }
-            else
-            {
-                var fileSize = faaReplyDocument.size / 1024 / 1024; // in MB
-                var fileExtension = faaReplyDocument.name.split('.').pop().toLowerCase();
-
-                if (fileExtension !== 'pdf')
-                {
-                    isValid = false;
-                    $('#sa_application_doc').addClass('is-invalid');
-                    $('#sa_application_doc').after('<span class="invalid-feedback">Only PDF files are allowed.</span>');
-                }
-
-                if (fileSize > 5)
-                {
-                    isValid = false;
-                    $('#sa_application_doc').addClass('is-invalid');
-                    $('#sa_application_doc').after('<span class="invalid-feedback">File size should not exceed 5MB.</span>');
-                }
-            }
-
-            var faDocument1 = $('#sa_document1')[0].files[0];
-            if (faDocument1)
-            {
-                var allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'jpeg'];
-                var faDoc1Extension = faDocument1.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(faDoc1Extension))
-                {
-                    isValid = false;
-                    $('#sa_document1').addClass('is-invalid');
-                    $('#sa_document1').after('<span class="invalid-feedback">Only PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, and JPEG files are allowed.</span>');
-                }
-            }
-
-            var faDocument2 = $('#sa_document2')[0].files[0];
-            if (faDocument2)
-            {
-                var allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'jpeg'];
-                var faDoc2Extension = faDocument2.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(faDoc2Extension))
-                {
-                    isValid = false;
-                    $('#sa_document2').addClass('is-invalid');
-                    $('#sa_document2').after('<span class="invalid-feedback">Only PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, and JPEG files are allowed.</span>');
-                }
-            }
-
-            if ($('#sa_document1').val() && $('#sa_document1_supporting_text').val() === "")
-            {
-                isValid = false;
-                $('#sa_document1_supporting_text').addClass('is-invalid');
-                $('#sa_document1_supporting_text').after('<span class="invalid-feedback">Please enter text for Supporting Document 1.</span>');
-            }
-
-            if ($('#sa_document2').val() && $('#sa_document2_supporting_text').val() === "")
-            {
-                isValid = false;
-                $('#sa_document2_supporting_text').addClass('is-invalid');
-                $('#sa_document2_supporting_text').after('<span class="invalid-feedback">Please enter text for Supporting Document 2.</span>');
-            }
-
-            if ($('#id_proof').val() === "")
-            {
-                isValid = false;
-                $('#id_proof').addClass('is-invalid');
-                $('#id_proof').after('<span class="invalid-feedback">Please select ID Proof document type</span>');
-            }
-
-            var idProofFile = $('#id_proof_file')[0].files[0];
-            if (idProofFile)
-            {
-                var allowedExtensions = ['pdf','jpg', 'jpeg'];
-                var idProofExtension = idProofFile.name.split('.').pop().toLowerCase();
-                if (!allowedExtensions.includes(idProofExtension))
-                {
-                    isValid = false;
-                    $('#id_proof_file').addClass('is-invalid');
-                    $('#id_proof_file').after('<span class="invalid-feedback">Only PDF, JPG, and JPEG files are allowed.</span>');
-                }
-            }
-            else
-            {
-                isValid = false;
-                $('#id_proof_file').addClass('is-invalid');
-                $('#id_proof_file').after('<span class="invalid-feedback">This field is required.</span>');
-            }
-
-            // If all validations pass, submit the form
-            if (isValid) {
-                $('form').submit(); // Manually submit the form
-            }
-        });
+    nextBtn.addEventListener('click', function () {
+        if (!stepper.validateCurrent()) { return; }
+        stepper.show(stepper.current + 1, true);
     });
 
-    // Wait until the page is fully loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    backBtn.addEventListener('click', function () { stepper.show(stepper.current - 1, true); });
 
-        let tooltip;
+    /* ---------- submit ---------- */
+    form.addEventListener('submit', function (event) {
+        if (busy) { event.preventDefault(); return; }
 
-        document.querySelectorAll('.cursor-tooltip').forEach(el => {
+        /* Enter key on an earlier step moves on instead of submitting */
+        if (stepper.current !== stepper.steps.length - 1) {
+            event.preventDefault();
+            nextBtn.click();
+            return;
+        }
 
-            el.addEventListener('mouseenter', function(e) {
-                tooltip = document.createElement('div');
-                tooltip.className = 'custom-cursor-tooltip';
-                tooltip.innerHTML = el.dataset.tooltip;
-                document.body.appendChild(tooltip);
-            });
+        var bad = DbimForm.validate(form, true);
+        if (bad.length) {
+            event.preventDefault();
+            stepper.show(stepper.stepOf(bad[0]), false);
+            DbimForm.summary(bad);
+            return;
+        }
 
-            el.addEventListener('mousemove', function(e) {
-                if (!tooltip) return;
-
-                // Tooltip position relative to cursor
-                const offsetX = 15; // distance from cursor
-                const offsetY = 15;
-
-                tooltip.style.left = (e.clientX + offsetX) + 'px';
-                tooltip.style.top  = (e.clientY + offsetY) + 'px';
-                tooltip.style.opacity = 1;
-
-                // Arrow points to cursor (bottom-left of tooltip)
-                tooltip.style.setProperty('--arrow-left', '10px');
-                tooltip.style.setProperty('--arrow-top', '-6px'); // above tooltip box
-            });
-
-            el.addEventListener('mouseleave', function() {
-                if (tooltip) tooltip.remove();
-                tooltip = null;
-            });
-
-        });
+        setBusy(true);   /* the form is then submitted normally */
     });
+
+    /* ---------- reset (with warning) ---------- */
+    form.addEventListener('reset', function (event) {
+        if (!window.confirm('Clear everything you have entered and start again?')) {
+            event.preventDefault();
+            return;
+        }
+        setTimeout(function () {
+            DbimForm.clearAll(form);
+            pending = Object.assign({}, initialPending);
+            loadSubDepts();
+            loadDistricts();
+            stepper.show(0, false);
+        }, 0);
+    });
+
+    /* ---------- start ---------- */
+    DbimForm.bind(form, syncButtons);
+    loadSubDepts();
+    loadDistricts();
+
+    /* After a server-side validation error, open the step that has it */
+    var hadServerErrors = !summary.hidden;
+    var firstError = form.querySelector('.is-invalid, .invalid-feedback.d-block');
+    stepper.show(firstError ? stepper.stepOf(firstError) : 0, false);
+    if (hadServerErrors) { summary.hidden = false; summary.focus(); }
+})();
 </script>
+@endpush

@@ -16,7 +16,7 @@
     <div class="dbim-captcha__challenge">
         <div class="dbim-captcha__image">
             <img id="img" width="200" height="60"
-                 alt="Captcha image. Type the characters shown. An audio option is available.">
+                 alt="Captcha image. Type the characters shown. An audio option is available." data-a11y-keep>
         </div>
 
         <button type="button" id="play-audio" class="dbim-captcha__btn"
@@ -132,7 +132,7 @@
                 clearInterval(timerId);
                 var hadFocus = (document.activeElement === input || document.activeElement === playBtn);
                 setExpired(true);
-                showStatus('The captcha has expired. Reload it to get a new code.', 'warning', true);
+                showStatus('The captcha has expired. Reload it to get a new code.', 'error', true);
                 if (hadFocus) { statusBox.querySelector('button').focus(); }  /* focus must not be lost with the disabled control */
             }
         }, 1000);

@@ -373,7 +373,7 @@ td.text-number,
 .dbim-header__search {
   display: flex;
   width: 100%;
-  max-width: 320px;
+  /*max-width: 320px;*/
   margin: 0 auto;
   border: 1px solid var(--dbim-linen);
   border-bottom: 2px solid var(--dbim-deep-blue);
@@ -2166,4 +2166,206 @@ iframe.skiptranslate,
   background: none;
   border: 1px solid var(--dbim-key);
   color: var(--dbim-key);
+}
+body {
+  align-items: stretch;
+}
+#app,
+main {
+  width: 100%;
+  min-width: 0;
+}
+/* ============================================================
+   NN. Accessibility Controls side panel
+   ============================================================ */
+.dbim-a11y {
+  width: 350px;
+  max-width: 100vw;
+  border-left: 1px solid #162f6a;
+}
+.dbim-a11y .offcanvas-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #162f6a;
+}
+.dbim-a11y .offcanvas-title svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+}
+.dbim-a11y .btn-close:focus-visible {
+  outline: 3px solid #162f6a;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Buttons */
+.a11y-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 5rem;
+  padding: 0.75rem 0.5rem;
+  background: #fff;
+  color: #162f6a;
+  border: 1px solid #162f6a;
+  border-radius: 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+.a11y-btn svg {
+  width: 2rem;
+  height: 2rem;
+}
+.a11y-btn:hover {
+  background: #eef1fa;
+}
+.a11y-btn[aria-pressed="true"] {
+  background: #dde3f3;
+}
+.a11y-btn:focus-visible {
+  outline: 3px solid #162f6a;
+  outline-offset: 2px;
+}
+
+/* Small reset buttons: Reset Filter / Resize Text */
+.a11y-btn.a11y-reset {
+  width: auto;
+  min-height: 0;
+  padding: 0.4rem 0.75rem;
+  flex-direction: row;
+  font-size: 0.625rem;
+}
+
+/* Dark (high contrast) theme: yellow on black */
+[data-theme="dark"] #a11yMenuButton svg {
+  color: #ffff00;
+}
+
+[data-theme="dark"] .dbim-a11y {
+  background: #000;
+  color: #ffff00;
+  border-left: 1px solid #ffff00;
+}
+[data-theme="dark"] .dbim-a11y .offcanvas-title {
+  color: #ffff00;
+}
+
+[data-theme="dark"] .dbim-a11y .btn-close {
+  filter: none;
+  opacity: 1;
+  background: transparent
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23FFFF00'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e")
+    center / 1em auto no-repeat;
+}
+
+[data-theme="dark"] .a11y-btn {
+  background: #000;
+  color: #ffff00;
+  border-color: #ffff00;
+}
+[data-theme="dark"] .a11y-btn:hover {
+  background: rgba(255, 255, 0, 0.15);
+}
+[data-theme="dark"] .a11y-btn[aria-pressed="true"] {
+  background: #ffff00;
+  color: #000;
+}
+[data-theme="dark"] .a11y-btn:focus-visible,
+[data-theme="dark"] .dbim-a11y .btn-close:focus-visible {
+  outline-color: #ffff00;
+}
+
+/* Page effects in dark theme */
+html[data-theme="dark"].dbim-highlight-links a {
+  outline-color: #ffff00;
+}
+html[data-theme="dark"].dbim-big-cursor,
+html[data-theme="dark"].dbim-big-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 9-7 2-3 7z' fill='%23FFFF00' stroke='%23000' stroke-width='1.5'/%3E%3C/svg%3E")
+      4 2,
+    auto !important;
+}
+
+/* Page-level effects toggled from the panel */
+html.dbim-highlight-links a {
+  text-decoration: underline !important;
+  text-underline-offset: 0.2em;
+  font-weight: 700;
+  outline: 2px solid #162f6a;
+  outline-offset: 2px;
+}
+html.dbim-hide-images img:not([data-a11y-keep]) {
+  display: none !important;
+}
+html.dbim-big-cursor,
+html.dbim-big-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24'%3E%3Cpath d='M4 2l16 9-7 2-3 7z' fill='%23162F6A' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E")
+      4 2,
+    auto !important;
+}
+/* ============================================================
+   24. OFFICER DETAIL PAGES  (Request Details)
+   Label / value pairs: label column is as wide as the longest label
+   (max 12rem), 16px gap, 8px between rows. Stacks below 576px.
+   Card and card-header come from section 10. Existing variables only.
+   ============================================================ */
+.dbim-detail__heading {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-key);
+}
+
+.dbim-dl {
+  display: grid;
+  grid-template-columns: fit-content(12rem) 1fr;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
+  margin: 0;
+}
+.dbim-dl dt {
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+}
+.dbim-dl dd {
+  margin: 0;
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
+  overflow-wrap: anywhere; /* long emails never push the layout sideways */
+}
+
+@media (max-width: 575.98px) {
+  .dbim-dl {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+  .dbim-dl dd {
+    margin-bottom: 0.75rem;
+  }
+}
+/* ============================================================
+   24. OFFICER DETAIL PAGES  (Request Details, request processing)
+   Label / value pairs use Bootstrap's dl.row with dt.col-sm-4 / dd.col-sm-8.
+   Card and card-header come from section 10. Existing variables only.
+   ============================================================ */
+.dbim-detail__heading {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-key);
+}
+.dbim-detail dt {
+  margin-bottom: 0.75rem;
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--dbim-key);
+}
+.dbim-detail dd {
+  margin: 0 0 0.75rem;
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
 }

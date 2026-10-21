@@ -69,11 +69,6 @@ class FirstAppealController extends Controller
             $data['submitRequest'] = SubmitRequest::where('reg_no', $request->reg_no)->first();
             // dd($data['submitRequest']);
 
-            if(isset($data['firstAppealRequest']))
-            {
-                throw new Exception("First Appeal is already Submitted for this Registration Number");
-            }
-
             $data['firstAppealRequest'] = fa_submit_request::where('reg_no', $request->reg_no)->first();
 
             if(isset($data['firstAppealRequest']))
@@ -93,7 +88,7 @@ class FirstAppealController extends Controller
         }
         catch(Exception $ex)
         {
-            return redirect()->route('first-appeal-detail')->with('warning', $ex->getMessage());
+            return redirect()->route('first-appeal-detail')->with('error', $ex->getMessage());
         }
     }
 
@@ -117,7 +112,7 @@ class FirstAppealController extends Controller
             $diff = $createdDate->diffInDays($nowDate);
 
             if($diff < 30)
-                return redirect()->back()->with('warning', 'First Appeal can be filed only after 30 days of e-filing of initial RTI Application or Disposal of RTI Request');
+                return redirect()->back()->with('error', 'First Appeal can be filed only after 30 days of e-filing of initial RTI Application or Disposal of RTI Request');
         }
         // Query the DepartmentNew table once to retrieve all the required data
         $deptData = DepartmentNew::where(['dept_code' => $submitReqData['applied_dept']])
@@ -211,6 +206,7 @@ class FirstAppealController extends Controller
             'request_text' => 'required',
             'reg_no' => 'required',
             'pioname' => 'required',
+            'reg_no' => ['required', Rule::unique('fa_submit_requests', 'reg_no')],
             // Add the max constraint here
             'pioaddr' => 'required|string|max:50',
             'pio_resp_dropdown' => 'required',

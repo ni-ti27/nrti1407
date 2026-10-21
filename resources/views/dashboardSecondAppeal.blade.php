@@ -21,7 +21,7 @@
     $isClosed = $req_type == '{closed_SA}';
     $isAdmin  = session('role') == 1;
 @endphp
-<div class="container-fluid px-3 px-lg-5 py-4">
+<div class="container px-3 px-lg-5 py-4">
 
     <h1 class="h2 mb-4">{{ $pageTitle }}</h1>
 

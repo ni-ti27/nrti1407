@@ -194,7 +194,7 @@ class SecondAppealController extends Controller
         }
         catch (Exception $ex)
         {
-            return back()->with('warning', $ex->getMessage());
+            return back()->with('error', $ex->getMessage());
         }
     }
 

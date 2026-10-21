@@ -14,7 +14,7 @@
 @php
     $showSubDept = !in_array(session('role_name'), ['Nodal Officer', 'First Appellete Authority']);
 @endphp
-<div class="container-fluid px-3 px-lg-5 py-4">
+<div class="container px-3 px-lg-5 py-4">
 
     <h1 class="h2 mb-4">Application Stats</h1>
 

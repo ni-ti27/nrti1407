@@ -44,7 +44,7 @@
                           action="{{ route('sessionForm.save') }}" novalidate>
                         @csrf
 
-                        <div class="alert alert-info dbim-note" role="note">
+                    <div class="alert alert-info dbim-note" role="note">
                         <p>
                             <strong>Note:</strong> Fields marked with (<span class="dbim-required" aria-hidden="true">*</span>) are required.
                         </p>
@@ -114,7 +114,7 @@
                                    aria-describedby="otpError">
                             <div id="otpError" class="invalid-feedback @error('otp') d-block @enderror">@error('otp'){{ $message }}@enderror</div>
                         </div>
-
+<x-captcha/>
                         <div class="d-flex justify-content-end">
                             <button type="submit" id="loginButton" class="download-btn text-uppercase w-ft" title="Log in">
                                 Log In

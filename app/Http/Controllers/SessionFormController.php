@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use App\Rules\CaptchaValid;
 
 class SessionFormController extends Controller
 {
@@ -42,6 +43,7 @@ class SessionFormController extends Controller
             'username' => ['required', 'max:255'],
             'email_id' => ['required', 'email'],
             'mobile_no' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/','min:10','max:10'],
+            'captcha'   => ['required', new CaptchaValid]
         ]);
 
         try

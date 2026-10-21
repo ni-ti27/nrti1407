@@ -9,7 +9,7 @@
 @section('title', 'View Notices | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container-fluid px-3 px-lg-5 py-4">
+<div class="container px-3 px-lg-5 py-4">
 
     <h1 class="h2 mb-4">View Notices</h1>
 

@@ -2,6 +2,7 @@
      RTI Online - Officer header (DBIM / GIGW 3.0 accessible)
      Included from layouts/app.blade.php for officer logins.
      Styles : public/css/dbim.css
+     Accessibility tool : resources/views/partials/accessibility.blade.php
 
      Keyboard support
        Tab / Shift+Tab ... move between controls
@@ -9,7 +10,6 @@
        2nd Tab stop ...... Skip to navigation
        Nav items ......... Left/Right arrows, Home, End
        Menus ............. Enter/Space/Down open, Up/Down move, Esc closes
-       Text size buttons . Left/Right arrows move, Up/Down leave the group
      ============================================================ --}}
 @php
     $role = session('role');
@@ -26,6 +26,9 @@
     elseif ($role == 4)             { $manual = ['../FA_Dept_User_Manual.pdf',       'FA User Manual']; }
     elseif ($role == 5)             { $manual = ['../FA_Dept_User_Manual.pdf',       'Clerk User Manual']; }
     elseif ($role == 6)             { $manual = ['../FA_Dept_User_Manual.pdf',       'State Information Commissioner Manual']; }
+
+    // Nodal (role 1) has 10 menu items: smaller text so they sit on ONE line
+    $navCompact = $role == 1 ? 'dbim-nav--compact' : '';
 @endphp
 
 {{-- Self-contained fallback: load the DBIM assets if the layout did not. --}}
@@ -119,31 +122,8 @@
                             </ul>
                         </div>
 
-                        {{-- Accessibility --}}
-                        <div class="tool dropdown">
-                            <button type="button" id="a11yMenuButton" data-bs-toggle="dropdown"
-                                    aria-expanded="false" aria-haspopup="true"
-                                    aria-label="Accessibility panel" title="Accessibility panel">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 64 64" aria-hidden="true" focusable="false" fill="none" class="d-flex justify-content-center">
-                                <path d="M24.2921 29.7656C21.4604 29.7656 18.7402 29.7704 16.0199 29.7608C15.4887 29.7608 14.9503 29.7419 14.4286 29.6565C12.2182 29.296 10.6482 27.4043 10.6672 25.1638C10.6861 22.9779 12.3652 21.041 14.5305 20.7305C14.9977 20.6641 15.4744 20.6451 15.9488 20.6451C26.6163 20.6403 37.2838 20.6356 47.9515 20.6522C48.6534 20.6522 49.3862 20.7091 50.0505 20.9154C52.0307 21.5294 53.2593 23.4166 53.1265 25.491C52.9982 27.4968 51.4521 29.2771 49.4526 29.6256C48.7294 29.7512 47.9798 29.7536 47.2425 29.7584C44.7025 29.7725 42.1601 29.7632 39.3638 29.7632C39.5203 32.2075 39.3779 34.6163 39.8785 36.8827C41.0523 42.1933 42.5465 47.4328 43.8817 52.7077C44.5102 55.1947 43.1987 57.6104 40.8555 58.4072C38.2041 59.308 35.4126 57.7765 34.7414 54.9837C33.8307 51.188 32.9817 47.3757 32.1043 43.5731C32.0686 43.4165 32.0166 43.2648 31.7985 43.1059C31.3595 45.0168 30.9185 46.9301 30.4774 48.8408C30.0126 50.8584 29.5785 52.8832 29.0758 54.8912C28.4046 57.5632 25.9072 59.0613 23.3008 58.4141C20.7893 57.7883 19.2785 55.2325 19.9402 52.6128C21.1403 47.8523 22.2834 43.0752 23.6376 38.3573C24.4439 35.548 24.24 32.7384 24.2921 29.7656ZM31.9929 23.6868C26.6875 23.6868 21.3822 23.6868 16.0745 23.6868C15.7187 23.6868 15.3582 23.6797 15.012 23.7366C14.2341 23.8599 13.7218 24.4573 13.7147 25.1946C13.7076 25.9462 14.1914 26.5318 14.9788 26.6717C15.2966 26.7285 15.6286 26.7237 15.9535 26.7237C18.7093 26.7285 21.4675 26.7096 24.2234 26.7333C25.8219 26.7475 27.195 27.7456 27.2473 29.1704C27.335 31.6219 27.5222 34.1349 27.0977 36.52C26.429 40.2659 25.2906 43.9285 24.3467 47.6272C23.8629 49.5189 23.3483 51.4013 22.881 53.2981C22.613 54.3837 23.1443 55.2563 24.138 55.4885C25.0582 55.7043 25.8859 55.1379 26.1728 54.0923C26.1966 54.0069 26.2037 53.9168 26.2227 53.8315C27.2899 49.1587 28.3523 44.4859 29.4385 39.8176C29.5643 39.2795 29.7374 38.7128 30.0433 38.2672C30.5699 37.5037 31.3761 37.1933 32.3035 37.3664C33.3779 37.5677 34.0062 38.2435 34.2505 39.3032C35.3534 44.1184 36.4633 48.9333 37.571 53.7485C37.5899 53.8339 37.5945 53.9264 37.6158 54.0117C37.8958 55.1211 38.7259 55.7187 39.6697 55.4957C40.6942 55.2539 41.1947 54.3624 40.9054 53.2173C40.1987 50.4365 39.4777 47.6579 38.7521 44.8816C37.4878 40.0477 36.0009 35.2659 36.4419 30.1448C36.6363 27.8712 37.623 26.7285 39.9307 26.7213C42.5678 26.7144 45.2075 26.7213 47.8449 26.7192C48.1411 26.7192 48.4401 26.7237 48.7294 26.6741C49.5974 26.527 50.1334 25.8798 50.0859 25.0785C50.0385 24.2985 49.4907 23.7722 48.6227 23.6963C48.3286 23.6702 48.0297 23.6797 47.7334 23.6797C42.4873 23.6797 37.2411 23.6797 31.9929 23.6797V23.6868Z" fill="#162F6A"/>
-                                <path d="M31.6523 17.6787C28.1841 17.6715 25.4626 14.9253 25.4796 11.4504C25.4965 8.07201 28.3001 5.3138 31.6982 5.33311C35.0867 5.35482 37.8323 8.13473 37.8251 11.5397C37.8179 14.9519 35.0699 17.6859 31.6523 17.6787ZM34.7339 11.4938C34.7219 9.7974 33.2958 8.4002 31.6041 8.42433C29.9435 8.44844 28.5731 9.83841 28.5707 11.4962C28.5659 13.2313 29.9195 14.5826 31.6547 14.5802C33.395 14.5778 34.7483 13.2216 34.7339 11.4938Z" fill="#162F6A"/>
-                            </svg>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-2" aria-labelledby="a11yMenuButton">
-                                <li class="dropdown-item-text" id="textSizeLabel">Text size</li>
-                                <li class="dropdown-item-text fs-group" role="group" aria-labelledby="textSizeLabel">
-                                    <button type="button" id="fontDecrease" aria-label="Decrease text size">A-</button>
-                                    <button type="button" id="fontReset" aria-label="Normal text size">A</button>
-                                    <button type="button" id="fontIncrease" aria-label="Increase text size">A+</button>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <button type="button" class="dropdown-item" id="themeToggle" aria-pressed="false">
-                                        <span id="themeToggleLabel">High Contrast</span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+                        {{-- Accessibility: icon + side panel + logic, all in one shared partial --}}
+                        @include('partials.accessibility')
 
                     </div>
                 </div>
@@ -152,8 +132,10 @@
         </div>
     </div>
 
-    {{-- ================= Row 2 : main navigation (role based, as before) ================= --}}
-    <div class="dbim-header__nav">
+    {{-- ================= Row 2 : main navigation (role based, as before) =================
+         dbim-nav--plain   : selected menu has NO underline bar (light-blue block + bold instead)
+         dbim-nav--compact : smaller text, so the 10 Nodal items stay on one line --}}
+    <div class="dbim-header__nav dbim-nav--plain">
         <div class="container-fluid px-3 px-lg-5">
             <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -163,7 +145,7 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav gap-lg-4 flex-lg-wrap">
+                    <ul class="navbar-nav flex-lg-wrap {{ $navCompact }}">
 
                         {{-- Requests : Nodal / PIO / APIO --}}
                         @if($role < 4)
@@ -336,18 +318,16 @@
     Mobile Number and Email Id in "Profile Update" to receive SMS Messages and Notifications.
 </div>
 
+{{-- Header-only script. Theme, text size and all accessibility options
+     live in partials/accessibility.blade.php --}}
 <script>
     (function () {
-        var root   = document.documentElement;
-        var status = document.getElementById('dbimStatus');
-        var store  = {
-            get: function (k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-            set: function (k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-        };
-        function announce(msg) {
-            status.textContent = '';
-            setTimeout(function () { status.textContent = msg; }, 50);
-        }
+        var root = document.documentElement;
+
+        /* ---- Keyboard vs mouse: the search ring shows only for Tab users ---- */
+        document.addEventListener('keydown', function (e) { if (e.key === 'Tab') { root.classList.add('dbim-kbd'); } });
+        document.addEventListener('mousedown', function () { root.classList.remove('dbim-kbd'); });
+        document.addEventListener('touchstart', function () { root.classList.remove('dbim-kbd'); }, { passive: true });
 
         /* ---- Sticky header height: lets in-page links stop BELOW the header ---- */
         var header = document.querySelector('.dbim-header');
@@ -358,61 +338,6 @@
         window.addEventListener('load', setHeaderHeight);
         window.addEventListener('resize', setHeaderHeight);
         if ('ResizeObserver' in window) { new ResizeObserver(setHeaderHeight).observe(header); }
-
-        /* ---- Theme: standard / DBIM high-contrast dark ---- */
-        var toggle = document.getElementById('themeToggle');
-        var label  = document.getElementById('themeToggleLabel');
-
-        function applyTheme(theme, speak) {
-            var dark = theme === 'dark';
-            if (dark) { root.setAttribute('data-theme', 'dark'); }
-            else      { root.removeAttribute('data-theme'); }
-            root.setAttribute('data-bs-theme', dark ? 'dark' : 'light');
-            toggle.setAttribute('aria-pressed', dark ? 'true' : 'false');
-            label.textContent = dark ? 'Standard Contrast' : 'High Contrast';
-            store.set('dbim-theme', theme);
-            if (speak) { announce(dark ? 'High contrast theme on' : 'High contrast theme off'); }
-        }
-        applyTheme(store.get('dbim-theme') === 'dark' ? 'dark' : 'light', false);
-        toggle.addEventListener('click', function () {
-            applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark', true);
-        });
-
-        /* ---- Text size: A- / A / A+ ---- */
-        var size = parseInt(store.get('dbim-font-size') || '100', 10);
-        function applySize(s, speak) {
-            size = Math.min(130, Math.max(80, s));
-            root.style.fontSize = size + '%';
-            store.set('dbim-font-size', size);
-            if (speak) { announce('Text size ' + size + ' percent'); }
-        }
-        applySize(size, false);
-
-        var fDec = document.getElementById('fontDecrease');
-        var fRes = document.getElementById('fontReset');
-        var fInc = document.getElementById('fontIncrease');
-        fInc.addEventListener('click', function (e) { e.stopPropagation(); applySize(size + 10, true); });
-        fDec.addEventListener('click', function (e) { e.stopPropagation(); applySize(size - 10, true); });
-        fRes.addEventListener('click', function (e) { e.stopPropagation(); applySize(100, true); });
-
-        /* ---- Keyboard: text size group (Left/Right inside, Up/Down leave) ---- */
-        var fsButtons = [fDec, fRes, fInc];
-        fsButtons.forEach(function (btn, i) {
-            btn.addEventListener('keydown', function (e) {
-                var next = null;
-                if (e.key === 'ArrowRight') { next = fsButtons[(i + 1) % 3]; }
-                else if (e.key === 'ArrowLeft') { next = fsButtons[(i + 2) % 3]; }
-                else if (e.key === 'ArrowDown') { next = toggle; }
-                else if (e.key === 'ArrowUp') { next = document.getElementById('skipFromMenu'); }
-                if (next) { e.preventDefault(); e.stopPropagation(); next.focus(); }
-            });
-        });
-        document.getElementById('skipFromMenu').addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowDown') { e.preventDefault(); e.stopPropagation(); fDec.focus(); }
-        });
-        toggle.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowUp') { e.preventDefault(); e.stopPropagation(); fRes.focus(); }
-        });
 
         /* ---- Skip to navigation ---- */
         document.getElementById('skipToNav').addEventListener('click', function (e) {

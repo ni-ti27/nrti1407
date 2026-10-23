@@ -1,8 +1,7 @@
 {{-- ============================================================
-     Officer: View Comments / Reply (DBIM / GIGW 3.0, keyboard + screen reader friendly)
+     Officer: View Comments / Reply (DBIM / GIGW 3.0)
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      Pagination: resources/views/pagination.blade.php
-     No inline styles, no inline event handlers.
      ============================================================ --}}
 @extends('layouts.app')
 
@@ -11,24 +10,10 @@
 @section('content')
 <div class="container px-3 px-lg-5 py-4">
 
-    <h1 class="h2 mb-4">View Comments / Reply</h1>
+    <h1 class="h2 mb-4 dbim-text-key">View Comments / Reply</h1>
 
-    {{-- ===== Department / user details ===== --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="text-center mb-3">
-                <h2 class="h5 mb-1">{{ session('faaDeptName') }}</h2>
-                @if(session('role_name') != 'Nodal Officer' && session('role_name') != 'First Appellete Authority')
-                    <p class="fs-6 fw-bold mb-1">{{ session('subDepartmentName') }}</p>
-                    <p class="fs-6 fw-bold mb-0">{{ session('officeName') }}</p>
-                @endif
-            </div>
-            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                <p class="fs-6 fw-bold mb-0">Username: <span class="fw-normal">{{ session('username') }}</span></p>
-                <p class="fs-6 fw-bold mb-0">Role: <span class="fw-normal">{{ session('role_name') }}</span></p>
-            </div>
-        </div>
-    </div>
+    {{-- ===== Reusable Department / User Header Card ===== --}}
+    @include('OfficerView.officer-header-card')
 
     {{-- ===== Flash messages ===== --}}
     @include('partials.flash-messages')
@@ -62,7 +47,7 @@
                         @endphp
                         @foreach($requestLines as $request)
                             <tr>
-                                <td>{{ $serialNumber++ }}</td>
+                                <td class="text-center">{{ $serialNumber++ }}</td>
                                 <td>
                                     <a href="{{ route('detailedComments', ['id' => $request->id]) }}">
                                         {{ $role == 4 ? $request->fa_reg_no : $request->reg_no }}
@@ -70,7 +55,7 @@
                                 </td>
                                 <td>{{ $request->name }}</td>
                                 <td>{{ $request->created_at->format('d-m-Y H:i') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($request->created_at)->diffInDays(now()) }}</td>
+                                <td class="text-number">{{ \Carbon\Carbon::parse($request->created_at)->diffInDays(now()) }}</td>
                                 @if(session('role') == 1)
                                     <td>{{ $request->username }}</td>
                                 @endif

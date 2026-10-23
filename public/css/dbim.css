@@ -309,6 +309,296 @@ td.text-number,
   color: #000;
 }
 
+/* ---- Main navigation: MeitY look ---- */
+@media (min-width: 992px) {
+  /* items touch each other; the markup's gap-lg-4 is cancelled here */
+  .dbim-header__nav .navbar-nav {
+    gap: 0 !important;
+  }
+  .dbim-header__nav .nav-link {
+    justify-content: center;
+    padding: 8px 40px;
+    white-space: nowrap;
+  }
+}
+
+/* Open dropdown keeps the light-blue block, like hover */
+.dbim-header__nav .nav-link.show {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-key);
+}
+
+/* Chevron instead of Bootstrap's triangle; points up when open */
+.dbim-header__nav .dropdown-toggle::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin: -0.25em 0 0 0.6em;
+  border: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  vertical-align: middle;
+  transition: transform 0.15s;
+}
+.dbim-header__nav .dropdown-toggle[aria-expanded="true"]::after {
+  margin-top: 0.15em;
+  transform: rotate(-135deg);
+}
+
+/* Dropdown panel: dark, flush under the item, centred small text */
+.dbim-header__nav .dropdown-menu {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--dbim-rhythm); /* #3D4043 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+@media (min-width: 992px) {
+  .dbim-header__nav .dropdown-menu {
+    min-width: 100%;
+    width: max-content;
+    max-width: 24rem;
+  }
+}
+.dbim-header__nav .dropdown-item {
+  padding: 10px 16px;
+  text-align: center;
+  white-space: normal;
+  font-size: var(--dbim-fs-p2);
+  font-weight: 400;
+  color: #fff; /* ~11:1 on #3D4043 */
+}
+.dbim-header__nav .dropdown-item:hover,
+.dbim-header__nav .dropdown-item:focus {
+  background: var(
+    --dbim-azureish-white-bg
+  ); /* light-blue hover, as in the screenshot */
+  color: var(--dbim-key);
+}
+.dbim-header__nav .dropdown-item:focus-visible {
+  outline: 2px solid var(--dbim-key);
+  outline-offset: -2px;
+}
+/* current page inside a menu */
+.dbim-header__nav .dropdown-item[aria-current="page"] {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .dbim-header__nav .nav-link.show {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-menu {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item:hover,
+[data-theme="dark"] .dbim-header__nav .dropdown-item:focus {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item:focus-visible {
+  outline-color: #000;
+}
+
+.nav-item a {
+  color: var(--dbim-link);
+  text-decoration: none;
+}
+.nav-item a:hover {
+  color: var(--dbim-link);
+  text-decoration: none;
+}
+
+/* ============================================================
+   MAIN NAVIGATION + SEARCH FIXES   (MeitY look, both headers)
+
+   HOW TO USE
+   1. In dbim.css DELETE the earlier block that starts with
+        /* ---- Main navigation: MeitY look ---- * /
+      and ends with
+        [data-theme="dark"] .dbim-header__nav .dropdown-item:focus-visible { ... }
+      (it sits just above "3. HEADER"). Keep the two ".nav-item a" rules.
+   2. PASTE THIS WHOLE FILE AT THE VERY END of dbim.css.
+      It must be last: section 3 has rules of the same strength
+      (.dbim-header__nav .nav-link { padding ... }) that would win otherwise.
+
+   Optional classes (set in the blade, see OfficerHeader.blade.php):
+     .dbim-nav--plain   on .dbim-header__nav : selected menu has no underline bar
+     .dbim-nav--compact on <ul class="navbar-nav"> : smaller text (Nodal, 10 items)
+   Existing variables only.
+   ============================================================ */
+
+/* ---- Gap between links + no-wrap text (desktop) ---- */
+@media (min-width: 992px) {
+  .dbim-header__nav .navbar-nav {
+    gap: 0 8px !important; /* beats Bootstrap's gap-lg-4 utility if it is still in a blade */
+  }
+  .dbim-header__nav .nav-link {
+    justify-content: center;
+    padding: 8px 20px;
+    white-space: nowrap;
+  }
+
+  /* Nodal: smaller text + tighter padding so all 10 items sit on one line.
+     Text scales with the screen: 14px on wide screens, down to 12px. */
+  .dbim-nav--compact .navbar-nav {
+    gap: 0 4px !important;
+  }
+  .dbim-nav--compact .nav-link {
+    padding: 8px 8px;
+    font-size: clamp(0.75rem, 0.8vw, 0.875rem);
+  }
+}
+
+/* ---- Open dropdown keeps the light-blue block, like hover ---- */
+.dbim-header__nav .nav-link.show {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-key);
+}
+
+/* ---- Chevron: always points DOWN (not on hover, not when open) ---- */
+.dbim-header__nav .dropdown-toggle::after,
+.dbim-header__nav .dropdown-toggle:hover::after,
+.dbim-header__nav .dropdown-toggle.show::after,
+.dbim-header__nav .dropdown-toggle[aria-expanded="true"]::after {
+  content: "";
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  margin: -0.25em 0 0 0.6em;
+  border: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: none;
+  vertical-align: middle;
+}
+
+/* ---- Dropdown panel: dark, flush under the item, centred small text ---- */
+.dbim-header__nav .dropdown-menu {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--dbim-rhythm); /* #3D4043 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+@media (min-width: 992px) {
+  .dbim-header__nav .dropdown-menu {
+    min-width: 100%;
+    width: max-content;
+    max-width: 24rem;
+  }
+}
+.dbim-header__nav .dropdown-item {
+  padding: 10px 16px;
+  text-align: center;
+  white-space: normal;
+  font-size: var(--dbim-fs-p2);
+  font-weight: 400;
+  color: #fff; /* ~11:1 on #3D4043 */
+}
+.dbim-header__nav .dropdown-item:hover,
+.dbim-header__nav .dropdown-item:focus {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-key);
+}
+.dbim-header__nav .dropdown-item:focus-visible {
+  outline: 2px solid var(--dbim-key);
+  outline-offset: -2px;
+}
+/* current page inside a menu: bold (not colour alone) */
+.dbim-header__nav .dropdown-item[aria-current="page"] {
+  font-weight: 700;
+}
+
+/* ---- PLAIN selection: no underline bar, no underlined text ----
+   Selected top-level item = light-blue block + bold + key colour. */
+.dbim-nav--plain .nav-link.active {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-key);
+  font-weight: 700;
+  text-decoration: none;
+}
+@media (min-width: 992px) {
+  .dbim-nav--plain .nav-link.active {
+    border-bottom-color: transparent; /* removes the 8px underline bar */
+  }
+}
+.dbim-nav--plain .nav-link:hover,
+.dbim-nav--plain .nav-link.show,
+.dbim-nav--plain .dropdown-item,
+.dbim-nav--plain .dropdown-item:hover,
+.dbim-nav--plain .dropdown-item:focus,
+.dbim-nav--plain .dropdown-item[aria-current="page"] {
+  text-decoration: none;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-header__nav .dropdown-menu {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item:hover,
+[data-theme="dark"] .dbim-header__nav .dropdown-item:focus {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-header__nav .dropdown-item:focus-visible {
+  outline-color: #000;
+}
+/* plain: dark panel block instead of an underline */
+[data-theme="dark"] .dbim-nav--plain .nav-link:hover,
+[data-theme="dark"] .dbim-nav--plain .nav-link.show,
+[data-theme="dark"] .dbim-nav--plain .nav-link.active {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+@media (min-width: 992px) {
+  [data-theme="dark"] .dbim-nav--plain .nav-link.active {
+    border-bottom-color: transparent;
+  }
+}
+
+/* ---- Header search: no ring / fill on mouse hover or click ----
+   (placed last so the old section 4 rule cannot bring the dark ring back) */
+.dbim-header__search input:focus,
+.dbim-header__search input:focus-visible,
+.dbim-header__search button:focus,
+.dbim-header__search button:focus-visible,
+.dbim-header__appsearch input:focus,
+.dbim-header__appsearch input:focus-visible,
+.dbim-header__appsearch button:focus,
+.dbim-header__appsearch button:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+.dbim-header__search button:hover,
+.dbim-header__search button:active,
+.dbim-header__appsearch button:hover,
+.dbim-header__appsearch button:active,
+[data-theme="dark"] .dbim-header__search button:hover,
+[data-theme="dark"] .dbim-header__search button:active,
+[data-theme="dark"] .dbim-header__appsearch button:hover,
+[data-theme="dark"] .dbim-header__appsearch button:active {
+  background: transparent;
+  color: var(--dbim-key);
+}
 /* ============================================================
    3. HEADER   (layout modelled on meity.gov.in)
    ============================================================ */
@@ -370,10 +660,18 @@ td.text-number,
 }
 
 /* ---- Search ---- */
+.dbim-header__appsearch {
+  display: flex;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border: 1px solid var(--dbim-linen);
+  border-bottom: 2px solid var(--dbim-deep-blue);
+  background: var(--dbim-white);
+}
 .dbim-header__search {
   display: flex;
   width: 100%;
-  /*max-width: 320px;*/
   margin: 0 auto;
   border: 1px solid var(--dbim-linen);
   border-bottom: 2px solid var(--dbim-deep-blue);
@@ -406,7 +704,77 @@ td.text-number,
 .dbim-header__search button:hover {
   background: var(--dbim-azureish-white-bg);
 }
+.dbim-header__appsearch input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 8px 10px;
+  font-size: 0.875rem;
+  background: transparent;
+  color: var(--dbim-black);
+}
+.dbim-header__appsearch input::placeholder {
+  color: var(--dbim-text-muted);
+  opacity: 1;
+}
+.dbim-header__appsearch button {
+  border: 0;
+  border-left: 1px solid var(--dbim-linen);
+  background: transparent;
+  color: var(--dbim-powder-blue);
+  padding: 0 12px;
+}
+.dbim-header__appsearch button svg {
+  width: 18px;
+  height: 18px;
+}
+.dbim-header__appsearch button:hover {
+  background: var(--dbim-azureish-white-bg);
+}
+/* Search: no highlight on hover or mouse click */
+.dbim-header__appsearch button:hover,
+.dbim-header__appsearch button:active,
+.dbim-header__search button:hover,
+.dbim-header__search button:active {
+  background: transparent;
+  color: var(--dbim-key);
+}
+.dbim-header__appsearch button,
+.dbim-header__search button {
+  -webkit-tap-highlight-color: transparent;
+}
+.dbim-header__appsearch input:focus,
+.dbim-header__appsearch input:focus-visible,
+.dbim-header__search input:focus,
+.dbim-header__search input:focus-visible,
+.dbim-header__appsearch button:focus,
+.dbim-header__search button:focus {
+  outline: none;
+  box-shadow: none;
+}
 
+/* Keyboard (Tab) users only: one ring around the whole search box (GIGW focus visibility) */
+html.dbim-kbd .dbim-header__appsearch:focus-within,
+html.dbim-kbd .dbim-header__search:focus-within {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+/* High-contrast theme */
+[data-theme="dark"] .dbim-header__appsearch button:hover,
+[data-theme="dark"] .dbim-header__appsearch button:active,
+[data-theme="dark"] .dbim-header__search button:hover,
+[data-theme="dark"] .dbim-header__search button:active {
+  background: transparent;
+  color: var(--dbim-key);
+}
+
+/* High-contrast theme: keep the button hover plain too */
+[data-theme="dark"] .dbim-header__appsearch button:hover,
+[data-theme="dark"] .dbim-header__search button:hover {
+  background: transparent;
+  color: var(--dbim-key);
+}
 /* ---- Utility icons ---- */
 .dbim-header__tools {
   display: flex;
@@ -2368,4 +2736,161 @@ html.dbim-big-cursor * {
   margin: 0 0 0.75rem;
   font-size: var(--dbim-fs-p1);
   line-height: 1.5;
+}
+
+/* ============================================================
+   25. REFINED COMPACT FORM CARD HEADER (.dbim-form-card__header)
+   ============================================================ */
+.dbim-form-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  background: linear-gradient(
+    135deg,
+    var(--dbim-azureish-white-bg) 0%,
+    var(--dbim-inclusive-white) 100%
+  );
+  color: var(--dbim-wintergreen-dream);
+  border-bottom: 1px solid var(--dbim-azureish-white);
+  border-left: 5px solid var(--dbim-powder-blue);
+  border-top-left-radius: 7px;
+  border-top-right-radius: 7px;
+}
+
+.dbim-form-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--dbim-powder-blue);
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(33, 74, 171, 0.2);
+}
+
+.dbim-form-card__icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  stroke: none;
+}
+
+.dbim-form-card__title {
+  margin: 0;
+  color: inherit;
+  font-size: var(--dbim-fs-h3); /* 20px desktop, 16px mobile */
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.dbim-form-card__step {
+  margin: 2px 0 0;
+  color: var(--dbim-text-muted);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* High-contrast dark theme adjustments */
+[data-theme="dark"] .dbim-form-card__header {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+  border-left: 5px solid var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-form-card__icon {
+  background: var(--dbim-key);
+  color: #000;
+  box-shadow: none;
+}
+
+[data-theme="dark"] .dbim-form-card__step {
+  color: var(--dbim-azureish-white-bg);
+}
+/* ============================================================
+   EMBEDDED PAGE HEADER & META STRIP (DBIM / GIGW 3.0)
+   ============================================================ */
+.dbim-page-header {
+  background: transparent;
+  padding: 0;
+}
+
+.dbim-header-divider {
+  border-bottom: 2px solid var(--dbim-powder-blue) !important;
+}
+
+.dbim-dept-heading {
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  color: var(--dbim-wintergreen-dream);
+}
+
+.dbim-dept-sub {
+  font-size: var(--dbim-fs-p2);
+  font-weight: 400;
+  color: var(--dbim-text-muted);
+}
+
+.dbim-meta-strip {
+  background: var(--dbim-azureish-white-bg);
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--dbim-azureish-white);
+  font-size: var(--dbim-fs-p2);
+}
+
+.dbim-meta-label {
+  color: var(--dbim-deep-earthy-brown);
+  font-weight: 700;
+}
+
+.dbim-meta-value {
+  color: var(--dbim-wintergreen-dream);
+  font-weight: 600;
+}
+
+.dbim-meta-separator {
+  color: var(--dbim-grey-02);
+  user-select: none;
+}
+
+.dbim-role-pill {
+  display: inline-block;
+  padding: 1px 8px;
+  font-size: var(--dbim-fs-small);
+  font-weight: 700;
+  background: var(--dbim-wintergreen-dream);
+  color: #ffffff;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* High-contrast theme mapping */
+[data-theme="dark"] .dbim-header-divider {
+  border-bottom-color: var(--dbim-key) !important;
+}
+
+[data-theme="dark"] .dbim-dept-heading,
+[data-theme="dark"] .dbim-dept-sub {
+  color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-meta-strip {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-meta-label,
+[data-theme="dark"] .dbim-meta-value {
+  color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-role-pill {
+  background: var(--dbim-key);
+  color: #000000;
 }

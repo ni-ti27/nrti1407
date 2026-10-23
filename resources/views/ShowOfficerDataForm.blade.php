@@ -2,6 +2,8 @@
      Officer Profile Update  (DBIM / GIGW 3.0, keyboard accessible)
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      Step 1: verify mobile number with OTP.  Step 2: update profile.
+     One header per step (.dbim-form-card__header) carries the page
+     <h1> and the "Step X of 2" line. Section cards below use <h2>.
      Hints are in the placeholders; messages only appear under a
      field when it has an error.
      No inline styles, no inline event handlers.
@@ -29,8 +31,6 @@
     <div class="row justify-content-center">
         <div class="col-12 col-lg-10">
 
-            <h1 class="h2 mb-4">Officer's Profile Update</h1>
-
             {{-- Messages from the server --}}
             @include('partials.flash-messages')
 
@@ -49,8 +49,16 @@
                  STEP 1: Verify registered mobile number
                  ===================================================== --}}
             @if(session('VerifiedOTP') != true)
-                <div class="card shadow-sm mb-4">
-                    <h2 class="card-header h4 mb-0">Verify Registered Mobile Number</h2>
+                <div class="card dbim-form-card mb-4">
+                    <div class="dbim-form-card__header">
+                        <span class="dbim-form-card__icon" aria-hidden="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" focusable="false"><path d="M500-220Zm-340 60v-94q0-38 19-65t49-41q67-30 128.5-45T480-420q38.02 0 75.01 6T630-397l-48 47q-26-5-50.9-7.5-24.89-2.5-51.1-2.5-57 0-111 11.5T252-306q-14 7-23 21.5t-9 30.5v34h280v60H160Zm400 40v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T902.09-340L683-120H560Zm300-263-37-37 37 37ZM620-180h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19ZM480-481q-63 0-106.5-43.5T330-631q0-63 43.5-106.5T480-781q63 0 106.5 43.5T630-631q0 63-43.5 106.5T480-481Zm0-60q38 0 64-26t26-64q0-38-26-64t-64-26q-38 0-64 26t-26 64q0 38 26 64t64 26Zm0-90Z"/></svg>
+                        </span>
+                        <div>
+                            <h1 class="dbim-form-card__title">Officer's Profile Update</h1>
+                            <p class="dbim-form-card__step">Step 1 of 2: Verify your registered mobile number</p>
+                        </div>
+                    </div>
 
                     <div class="card-body">
                         <form id="sendOTPForm" name="sendOTPForm" method="POST"
@@ -120,6 +128,22 @@
                 <form id="profileUpdate" name="profileUpdate" method="POST"
                       action="{{ route('updateOfficerData') }}" novalidate>
                     @csrf
+
+                    {{-- Page header (unified pattern with step 1) --}}
+                    <div class="card dbim-form-card mb-4">
+                        <div class="dbim-form-card__header">
+                            <span class="dbim-form-card__icon" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
+                                    <circle cx="12" cy="8" r="4" fill="currentColor"/>
+                                    <path d="M4 21c0-4 4-7 8-7s8 3 8 7" fill="currentColor"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <h1 class="dbim-form-card__title">Officer's Profile Update</h1>
+                                <p class="dbim-form-card__step">Step 2 of 2: Update your profile details</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="alert alert-info dbim-note" role="note">
                         <p>

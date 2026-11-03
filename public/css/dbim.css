@@ -883,7 +883,7 @@ html.dbim-kbd .dbim-header__search:focus-within {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
-  border-bottom: 8px solid var(--dbim-key);
+  border-bottom: 5px solid var(--dbim-key);
 }
 
 .dbim-header__nav .navbar-toggler {
@@ -2893,4 +2893,158 @@ html.dbim-big-cursor * {
 [data-theme="dark"] .dbim-role-pill {
   background: var(--dbim-key);
   color: #000000;
+}
+/* ============================================================
+   26. HEADER POLISH  (DBIM / GIGW 3.0)
+   APPEND AT THE VERY END of public/css/dbim.css.
+   Existing variables only. Does NOT touch .dbim-header__tools,
+   so the skip / language / accessibility icons stay exactly as they are.
+
+   What changes
+     - 4px Blue-group accent line on top of the header
+     - emblem a little smaller, thin divider between emblem and title
+     - title in the key colour, clearer hierarchy (gov / name / tagline)
+     - rounded search box, no highlight on mouse hover or click
+     - navigation: taller links, light-blue block + 4px bar for the current page
+     - logged-in strip: separator between profile and Logout
+   ============================================================ */
+
+/* ---- Accent line + softer bottom edge ---- */
+.dbim-header::before {
+  content: "";
+  display: block;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--dbim-wintergreen-dream) 0%,
+    var(--dbim-columbia-blue) 100%
+  );
+}
+[data-theme="dark"] .dbim-header::before {
+  background: var(--dbim-key);
+}
+.dbim-header {
+  border-bottom: 1px solid var(--dbim-azureish-white);
+  box-shadow: 0 2px 6px rgba(22, 47, 106, 0.08); /* decoration only */
+}
+[data-theme="dark"] .dbim-header {
+  border-bottom-color: var(--dbim-key);
+  box-shadow: none;
+}
+
+/* ---- Row 1 ---- */
+.dbim-header__top {
+  padding: 12px 0;
+}
+
+/* ---- Brand: emblem | divider | title ---- */
+.dbim-header__brand img {
+  width: 48px;
+  height: 84px; /* same ratio as the 57 x 100 original */
+  flex: 0 0 48px;
+}
+.dbim-header__brand > span {
+  border-left: 0;
+}
+.dbim-header__brand .gov {
+  font-size: var(--dbim-fs-p2);
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--dbim-text-muted); /* #606060, ~6:1 on white */
+}
+.dbim-header__brand .name {
+  margin: 2px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--dbim-key);
+}
+.dbim-header__brand .tag {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--dbim-text-muted);
+}
+
+/* ---- Search: rounded box, quiet states ---- */
+.dbim-header__appsearch {
+  max-width: 360px;
+  border: 1px solid var(--dbim-grey-02); /* 3:1 on white (WCAG 1.4.11) */
+  border-radius: 2rem;
+  overflow: hidden;
+  background: var(--dbim-white);
+}
+.dbim-header__appsearch input {
+  padding: 10px 6px 10px 18px;
+}
+.dbim-header__appsearch button {
+  width: 48px;
+  padding: 0;
+  border-left: 0;
+  color: var(--dbim-key);
+}
+.dbim-header__appsearch button svg {
+  width: 20px;
+  height: 20px;
+}
+/* outer border only, no inner fill or ring for mouse users */
+.dbim-header__appsearch:focus-within {
+  border-color: var(--dbim-key);
+}
+/* keyboard (Tab) users keep the visible ring from section 3 */
+html.dbim-kbd .dbim-header__appsearch:focus-within {
+  outline-offset: 2px;
+}
+
+/* ---- Row 2 : navigation ---- */
+.dbim-header__nav {
+  border-top: 1px solid var(--dbim-azureish-white);
+}
+@media (min-width: 992px) {
+  .dbim-header__nav .navbar-nav {
+    gap: 0 4px !important;
+  }
+  .dbim-header__nav .nav-link {
+    min-height: 54px;
+    padding: 8px 22px;
+  }
+}
+.dbim-header__nav .nav-link {
+  transition: background-color 0.15s, color 0.15s;
+}
+.dbim-header__nav .nav-link.active {
+  background: var(--dbim-azureish-white-bg);
+  color: var(--dbim-key);
+  font-weight: 700;
+  border-bottom: 4px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .nav-link.active {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  border-bottom-color: var(--dbim-key);
+}
+@media (max-width: 991.98px) {
+  .dbim-header__nav .nav-link.active {
+    border-bottom: 1px solid var(--dbim-linen);
+    border-left: 8px solid var(--dbim-key);
+  }
+}
+
+/* ---- Row 3 : logged-in strip ---- */
+.dbim-header__user a + a {
+  border-left: 1px solid var(--dbim-azureish-white);
+}
+[data-theme="dark"] .dbim-header__user a + a {
+  border-left-color: var(--dbim-key);
+}
+
+/* ---- Small screens ---- */
+@media (max-width: 575.98px) {
+  .dbim-header__brand img {
+    width: 38px;
+    height: 66px;
+    flex-basis: 38px;
+  }
+  .dbim-header__brand .name {
+    font-size: 1.25rem;
+  }
 }

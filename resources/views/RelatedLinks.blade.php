@@ -1,10 +1,12 @@
 {{-- ============================================================
      Related Links  (DBIM / GIGW 3.0, keyboard + screen reader friendly)
+     Same card as the Officers Login page (dbim-login__*), wide version.
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      Search and pagination work like the Application Status page
      (GET ?search=, resources/views/Pagination.blade.php), but the list
      is the array below, so no controller change is needed.
-     Styles: dbim.css section 21. Icons: inline SVG, sized and coloured by CSS.
+     Styles: dbim.css sections 21, 27, 29 and 34. Icons: inline SVG,
+     sized and coloured by CSS.
 
      To add a link, add one line to $allLinks.
      ============================================================ --}}
@@ -38,11 +40,14 @@
     );
 @endphp
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
+<div class="dbim-login dbim-login--wide">
+    <section class="dbim-login__card" aria-labelledby="linksHeading">
 
-            <h1 class="h2 mb-4">Related Links</h1>
+        <div class="dbim-login__head">
+            <h1 id="linksHeading" class="dbim-login__title">Related Links</h1>
+        </div>
+
+        <div class="dbim-login__body">
 
             {{-- ===== Search ===== --}}
             <form method="GET" action="{{ url()->current() }}" role="search" aria-label="Search related links"
@@ -70,7 +75,7 @@
 
             {{-- ===== List ===== --}}
             @if($relatedLinks->count() == 0)
-                <div class="alert alert-info" role="status">
+                <div class="alert alert-info mb-0" role="status">
                     No related links found for &ldquo;{{ $term }}&rdquo;.
                     <a href="{{ url()->current() }}">Clear the search</a> to see all links.
                 </div>
@@ -98,7 +103,7 @@
             @endif
 
         </div>
-    </div>
+    </section>
 </div>
 @endsection
 

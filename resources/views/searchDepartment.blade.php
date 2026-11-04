@@ -1,58 +1,59 @@
 {{-- ============================================================
      Search for Department / Office / Sub-Office
      (DBIM / GIGW 3.0, keyboard accessible)
+     Same card as the Officers Login page (dbim-login__*), wider.
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     Styles: sections 27 and 30 of public/css/dbim.css
      ============================================================ --}}
 @extends('layouts.app')
 
 @section('title', 'Search Public Authorities | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
+<div class="dbim-login dbim-login--wide">
+    <section class="dbim-login__card" aria-labelledby="searchHeading">
+
+        <div class="dbim-login__head">
+            <h1 id="searchHeading" class="dbim-login__title">Search for Department / Office / Sub-Office</h1>
+        </div>
+
+        <div class="dbim-login__body">
 
             {{-- ===== Search form ===== --}}
-            <div class="card shadow-sm">
-                <h1 class="card-header h4 mb-0">Search for Department / Office / Sub-Office</h1>
+            <form method="POST" action="{{ route('department.show') }}"
+                  role="search" aria-label="Search for department, office or sub-office">
+                @csrf
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('department.show') }}"
-                          role="search" aria-label="Search for department, office or sub-office">
-                        @csrf
-
-                        <div class="mb-3">
-                            <label for="search" class="form-label fw-bold">Enter characters to search</label>
-                            <input type="text" id="search" name="search" class="form-control"
-                                   value="{{ old('search', $search ?? '') }}"
-                                   placeholder="Enter characters of the department, office or sub-office name"
-                                   autocomplete="off">
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="download-btn text-uppercase w-ft" title="Search">
-                                Search
-                            </button>
-                        </div>
-                    </form>
+                <div class="mb-3">
+                    <label for="search" class="form-label fw-bold">Enter characters to search</label>
+                    <input type="text" id="search" name="search" class="form-control"
+                           value="{{ old('search', $search ?? '') }}"
+                           placeholder="Enter characters of the department, office or sub-office name"
+                           autocomplete="off">
                 </div>
-            </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="download-btn text-uppercase w-ft" title="Search">
+                        Search
+                    </button>
+                </div>
+            </form>
 
             {{-- ===== Results ===== --}}
             @if(!empty($search))
-                <section class="mt-4" aria-labelledby="searchResultsHeading">
-                    <h2 id="searchResultsHeading" class="h4" tabindex="-1">Search results for: "{{ $search }}"</h2>
+                <section class="dbim-search__results" aria-labelledby="searchResultsHeading">
+                    <h2 id="searchResultsHeading" class="dbim-search__heading" tabindex="-1">Search results for: "{{ $search }}"</h2>
 
                     @if($departments->isEmpty())
-                        <div class="alert alert-info" role="status">No departments found.</div>
+                        <div class="alert alert-info mb-0" role="status">No departments found.</div>
                     @else
                         @if(!empty($hierarchy))
-                            <h3 class="h5 mt-4">Detailed Hierarchy</h3>
+                            <h3 class="dbim-search__subheading">Detailed Hierarchy</h3>
 
                             {{-- scrollable on small screens; focusable so keyboard users can scroll it --}}
                             <div class="table-responsive" role="region" tabindex="0"
                                  aria-labelledby="searchResultsHeading">
-                                <table class="table table-bordered align-middle">
+                                <table class="table table-bordered align-middle mb-0">
                                     <caption class="visually-hidden">
                                         Departments, offices and sub-offices matching "{{ $search }}"
                                     </caption>
@@ -96,7 +97,7 @@
             @endif
 
         </div>
-    </div>
+    </section>
 </div>
 @endsection
 

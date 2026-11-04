@@ -3048,3 +3048,425 @@ html.dbim-kbd .dbim-header__appsearch:focus-within {
     font-size: 1.25rem;
   }
 }
+/* ============================================================
+   NN. Officers Login
+   ============================================================ */
+.dbim-login-card {
+  border-top: 4px solid #162f6a;
+}
+
+.dbim-login-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: #162f6a;
+  color: #fff;
+}
+
+.dbim-input-icon {
+  background-color: #f1f4fa;
+  color: #162f6a;
+}
+
+.dbim-login-card .form-control:focus,
+.dbim-login-link:focus-visible {
+  border-color: #162f6a;
+  outline: 2px solid #162f6a;
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.dbim-login-link {
+  color: #162f6a;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.dbim-login-card .card-footer {
+  background-color: #f1f4fa;
+}
+/* ============================================================
+   27. LOGIN PAGE  (resources/views/auth/login.blade.php)
+   Single centred card, 600px wide. Flat, solid colours (Blue colour group).
+   Buttons are NOT styled here: .download-btn / .btn-link from
+   the existing sections are used, as on other pages.
+   Also contains the sticky-footer fix.
+   Existing variables only. APPEND AT THE VERY END of dbim.css.
+   ============================================================ */
+
+/* ---- Footer always at the bottom of the window ----
+   Body is a full-height flex column; the content area grows and the
+   footer is pushed down with margin-top:auto, even on short pages. */
+html {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+body > #app {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}
+body > main,
+body > .main-content,
+#app > main,
+#app > .main-content {
+  flex: 1 0 auto;
+}
+body > footer,
+#app > footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* ---- Centred login card ---- */
+.dbim-login {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px 16px 32px;
+}
+.dbim-login__card {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+  border: 1px solid var(--dbim-grey-01);
+  border-top: 4px solid var(--dbim-columbia-blue);
+  border-radius: 4px;
+}
+.dbim-login__head {
+  padding: 12px 24px;
+  background: var(--dbim-azureish-white-bg);
+  border-bottom: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+}
+.dbim-login__title {
+  margin: 0;
+  color: inherit;
+  font-size: var(--dbim-fs-h3); /* 20px desktop, 16px mobile */
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-login__body {
+  padding: 24px;
+}
+.dbim-login__required {
+  margin: 0 0 16px;
+  color: var(--dbim-text-muted);
+  font-size: var(--dbim-fs-p2);
+}
+
+/* Fields: 44px targets, focus ring that is not clipped */
+.dbim-login .form-control {
+  min-height: 44px;
+}
+.dbim-login .form-control:focus {
+  border-color: var(--dbim-columbia-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-login .form-control.is-invalid:focus {
+  border-color: var(--dbim-error);
+  outline-color: var(--dbim-error);
+}
+
+/* Show / hide password button sits flush with the field */
+.dbim-login .input-group {
+  flex-wrap: nowrap;
+}
+.dbim-login .input-group .download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 4px 4px 0;
+}
+.dbim-login .input-group .download-btn img {
+  max-width: none;
+}
+
+/* Small screens */
+@media (max-width: 575.98px) {
+  .dbim-login {
+    padding: 20px 12px;
+  }
+  .dbim-login__head {
+    padding: 12px 16px;
+  }
+  .dbim-login__body {
+    padding: 16px;
+  }
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-login__card {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-login__head {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-login__required {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-login .btn-link {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-login .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+
+@media (forced-colors: active) {
+  .dbim-login__card {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ============================================================
+   28. HEADER POLISH  (small fixes, CSS only, no markup change)
+   - all nav links use the same 4px bottom border, so the selected
+     item no longer sits lower than the others
+   - top accent line is a solid colour (no gradient)
+   - no shadow under the header, just the 1px line
+   APPEND AFTER section 27 (must come after section 26).
+   ============================================================ */
+.dbim-header__nav .nav-link {
+  border-bottom: 4px solid transparent;
+}
+.dbim-header__nav .nav-link.active {
+  border-bottom: 4px solid var(--dbim-key);
+}
+@media (max-width: 991.98px) {
+  .dbim-header__nav .nav-link {
+    border-bottom: 1px solid var(--dbim-linen);
+  }
+  .dbim-header__nav .nav-link.active {
+    border-bottom: 1px solid var(--dbim-linen);
+    border-left: 8px solid var(--dbim-key);
+  }
+}
+.dbim-header::before {
+  background: var(--dbim-wintergreen-dream);
+}
+[data-theme="dark"] .dbim-header::before {
+  background: var(--dbim-key);
+}
+.dbim-header {
+  box-shadow: none;
+}
+/* ============================================================
+   29. CONTACT PAGE  (resources/views/contact.blade.php)
+   Uses the Officers Login card (section 27) in a wider version.
+   Existing variables only. APPEND AFTER section 28.
+   ============================================================ */
+.dbim-login--wide {
+  max-width: 960px; /* same card as login, wider for details + map */
+}
+
+/* Sub-heading inside the card */
+.dbim-contact__heading {
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--dbim-linen);
+  color: var(--dbim-key); /* #162F6A, yellow in the high-contrast theme */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Map frame */
+.dbim-contact__map {
+  overflow: hidden;
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-contact__map {
+  border-color: var(--dbim-key);
+}
+/* ============================================================
+   30. SEARCH PUBLIC AUTHORITIES  (resources/views/search-department.blade.php)
+   Uses the Officers Login card (section 27), wide version (section 29).
+   Existing variables only. APPEND AFTER section 29.
+   ============================================================ */
+
+/* Results sit inside the same card, under a divider */
+.dbim-search__results {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-search__heading {
+  margin: 0 0 16px;
+  color: var(--dbim-key); /* #162F6A, yellow in the high-contrast theme */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+  line-height: 1.5;
+  overflow-wrap: anywhere; /* a long search term never pushes the layout sideways */
+}
+/* The heading receives focus from script so screen readers announce it;
+   it is not a control, so no ring (same idea as main:focus in section 4) */
+.dbim-search__heading:focus {
+  outline: none;
+}
+.dbim-search__subheading {
+  margin: 0 0 8px;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Scroll region: visible ring for keyboard users, inside the box */
+.dbim-search__results .table-responsive:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-search__results {
+  border-top-color: var(--dbim-key);
+}
+/* ============================================================
+   31. LOGIN CARD FOOTER  (Applicant Login: user manual link)
+   Same light-blue tint as the card head (section 27), same idea as
+   .dbim-form-card .card-footer. Existing variables only.
+   APPEND AFTER section 30.
+   ============================================================ */
+.dbim-login__foot {
+  padding: 12px 24px;
+  background: var(--dbim-azureish-white-bg);
+  border-top: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-login__foot a {
+  color: var(--dbim-wintergreen-dream);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+}
+.dbim-login__foot a:hover {
+  text-decoration-thickness: 2px;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-login__foot {
+    padding: 12px 16px;
+  }
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-login__foot {
+  background: var(--dbim-linen);
+  border-top-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-login__foot a {
+  color: var(--dbim-key);
+}
+
+/* ============================================================
+   32. HOME PAGE  (resources/views/home.blade.php)
+   Uses the Officers Login card (section 27), wide version (section 29).
+   Existing variables only. APPEND AFTER section 31.
+   ============================================================ */
+
+/* Chief Minister column: centred, separated from the text by a Linen line
+   (above it on small screens, to its left from 768px) */
+.dbim-home__side {
+  padding-top: 24px;
+  border-top: 1px solid var(--dbim-linen);
+  text-align: center;
+}
+@media (min-width: 768px) {
+  .dbim-home__side {
+    padding-top: 0;
+    padding-left: 24px;
+    border-top: 0;
+    border-left: 1px solid var(--dbim-linen);
+  }
+}
+
+/* Photo never gets larger than its natural size and keeps its ratio */
+.dbim-home__photo {
+  display: block;
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  margin: 0 auto;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-home__side {
+  border-color: var(--dbim-key);
+}
+/* ============================================================
+   33. HELP / CONTENT PAGES IN THE LOGIN CARD  (resources/views/help.blade.php)
+   Section 17 (.dbim-about) gives h2 a 24px / 20px size. Inside the card the
+   page title is already 20px, so sub-headings drop to body size (bold,
+   key colour, Linen line), as on the Contact Us page.
+   Existing variables only. APPEND AFTER section 32.
+   ============================================================ */
+.dbim-login__body.dbim-about h2 {
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.5;
+}
+
+/* Scrollable table wrapper: visible ring for keyboard users, inside the box */
+.dbim-login .table-responsive:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+/* ============================================================
+   34. RELATED LINKS IN THE LOGIN CARD  (resources/views/related-links.blade.php)
+   Section 21 gives the list a 24px bottom margin. When the list is the last
+   thing in the card (no pagination), the card padding is enough.
+   Existing variables only. APPEND AFTER section 33.
+   ============================================================ */
+.dbim-login__body .dbim-linklist:last-child {
+  margin-bottom: 0;
+}
+/* ============================================================
+   35. FAQ PAGE IN THE LOGIN CARD  (resources/views/faq.blade.php)
+   Question / answer styles stay in section 12 (.dbim-faq-item).
+   Existing variables only. APPEND AFTER section 34.
+   ============================================================ */
+
+/* Department heading: same look as the Contact Us sub-heading */
+.dbim-faq__dept {
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--dbim-linen);
+  color: var(--dbim-key); /* #162F6A, yellow in the high-contrast theme */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Question index, separated from the first question */
+.dbim-faq__index {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--dbim-linen);
+}
+
+/* Comfortable line length inside the wide card */
+.dbim-faq-item p,
+.dbim-faq-item ol {
+  max-width: 75ch;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-faq__dept,
+[data-theme="dark"] .dbim-faq__index {
+  border-bottom-color: var(--dbim-key);
+}

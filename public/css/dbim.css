@@ -3470,3 +3470,1528 @@ body > footer,
 [data-theme="dark"] .dbim-faq__index {
   border-bottom-color: var(--dbim-key);
 }
+/* ============================================================
+   36. WIDESCREEN FULL-BLEED HOMEPAGE STYLES
+   Replaces boxed card look with an immersive government portal layout.
+   APPEND AT THE VERY END of public/css/dbim.css.
+   ============================================================ */
+
+.dbim-homepage-wrapper {
+  width: 100%;
+  background-color: var(--dbim-bright-gray);
+}
+
+/* Hero Header Banner */
+.dbim-hero-section {
+  background: linear-gradient(
+    135deg,
+    var(--dbim-azureish-white-bg) 0%,
+    var(--dbim-inclusive-white) 100%
+  );
+  border-bottom: 2px solid var(--dbim-columbia-blue);
+  padding: 2.5rem 0;
+}
+
+.dbim-hero-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: var(--dbim-fs-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--dbim-wintergreen-dream);
+  color: #fff;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.dbim-hero-title {
+  font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--dbim-wintergreen-dream);
+  line-height: 1.25;
+}
+
+.dbim-hero-lead {
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.6;
+  max-width: 900px;
+}
+
+/* Content cards replacing narrow container boxes */
+.dbim-content-card {
+  border: 1px solid var(--dbim-grey-01) !important;
+  border-radius: 6px;
+  background-color: var(--dbim-inclusive-white);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.dbim-portal-text {
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.7;
+  color: var(--dbim-deep-earthy-brown);
+  margin-bottom: 1rem;
+}
+
+/* Enlarged, proportional Chief Minister photograph */
+.dbim-home__photo-enlarged {
+  display: block;
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+  border: 1px solid var(--dbim-linen);
+  box-shadow: 0 4px 12px rgba(22, 47, 106, 0.08);
+}
+
+@media (min-width: 1200px) {
+  .dbim-home__photo-enlarged {
+    max-width: 300px;
+  }
+}
+
+/* High-contrast theme adaptation */
+[data-theme="dark"] .dbim-hero-section {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-hero-badge {
+  background: var(--dbim-key);
+  color: #000;
+}
+
+[data-theme="dark"] .dbim-hero-title,
+[data-theme="dark"] .dbim-hero-lead {
+  color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-content-card {
+  border-color: var(--dbim-key) !important;
+  background-color: var(--dbim-inclusive-white);
+}
+
+[data-theme="dark"] .dbim-home__photo-enlarged {
+  border-color: var(--dbim-key);
+  box-shadow: none;
+}
+/* Refined, softer title style */
+.dbim-hero-section {
+  background: transparent;
+  border-bottom: 1px solid var(--dbim-linen);
+  padding: 1.25rem 0;
+}
+
+.dbim-hero-title {
+  font-size: 1.5rem; /* Downsized from clamp(1.75rem, 2.5vw, 2.5rem) */
+  font-weight: 600; /* Softened from 700 bold */
+  color: var(--dbim-wintergreen-dream);
+  line-height: 1.3;
+}
+
+.dbim-hero-lead {
+  font-size: var(--dbim-fs-p2); /* Subtle 14px secondary text */
+  color: var(--dbim-text-muted);
+  line-height: 1.5;
+  max-width: 850px;
+} /* Hero Banner with Soft Blue Gradient Background */
+.dbim-hero-section {
+  background: linear-gradient(
+    135deg,
+    var(--dbim-azureish-white-bg) 0%,
+    var(--dbim-inclusive-white) 100%
+  );
+  border-bottom: 2px solid var(--dbim-columbia-blue);
+  padding: 1.75rem 0;
+}
+
+.dbim-hero-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--dbim-wintergreen-dream);
+  line-height: 1.3;
+}
+
+.dbim-hero-lead {
+  font-size: var(--dbim-fs-p1);
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.5;
+  max-width: 900px;
+}
+
+/* Dark Theme Compatibility */
+[data-theme="dark"] .dbim-hero-section {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+}
+
+[data-theme="dark"] .dbim-hero-title,
+[data-theme="dark"] .dbim-hero-lead {
+  color: var(--dbim-key);
+}
+/* Hero Banner Styling */
+.dbim-hero-section {
+  background: linear-gradient(
+    135deg,
+    var(--dbim-azureish-white-bg) 0%,
+    var(--dbim-inclusive-white) 100%
+  );
+  border-bottom: 2px solid var(--dbim-columbia-blue);
+  padding: 1.5rem 0;
+}
+
+.dbim-hero-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--dbim-wintergreen-dream);
+  line-height: 1.3;
+}
+
+.dbim-hero-lead {
+  font-size: var(--dbim-fs-p1);
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.5;
+  max-width: 100%; /* Removed 900px restriction so text stretches across one line */
+}
+
+/* Widescreen utility to prevent text wrapping on large screens */
+@media (min-width: 1200px) {
+  .text-nowrap-lg {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+} /* ============================================================
+   37. HOME PAGE, CLEAN FULL-WIDTH LAYOUT
+   (resources/views/home.blade.php)
+   Existing variables only. APPEND AT THE VERY END of public/css/dbim.css.
+   You can DELETE section 36 and the "Hero Banner" blocks after it
+   (.dbim-hero-*, .dbim-content-card, .dbim-portal-text,
+   .dbim-home__photo-enlarged, .text-nowrap-lg): the page does not use them.
+   Design: lots of white space, no heavy boxes. White / light-blue / white bands.
+   ============================================================ */
+
+/* ---- Page frame ---- */
+/* Remove the grey page background showing between header, content and footer */
+body:has(.dbim-hp) {
+  background-color: var(--dbim-inclusive-white);
+}
+/* No space between header, page content and footer on the home page */
+body:has(.dbim-hp) main,
+body:has(.dbim-hp) .main-content,
+body:has(.dbim-hp) #app > main {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+body:has(.dbim-hp) .dbim-header {
+  margin-bottom: 0 !important;
+}
+.dbim-hp {
+  background: var(--dbim-inclusive-white);
+}
+.dbim-hp-wrap {
+  width: 100%;
+  max-width: none; /* same left/right edges as the header */
+  margin: 0;
+  padding: 0 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-hp-wrap {
+    padding: 0 3rem; /* same as the header and the notice, so everything starts on one line */
+  }
+}
+.dbim-hp-section {
+  padding: 2.5rem 0;
+  background: var(--dbim-inclusive-white);
+}
+.dbim-hp-band {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+}
+
+/* ---- Important notice: label + slow moving text + Pause/Play ---- */
+.dbim-hp-notice {
+  background: var(
+    --dbim-warning
+  ); /* Mustard Yellow (DBIM functional palette) */
+  border-top: 1px solid rgba(21, 2, 2, 0.15); /* light border */
+  border-bottom: 1px solid rgba(21, 2, 2, 0.15);
+}
+.dbim-hp-notice__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 1.5rem; /* same side space as the header, lines up with "Home" */
+}
+@media (min-width: 992px) {
+  .dbim-hp-notice__inner {
+    padding: 10px 3rem;
+  }
+}
+.dbim-hp-notice__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--dbim-deep-earthy-brown); /* #150202 */
+  color: var(--dbim-warning); /* yellow icon, ~11:1 on #150202 */
+}
+.dbim-hp-notice__label {
+  flex: 0 0 auto;
+  color: var(--dbim-deep-earthy-brown); /* ~11:1 on #FFC107 */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+.dbim-hp-notice__viewport {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow: hidden;
+}
+.dbim-hp-notice__text {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* ~11:1 on #FFC107 */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.6;
+}
+.dbim-hp-notice__btn {
+  flex: 0 0 auto;
+  min-width: 80px;
+  min-height: 44px; /* touch target */
+  padding: 4px 16px;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-deep-earthy-brown);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-hp-notice__btn:hover {
+  background: var(--dbim-linen);
+}
+
+/* Moving state: added by the script only when motion is allowed.
+   Text enters from the right and passes slowly to the left; speed is set by the script. */
+.dbim-hp-notice.is-moving .dbim-hp-notice__viewport {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+}
+.dbim-hp-notice.is-moving .dbim-hp-notice__text {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  animation: dbim-hp-marquee 35s linear infinite; /* fallback; script sets the real value */
+}
+/* Paused by the button, or while the mouse is over the text */
+.dbim-hp-notice.is-paused .dbim-hp-notice__text,
+.dbim-hp-notice__viewport:hover .dbim-hp-notice__text {
+  animation-play-state: paused;
+}
+@keyframes dbim-hp-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dbim-hp-notice.is-moving .dbim-hp-notice__text {
+    display: block;
+    padding-left: 0;
+    white-space: normal;
+    animation: none;
+  }
+}
+
+/* ---- Headings ---- */
+.dbim-hp-heading {
+  margin: 0 0 1.5rem;
+  padding-left: 14px;
+  border-left: 4px solid var(--dbim-powder-blue);
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-hp-subheading {
+  margin: 2rem 0 0.5rem;
+  color: var(--dbim-powder-blue); /* ~8:1 on white */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---- About ---- */
+.dbim-hp-about {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .dbim-hp-about {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+.dbim-hp-text {
+  max-width: 80ch;
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+.dbim-hp-hint {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-text-muted);
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-hp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-hp-chips li {
+  padding: 4px 14px;
+  background: var(--dbim-azureish-white-bg);
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 1em;
+  color: var(--dbim-wintergreen-dream);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+
+/* Chief Minister panel: light-blue panel, as in the reference site */
+.dbim-hp-panel {
+  margin: 0;
+  padding: 1.5rem;
+  background: var(--dbim-azureish-white-bg);
+  border: 1px solid var(--dbim-azureish-white);
+  text-align: center;
+}
+.dbim-hp-panel__photo {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto 1rem;
+  background: #fff; /* photo has a transparent background: keep it white in every theme */
+  border: 2px solid var(--dbim-inclusive-white);
+}
+.dbim-hp-panel__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dbim-hp-panel__name {
+  color: var(--dbim-wintergreen-dream);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+}
+.dbim-hp-panel__role {
+  color: var(--dbim-wintergreen-dream); /* ~9.5:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p1);
+}
+
+/* ---- Service cards ---- */
+.dbim-hp-cards {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.dbim-hp-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+  transition: border-color 0.15s;
+}
+.dbim-hp-card:hover,
+.dbim-hp-card:focus-within {
+  border-color: var(--dbim-columbia-blue);
+}
+.dbim-hp-card__title {
+  margin: 0 0 0.5rem;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+}
+.dbim-hp-card__text {
+  flex: 1 1 auto;
+  margin: 0 0 1rem;
+  line-height: 1.7;
+}
+.dbim-hp-card__link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  min-height: 44px;
+  color: var(--dbim-key);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 4px;
+}
+.dbim-hp-card__link::after {
+  content: "\203A"/ ""; /* decorative chevron, empty alt text */
+  margin-left: 8px;
+  font-weight: 700;
+}
+.dbim-hp-card__link:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---- Steps: plain columns, no boxes ---- */
+.dbim-hp-steps {
+  display: grid;
+  gap: 2rem 2.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: dbim-step;
+}
+.dbim-hp-steps li {
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.7;
+  counter-increment: dbim-step;
+}
+.dbim-hp-steps li::before {
+  content: counter(dbim-step);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background: var(--dbim-powder-blue); /* white on #214AAB, ~8:1 */
+  color: #fff;
+  font-weight: 700;
+}
+.dbim-hp-steps strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-hp-band {
+  background: var(--dbim-linen); /* dark panel instead of light blue */
+  border-top: 1px solid var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-notice {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-notice__text,
+[data-theme="dark"] .dbim-hp-notice__label {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-notice__icon {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hp-notice__btn {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-heading {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-subheading,
+[data-theme="dark"] .dbim-hp-text,
+[data-theme="dark"] .dbim-hp-hint,
+[data-theme="dark"] .dbim-hp-card,
+[data-theme="dark"] .dbim-hp-steps li,
+[data-theme="dark"] .dbim-hp-panel__name,
+[data-theme="dark"] .dbim-hp-panel__role {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-panel,
+[data-theme="dark"] .dbim-hp-panel__photo,
+[data-theme="dark"] .dbim-hp-card,
+[data-theme="dark"] .dbim-hp-chips li {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-panel,
+[data-theme="dark"] .dbim-hp-chips li {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card {
+  background: var(--dbim-inclusive-white);
+}
+[data-theme="dark"] .dbim-hp-steps li::before {
+  background: var(--dbim-key);
+  color: #000;
+}
+
+/* ---- Small screens ---- */
+@media (max-width: 575.98px) {
+  .dbim-hp-section {
+    padding: 1.75rem 0;
+  }
+}
+
+/* ---- Forced colours / print ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card,
+  .dbim-hp-panel {
+    border: 2px solid CanvasText;
+  }
+}
+@media print {
+  .dbim-hp-band {
+    background: none;
+  }
+}
+/* ============================================================
+   38. LOGIN PAGE  (resources/views/auth/login.blade.php)
+   Light-blue band, white card, 4px blue heading bar: same look as the home page.
+   Existing variables only. APPEND AT THE VERY END of dbim.css.
+   Contrast (light):  #162F6A on #FFFFFF 12.7:1 | #162F6A on #D2DFFF 9.5:1
+     #150202 on #FFFFFF 20:1 | #150202 on #D2DFFF 15:1 | #150202 on #FFC107 12.4:1
+     #606060 on #FFFFFF 6.3:1 | #606060 on #D2DFFF 4.7:1
+     #DC3545 on #FFFFFF 4.5:1 | #FFFFFF on #DC3545 4.5:1
+     #214AAB (focus/bars) on #FFFFFF 8.0:1, on #D2DFFF 6.0:1
+     #8E8E8E (input border) on #FFFFFF 3.3:1
+     .download-btn #162F6A on #D2DFFF 9.5:1 | disabled #606060 on #EBEAEA 5.3:1
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.7:1
+     #000000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Page frame (same idea as the home page) ---- */
+body:has(.dbim-lg) {
+  background-color: var(--dbim-inclusive-white);
+}
+body:has(.dbim-lg) main,
+body:has(.dbim-lg) .main-content,
+body:has(.dbim-lg) #app > main {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.dbim-lg {
+  background: var(--dbim-inclusive-white);
+}
+.dbim-lg-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-lg-wrap {
+    padding: 0 3rem;
+  }
+}
+
+.dbim-lg-section {
+  padding: 2.5rem 0;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+}
+@media (max-width: 575.98px) {
+  .dbim-lg-section {
+    padding: 1.75rem 0;
+  }
+}
+
+/* ---- Optional notice (static, no movement) ---- */
+.dbim-lg-notice {
+  background: var(--dbim-warning); /* #FFC107 */
+  border-top: 1px solid var(--dbim-deep-earthy-brown);
+  border-bottom: 1px solid var(--dbim-deep-earthy-brown);
+}
+.dbim-lg-notice__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding: 0.75rem 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-lg-notice__inner {
+    padding: 0.75rem 3rem;
+  }
+}
+.dbim-lg-notice__label,
+.dbim-lg-notice__text {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 12.4:1 on #FFC107 */
+}
+.dbim-lg-notice__label {
+  font-weight: 700;
+}
+.dbim-lg-notice__text {
+  flex: 1 1 14rem;
+  line-height: 1.6;
+}
+
+/* ---- Grid: stacked below 992px, two columns above ---- */
+.dbim-lg-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "head" "card" "before";
+}
+.dbim-lg-head {
+  grid-area: head;
+}
+.dbim-lg-card {
+  grid-area: card;
+}
+.dbim-lg-before {
+  grid-area: before;
+}
+@media (min-width: 992px) {
+  .dbim-lg-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "head card" "before card";
+    column-gap: 3rem;
+    align-items: start;
+  }
+}
+
+/* ---- Left column ---- */
+.dbim-lg-heading {
+  margin: 0 0 1.25rem;
+  padding-left: 14px;
+  border-left: 4px solid var(--dbim-powder-blue); /* 6.0:1 on #D2DFFF */
+  color: var(--dbim-key); /* 9.5:1 */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-lg-lead {
+  max-width: 60ch;
+  margin: 0 0 0.75rem;
+  color: var(--dbim-deep-earthy-brown); /* 15:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.7;
+}
+.dbim-lg-subheading {
+  margin: 0 0 0.5rem;
+  color: var(--dbim-key); /* 9.5:1 */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dbim-lg-list {
+  max-width: 60ch;
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--dbim-deep-earthy-brown); /* 15:1 */
+  line-height: 1.7;
+}
+
+/* ---- Card ---- */
+.dbim-lg-card {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown); /* 20:1 */
+  border: 1px solid var(--dbim-azureish-white);
+  border-top: 4px solid var(--dbim-columbia-blue); /* 3.1:1 on #D2DFFF */
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dbim-lg-card__head {
+  padding: 0.75rem 1.5rem;
+  background: var(--dbim-azureish-white-bg);
+  border-bottom: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream); /* 9.5:1 */
+}
+.dbim-lg-card__title {
+  margin: 0;
+  color: inherit;
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-lg-card__body {
+  padding: 1.5rem;
+}
+.dbim-lg-card__foot {
+  padding: 0.5rem 1.5rem;
+  background: var(--dbim-azureish-white-bg);
+  border-top: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream); /* 9.5:1 */
+}
+.dbim-lg-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-lg-card__links li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 0.5rem;
+}
+.dbim-lg-card__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* touch target */
+  color: var(--dbim-wintergreen-dream); /* 9.5:1 */
+  font-weight: 600;
+  text-decoration: underline; /* not colour alone */
+  text-underline-offset: 4px;
+}
+.dbim-lg-card__links a:hover {
+  text-decoration-thickness: 2px;
+}
+@media (max-width: 575.98px) {
+  .dbim-lg-card__head,
+  .dbim-lg-card__foot {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .dbim-lg-card__body {
+    padding: 1rem;
+  }
+}
+
+/* ---- Fields ---- */
+.dbim-lg-field {
+  margin-bottom: 1.25rem;
+}
+.dbim-lg-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+}
+.dbim-lg-req {
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 400;
+}
+.dbim-lg-hint {
+  margin: 0.25rem 0 0;
+  color: var(--dbim-text-muted); /* 6.3:1 */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-lg-hint--top {
+  margin: 0 0 1rem;
+}
+.dbim-lg-card .form-control {
+  min-height: 44px;
+}
+.dbim-lg-card .form-control:focus {
+  border-color: var(--dbim-columbia-blue);
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 */
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-lg-card .form-control.is-invalid:focus {
+  border-color: var(--dbim-error);
+  outline-color: var(--dbim-error);
+}
+
+/* Field error: word "Error:" + "!" badge, so colour is never the only cue */
+.dbim-lg-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin: 0.375rem 0 0;
+  color: var(--dbim-error); /* 4.5:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+.dbim-lg-error[hidden] {
+  display: none;
+} /* display:flex above would override [hidden] */
+.dbim-lg-error::before {
+  content: "!"/"";
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--dbim-error);
+  color: var(--dbim-inclusive-white); /* 4.5:1 */
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+
+/* Mobile field + Send OTP button on one row */
+.dbim-lg-otp {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.dbim-lg-otp .form-control {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.dbim-lg-card .dbim-lg-send {
+  flex: 0 0 auto;
+  min-height: 44px; /* touch target */
+  margin: 0;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+/* ---- Error summary ---- */
+.dbim-lg-summary {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown); /* 20:1 */
+  border: 1px solid var(--dbim-grey-01);
+  border-left: 8px solid var(--dbim-error); /* 4.5:1, non-text needs 3:1 */
+  border-radius: 4px;
+}
+.dbim-lg-summary:focus {
+  outline: none;
+} /* the bar marks it, as in section 4 */
+.dbim-lg-summary__title {
+  margin: 0 0 0.5rem;
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+.dbim-lg-summary__list {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+.dbim-lg-summary__list a {
+  color: var(--dbim-key); /* 12.7:1 */
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.dbim-lg-summary__word {
+  font-weight: 700;
+}
+.dbim-lg-status {
+  margin-bottom: 1.25rem;
+}
+
+/* ---- Buttons + privacy ---- */
+.dbim-lg-card .dbim-lg-submit {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  font-size: var(
+    --dbim-fs-p2
+  ); /* .download-btn colours 9.5:1; disabled state in section 8 */
+}
+.dbim-lg-card .dbim-lg-submit:focus-visible,
+.dbim-lg-card .dbim-lg-send:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 */
+  outline-offset: 2px;
+}
+.dbim-lg-privacy {
+  margin: 1rem 0 0;
+  color: var(--dbim-text-muted); /* 6.3:1 */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-lg-privacy a {
+  color: var(--dbim-key);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ============ High-contrast theme (yellow on near-black) ============
+   --dbim-azureish-white-bg is light grey and --dbim-powder-blue is near-black
+   in this theme, so bands/bars use --dbim-linen / --dbim-key instead. */
+[data-theme="dark"] .dbim-lg-section {
+  background: var(--dbim-linen);
+  border-top: 1px solid var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-notice {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-notice__label,
+[data-theme="dark"] .dbim-lg-notice__text,
+[data-theme="dark"] .dbim-lg-heading,
+[data-theme="dark"] .dbim-lg-lead,
+[data-theme="dark"] .dbim-lg-subheading,
+[data-theme="dark"] .dbim-lg-list,
+[data-theme="dark"] .dbim-lg-label,
+[data-theme="dark"] .dbim-lg-req,
+[data-theme="dark"] .dbim-lg-hint,
+[data-theme="dark"] .dbim-lg-privacy {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-heading {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card__head,
+[data-theme="dark"] .dbim-lg-card__foot {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card__head {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card__foot {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card__links a,
+[data-theme="dark"] .dbim-lg-privacy a,
+[data-theme="dark"] .dbim-lg-summary__list a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-card .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+/* Red text on near-black is only 4.3:1, so error text turns yellow in this theme;
+   the "Error:" word, the badge and the red border still mark the state. */
+[data-theme="dark"] .dbim-lg-error {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-error::before {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-lg-card .dbim-lg-submit:focus-visible,
+[data-theme="dark"] .dbim-lg-card .dbim-lg-send:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lg-summary {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+  border-color: var(--dbim-key);
+  border-left-color: var(--dbim-error);
+}
+
+/* ---- Forced colours (Windows High Contrast) ---- */
+@media (forced-colors: active) {
+  .dbim-lg-card {
+    border: 2px solid CanvasText;
+  }
+  .dbim-lg-card__head,
+  .dbim-lg-card__foot {
+    border-color: CanvasText;
+  }
+  .dbim-lg-heading {
+    border-left-color: CanvasText;
+  }
+  .dbim-lg-summary {
+    border: 1px solid CanvasText;
+    border-left: 8px solid CanvasText;
+  }
+  .dbim-lg-card .dbim-lg-send {
+    border: 1px solid ButtonText;
+  }
+  .dbim-lg-card .form-control:focus,
+  .dbim-lg-card .dbim-lg-submit:focus-visible,
+  .dbim-lg-card .dbim-lg-send:focus-visible {
+    outline: 3px solid Highlight;
+  }
+  .dbim-lg-error::before {
+    forced-color-adjust: none;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-lg-section,
+  .dbim-lg-card__head,
+  .dbim-lg-card__foot,
+  .dbim-lg-notice {
+    background: none;
+  }
+  .dbim-lg-card {
+    border: 1px solid #000;
+  }
+  .dbim-lg-send,
+  .dbim-lg-submit {
+    display: none;
+  }
+}
+/* ============================================================
+   39. CONTACT PAGE, HOME PAGE LOOK  (resources/views/contact.blade.php)
+   Uses the home page classes (section 37): .dbim-hp-section, .dbim-hp-band,
+   .dbim-hp-wrap, .dbim-hp-heading, .dbim-hp-card. Only the two-column
+   layout is new. Map link sits in a white card (the blue link is
+   ~4.0:1 on #D2DFFF, so it must not sit directly on the band).
+   Existing variables only. The high-contrast rules for the cards, bands
+   and headings already exist in section 37.
+   ============================================================ */
+.dbim-hp-contact {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .dbim-hp-contact {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
+/* Details card: label/value pairs keep the normal 16px size */
+.dbim-hp-contact .dbim-detail dd {
+  overflow-wrap: anywhere; /* long emails never push the layout sideways */
+}
+.dbim-hp-contact .dbim-detail dd:last-child {
+  margin-bottom: 0;
+}
+
+/* Note box: the heading bar above already separates it, so no extra margin */
+.dbim-hp-section .alert:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- High-contrast theme: detail labels follow the key colour (yellow) ---- */
+[data-theme="dark"] .dbim-hp-contact .dbim-detail dt {
+  color: var(--dbim-key);
+}
+
+/* ---- Print: the map frame is not useful on paper ---- */
+@media print {
+  .dbim-hp-contact .dbim-contact__map {
+    display: none;
+  }
+}
+/* ============================================================
+   40. SEARCH PAGE, HOME PAGE LOOK  (resources/views/search-department.blade.php)
+   Uses the home page classes (section 37): .dbim-hp-section, .dbim-hp-band,
+   .dbim-hp-wrap, .dbim-hp-heading, .dbim-hp-card. Only the search row and
+   a few small fixes are new. The results table sits inside a white card,
+   so the table and link contrast does not depend on the #D2DFFF band.
+   Existing variables only. High-contrast rules for bands, cards and
+   headings already exist in section 37.
+   APPEND AFTER section 39.
+   ============================================================ */
+
+/* Search field + button on one row; stacked below 576px */
+.dbim-hp-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+  max-width: 50rem;
+}
+.dbim-hp-search .form-control {
+  flex: 1 1 16rem;
+  min-width: 0;
+  min-height: 44px; /* touch target */
+}
+.dbim-hp-search .download-btn {
+  flex: 0 0 auto;
+  min-height: 44px;
+  margin: 0; /* .download-btn has margin-top 10px */
+  padding: 0 1.5rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-hp-search .download-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Results heading receives focus from script so screen readers announce it;
+   it is not a control, so no ring (same idea as main:focus in section 4) */
+.dbim-hp-heading:focus {
+  outline: none;
+}
+.dbim-hp-heading {
+  overflow-wrap: anywhere; /* a long search term never pushes the layout sideways */
+}
+
+/* "Detailed Hierarchy" title inside the white card */
+.dbim-hp-card .dbim-hp-card__title {
+  margin-bottom: 1rem;
+}
+
+/* Scroll region: visible ring for keyboard users, inside the box */
+.dbim-hp-card .table-responsive:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: -2px;
+}
+
+/* ---- Print: hide the search form, keep the results ---- */
+@media print {
+  .dbim-hp-search {
+    display: none;
+  }
+}
+/* ============================================================
+   41. TABLE ROWS: CALM LOOK  (search results, inside .dbim-hp-card)
+   Two colours only: white rows + the same light blue as the page band
+   (--dbim-azureish-white-bg, #D2DFFF) for the header row and the hover.
+   No stripes, no vertical lines: only thin Linen lines between rows.
+   Text stays Deep Earthy Brown.
+   Contrast (light):  #150202 on #FFFFFF 20:1 | #150202 on #D2DFFF 15:1
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #000000 on #FFFF00 19.6:1
+   Bootstrap paints cells with its own background and an inset box-shadow,
+   so both are set on the cells (td), not on the row.
+   ============================================================ */
+
+/* Lines: horizontal only, light grey */
+.dbim-hp-card .table-bordered > :not(caption) > * > * {
+  border-width: 0 0 1px;
+  border-color: var(--dbim-linen);
+}
+.dbim-hp-card .table > thead > tr > th {
+  border-color: var(--dbim-azureish-white);
+}
+
+/* Rows: all white, hover = light blue */
+.dbim-hp-card .table > tbody > tr > td {
+  background-color: var(--dbim-inclusive-white);
+  box-shadow: none;
+  transition: background-color 0.15s;
+}
+.dbim-hp-card .table > tbody > tr:hover > td {
+  background-color: var(--dbim-azureish-white-bg);
+  color: var(--dbim-deep-earthy-brown);
+}
+
+/* No inner vertical scrollbar when the rows fit */
+.dbim-hp-card .table-responsive {
+  overflow-y: hidden;
+}
+
+/* ---- High-contrast theme: dark rows, yellow fill on hover ---- */
+[data-theme="dark"] .dbim-hp-card .table-bordered > :not(caption) > * > * {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card .table > tbody > tr > td {
+  background-color: var(--dbim-inclusive-white); /* #0B0C0E */
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card .table > tbody > tr:hover > td {
+  background-color: var(--dbim-key);
+  color: #000; /* black on yellow, never yellow on yellow */
+}
+
+/* ---- Forced colours: backgrounds are overridden, so mark hover with an outline ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card .table > tbody > tr:hover > td {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+/* ---- Print: plain white rows ---- */
+@media print {
+  .dbim-hp-card .table > tbody > tr > td {
+    background: none;
+  }
+}
+
+/* ============================================================
+   43. SEARCH RESULTS ON WHITE  (no light-blue band)
+   A thin Linen line separates the search form from the results.
+   Heading, card and table keep their colours from sections 37 and 41.
+   Contrast: #162F6A on #FFFFFF 12.7:1
+   ============================================================ */
+.dbim-hp-section + .dbim-hp-section:not(.dbim-hp-band) {
+  border-top: 1px solid var(--dbim-linen);
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-hp-section + .dbim-hp-section:not(.dbim-hp-band) {
+  border-top-color: var(--dbim-key);
+}
+/* ============================================================
+   44. TABLE CARD BACKGROUND  (.dbim-hp-card--table, search results)
+   Card = Linen (--dbim-linen, #EBEAEA); table rows stay white (section 41),
+   so the table reads as a white panel on a quiet grey card.
+   Contrast (light):  #162F6A on #EBEAEA ~10.9:1 (title)
+                      #150202 on #FFFFFF 20:1 (rows)
+   Contrast (dark):   #FFFF00 on #23232A 14.7:1 (title)
+                      #FFFF00 on #0B0C0E 18.2:1 (rows)
+   Only the card with the table changes: other .dbim-hp-card boxes
+   (home page, contact page) keep their white background.
+   APPEND AFTER section 43.
+   ============================================================ */
+.dbim-hp-card.dbim-hp-card--table {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-grey-01);
+}
+
+/* Thin outline so the white table edge is clear against the grey card */
+.dbim-hp-card--table .table-responsive {
+  border: 1px solid var(--dbim-grey-01);
+  background: var(--dbim-inclusive-white);
+}
+
+/* ---- High-contrast theme: dark panel card, near-black table ---- */
+[data-theme="dark"] .dbim-hp-card.dbim-hp-card--table {
+  background: var(--dbim-linen); /* #23232A */
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card--table .table-responsive {
+  border-color: var(--dbim-key);
+  background: var(--dbim-inclusive-white); /* #0B0C0E */
+}
+
+/* ---- Print: no grey card ---- */
+@media print {
+  .dbim-hp-card.dbim-hp-card--table {
+    background: none;
+  }
+}
+/* ============================================================
+   45. TABLE POLISH  (search results, .dbim-hp-card--table)
+   - title + record count on one row
+   - header: left-aligned like the data, 2px blue line under it
+   - roomier rows, Department column in semi-bold
+   - "-" for empty cells is muted, so real text stands out
+   Contrast (light):  #606060 on #FFFFFF 6.3:1 | #606060 on #D2DFFF 4.7:1 (muted dash)
+                      #162F6A on #D2DFFF 9.5:1 (header)
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.7:1
+   Existing variables only. APPEND AFTER section 44.
+   ============================================================ */
+
+/* Title + count */
+.dbim-hp-card__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+.dbim-hp-card__bar .dbim-hp-card__title {
+  margin: 0;
+}
+
+/* Header row: left-aligned, stronger line underneath */
+.dbim-hp-card--table .table > thead > tr > th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--dbim-powder-blue); /* 8.0:1 on white */
+}
+
+/* Body rows: more room, Department column in semi-bold */
+.dbim-hp-card--table .table > tbody > tr > td {
+  padding: 0.75rem 1rem;
+  line-height: 1.5;
+}
+.dbim-hp-card--table .table > tbody > tr > td:first-child {
+  font-weight: 600;
+}
+
+/* Empty cell dash: quieter than real text (screen readers still hear "Not applicable") */
+.dbim-hp-card--table td > span[aria-hidden="true"] {
+  color: var(--dbim-text-muted);
+}
+
+/* Columns never get squashed on small screens: the wrapper scrolls instead */
+.dbim-hp-card--table .table {
+  min-width: 40rem;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-hp-card--table .table > thead > tr > th {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card--table td > span[aria-hidden="true"] {
+  color: var(--dbim-key);
+}
+/* dash on the yellow hover row must be dark, never yellow on yellow */
+[data-theme="dark"]
+  .dbim-hp-card--table
+  tr:hover
+  > td
+  > span[aria-hidden="true"] {
+  color: #000;
+}
+
+/* ---- Forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card--table .table > thead > tr > th {
+    border-bottom: 2px solid CanvasText;
+  }
+}
+/* ============================================================
+   46. TABLE BORDERS RESTORED  (search results, .dbim-hp-card--table)
+   Full grid again: vertical + horizontal lines, left and right edges.
+   Lines = Functional grey 1 (--dbim-grey-01, #C6C6C6); header cells keep
+   the light-blue line (--dbim-azureish-white). The table's own outer
+   border is the outline, so the wrapper border from section 44 is removed
+   to avoid a double line at the edges.
+   Contrast: lines are decoration, text contrast is unchanged (see section 41).
+   APPEND AFTER section 45.
+   ============================================================ */
+.dbim-hp-card--table .table-bordered > :not(caption) > * > * {
+  border-width: 1px;
+  border-color: var(--dbim-grey-01);
+}
+.dbim-hp-card--table .table > thead > tr > th {
+  border-color: var(--dbim-azureish-white);
+  border-bottom: 2px solid var(--dbim-powder-blue); /* keeps the line from section 45 */
+}
+.dbim-hp-card--table .table-responsive {
+  border: 0; /* the table border is the outline now */
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"]
+  .dbim-hp-card--table
+  .table-bordered
+  > :not(caption)
+  > *
+  > * {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card--table .table > thead > tr > th {
+  border-bottom-color: var(--dbim-key);
+}
+
+/* ---- Forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card--table .table-bordered > :not(caption) > * > * {
+    border-color: CanvasText;
+  }
+}
+/* ============================================================
+   47. TABLE HEADER: DARK  (search results, .dbim-hp-card--table)
+   Header row = footer colour (--dbim-wintergreen-dream, #162F6A), white text.
+   Replaces the light-blue header of sections 11 and 45.
+   Rows stay white, hover stays light blue (section 41), so the table
+   uses one strong colour (the header) and one soft colour (hover).
+   Contrast (light):  #FFFFFF on #162F6A 13:1
+                      #150202 on #FFFFFF 20:1 | #150202 on #D2DFFF 15:1
+   Contrast (dark):   #FFFF00 on #23232A 14.7:1
+   APPEND AFTER section 46.
+   ============================================================ */
+.dbim-hp-card--table .table > thead > tr > th {
+  background-color: var(--dbim-wintergreen-dream);
+  color: #fff;
+  border-color: var(
+    --dbim-columbia-blue
+  ); /* soft divider between header cells */
+  border-bottom-color: var(--dbim-wintergreen-dream); /* no blue-on-navy line */
+}
+
+/* ---- High-contrast theme: dark panel, yellow text, yellow line ---- */
+[data-theme="dark"] .dbim-hp-card--table .table > thead > tr > th {
+  background-color: var(--dbim-linen); /* #23232A */
+  color: var(--dbim-key);
+  border-color: var(--dbim-key);
+  border-bottom: 2px solid var(--dbim-key);
+}
+
+/* ---- Forced colours: system colours replace the fills ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card--table .table > thead > tr > th {
+    border-color: CanvasText;
+  }
+}
+
+/* ---- Print: save ink, keep the header readable ---- */
+@media print {
+  .dbim-hp-card--table .table > thead > tr > th {
+    background: none;
+    color: #000;
+    border-bottom: 2px solid #000;
+  }
+}
+/* ============================================================
+   48. CONTACT PAGE, CALM LOOK  (resources/views/contact.blade.php)
+   Same idea as the search page (sections 43, 44):
+   white section + thin Linen line, Linen card (--dbim-linen), white inner
+   panel (--dbim-inclusive-white). Links stay on the white panel, because
+   the link blue is ~4.5:1 on white but only ~3.7:1 on Linen.
+   Contrast (light):  #150202 on #FFFFFF 20:1 | #162F6A on #FFFFFF 12.7:1
+                      #0D6EFD on #FFFFFF 4.5:1 (link)
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.7:1
+   Existing variables only. APPEND AFTER section 47.
+   ============================================================ */
+.dbim-hp-section--line {
+  border-top: 1px solid var(--dbim-linen);
+}
+
+/* Grey card */
+.dbim-hp-card.dbim-hp-card--grey {
+  padding: 1.25rem;
+  background: var(--dbim-linen);
+  border-color: var(--dbim-grey-01);
+}
+
+/* White panel inside the card: holds the text, the link and the map */
+.dbim-hp-inset {
+  height: 100%;
+  padding: 1.25rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+.dbim-hp-card--grey .dbim-contact__map {
+  border-color: var(--dbim-grey-01);
+}
+
+/* Two equal cards side by side on wide screens */
+@media (min-width: 992px) {
+  .dbim-hp-contact {
+    align-items: stretch;
+  }
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-hp-section--line {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-card.dbim-hp-card--grey {
+  background: var(--dbim-linen); /* #23232A */
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hp-inset {
+  background: var(--dbim-inclusive-white); /* #0B0C0E */
+  border-color: var(--dbim-key);
+}
+
+/* ---- Forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hp-card.dbim-hp-card--grey,
+  .dbim-hp-inset {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print: no grey card ---- */
+@media print {
+  .dbim-hp-card.dbim-hp-card--grey {
+    background: none;
+  }
+}

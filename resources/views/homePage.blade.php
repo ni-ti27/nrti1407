@@ -1,7 +1,8 @@
 {{-- ============================================================
-     Home Page (DBIM / GIGW 3.0, clean full-width layout)
-     Styles: section 37 in public/css/dbim.css (existing variables only)
-     Bands: white (notice + About) / light blue (Services) / white (How it works)
+     Home Page (DBIM / GIGW 3.0), Option A layout
+     Styles: section 49 in public/css/dbim.css (existing variables only)
+     Order : notice / About (Linen, round photo left) / Online Services (white) / How it works (white)
+     Header and footer come from layouts.app (unchanged).
      ============================================================ --}}
 @extends('layouts.app')
 
@@ -17,125 +18,160 @@
     ];
 @endphp
 
-<div class="dbim-hp">
+<div class="dbim-hm">
 
     {{-- 0. IMPORTANT NOTICE
-         Moving, slow, with Pause/Play. Shows as normal static text if JS is off
-         or the visitor has reduced motion turned on (WCAG 2.2.2 / GIGW 3.0). --}}
-    <div class="dbim-hp-notice" id="dbimNotice" role="note">
-        <div class="dbim-hp-notice__inner">
-            <span class="dbim-hp-notice__icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" height="32 " viewBox="0 -960 960 960" width="32" fill="2d2d2d" style="display: flex; justify-content: center;"><path d="M479.98-280q14.02 0 23.52-9.48t9.5-23.5q0-14.02-9.48-23.52t-23.5-9.5q-14.02 0-23.52 9.48t-9.5 23.5q0 14.02 9.48 23.52t23.5 9.5ZM453-433h60v-253h-60v253Zm27.27 353q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Zm.23-60Q622-140 721-239.5t99-241Q820-622 721.19-721T480-820q-141 0-240.5 98.81T140-480q0 141 99.5 240.5t241 99.5Zm-.5-340Z" fill="currentColor"/></svg>
+         Slow moving text with Pause / Play. Shows as normal static text when JS is off
+         or when the visitor has reduced motion turned on (WCAG 2.2.2, GIGW 3.0). --}}
+    <div class="dbim-hm-notice" id="dbimNotice" role="note">
+        <div class="dbim-hm-notice__inner">
+            <span class="dbim-hm-notice__icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" focusable="false">
+                    <circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><path d="M12 17h.01"/>
+                </svg>
             </span>
-            <strong class="dbim-hp-notice__label">Important:</strong>
-            <div class="dbim-hp-notice__viewport">
-                <p class="dbim-hp-notice__text" id="dbimNoticeText">
+            <strong class="dbim-hm-notice__label">Important:</strong>
+            <div class="dbim-hm-notice__viewport">
+                <p class="dbim-hm-notice__text" id="dbimNoticeText">
                     Please file RTI application/first appeal through this portal for Departments/Public
                     Authorities under the Goa State Government only. If filed wrongly, the application
                     would be returned, without a refund of amount.
                 </p>
             </div>
-            <button type="button" class="dbim-hp-notice__btn" id="dbimNoticeToggle"
+            <button type="button" class="dbim-hm-notice__btn" id="dbimNoticeToggle"
                     aria-label="Pause scrolling notice" hidden>Pause</button>
         </div>
     </div>
 
-    {{-- 1. ABOUT (white) ---------------------------------------- --}}
-    <section class="dbim-hp-section" aria-labelledby="homeHeading">
-        <div class="dbim-hp-wrap">
+    {{-- 1. ABOUT THIS PORTAL (Linen band) ---------------------- --}}
+    <section class="dbim-hm-hero" aria-labelledby="homeHeading">
+        <div class="dbim-hm-wrap">
+            <div class="dbim-hm-about">
 
-
-            <div class="dbim-hp-about">
-
-                <div class="dbim-hp-about__text">
-                    <h1 id="homeHeading" class="dbim-hp-heading">About this Portal</h1>
-
-                    <p class="dbim-hp-text">
-                        This is a portal to file RTI application / first appeal / second appeal online
-                        along with an eChallan payment gateway.
-                    </p>
-                    <p class="dbim-hp-text">
-                        Through this portal, RTI application / first appeal / second appeal can be filed by
-                        Indian Citizens for all Departments / Offices / Sub-Offices Public Authorities of
-                        Goa State Government.
-                    </p>
-
-                    <h2 class="dbim-hp-subheading">Payment options</h2>
-                    <ul class="dbim-hp-chips">
-                        <li>Internet banking</li>
-                        <li>Debit / credit cards (Master, Visa)</li>
-                        <li>UPI</li>
-                    </ul>
-
-                    <h2 class="dbim-hp-subheading">Instructions</h2>
-                    <p class="dbim-hp-text mb-0">
-                        Please read the instructions carefully while submitting your RTI application,
-                        first appeal or second appeal.
-                    </p>
-                </div>
-
-                <figure class="dbim-hp-panel">
+                {{-- Round photo + name, on the left --}}
+                <figure class="dbim-hm-person">
                     <img src="{{ asset('images/CM_image.png') }}"
                          alt="Dr. Pramod Sawant, Chief Minister of Goa"
-                         class="dbim-hp-panel__photo"
-                         width="360" height="352">
-                    <figcaption class="dbim-hp-panel__caption">
-                        <span class="dbim-hp-panel__name">Dr. Pramod Sawant</span>
-                        <span class="dbim-hp-panel__role">Chief Minister</span>
-                        <span class="dbim-hp-panel__role">Government of Goa</span>
+                         class="dbim-hm-person__photo"
+                         width="230" height="230">
+                    <figcaption class="dbim-hm-person__caption">
+                        <span class="dbim-hm-person__name">Dr. Pramod Sawant</span>
+                        <span>Chief Minister</span>
+                        <span>Government of Goa</span>
                     </figcaption>
                 </figure>
+
+                {{-- Text, on the right --}}
+                <div class="dbim-hm-about__body">
+                    <h1 id="homeHeading" class="dbim-hm-heading">About this Portal</h1>
+
+                    <div class="dbim-hm-lead">
+                        <p>
+                            This is a portal to file RTI application / first appeal / second appeal online
+                            along with an eChallan payment gateway.
+                        </p>
+                        <p>
+                            Through this portal, RTI application / first appeal / second appeal can be filed by
+                            Indian Citizens for all Departments / Offices / Sub-Offices Public Authorities of
+                            Goa State Government.
+                        </p>
+                    </div>
+
+                    <div class="dbim-hm-pair">
+                        <div>
+                            <h2 class="dbim-hm-subheading">Payment options</h2>
+                            <ul class="dbim-hm-chips">
+                                <li>Internet banking</li>
+                                <li>Debit / credit cards (Master, Visa)</li>
+                                <li>UPI</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h2 class="dbim-hm-subheading">Instructions</h2>
+                            <div class="dbim-hm-lead">
+                                <p>
+                                    Please read the instructions carefully while submitting your RTI application,
+                                    first appeal or second appeal.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
     </section>
 
-    {{-- 2. ONLINE SERVICES (light blue) -------------------------- --}}
-    <section class="dbim-hp-section dbim-hp-band" aria-labelledby="servicesHeading">
-        <div class="dbim-hp-wrap">
-            <h2 id="servicesHeading" class="dbim-hp-heading">Online Services</h2>
+    {{-- 2. ONLINE SERVICES (white) ------------------------------ --}}
+    <section class="dbim-hm-section" aria-labelledby="servicesHeading">
+        <div class="dbim-hm-wrap">
+            <h2 id="servicesHeading" class="dbim-hm-heading">Online Services</h2>
 
-            <div class="dbim-hp-cards">
-                <article class="dbim-hp-card">
-                    <h3 class="dbim-hp-card__title">RTI Application</h3>
-                    <p class="dbim-hp-card__text">
+            <div class="dbim-hm-cards">
+
+                <article class="dbim-hm-card">
+                    <span class="dbim-hm-card__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 3v5h5M9 13h6M9 17h6"/>
+                        </svg>
+                    </span>
+                    <h3 class="dbim-hm-card__title">RTI Application</h3>
+                    <p class="dbim-hm-card__text">
                         Submit a new RTI application to the Public Authority of your choice.
                         Fee payment is online, for non-BPL applicants only.
                     </p>
-                    <a href="{{ $links['rti'] }}" class="dbim-hp-card__link">
+                    <a href="{{ $links['rti'] }}" class="dbim-hm-btn">
                         File RTI application<span class="dbim-sr-only"> online</span>
                     </a>
                 </article>
 
-                <article class="dbim-hp-card">
-                    <h3 class="dbim-hp-card__title">First Appeal</h3>
-                    <p class="dbim-hp-card__text">
-                        Not satisfied with the reply, or no reply received? File a first appeal before the First Appellate Authority.
+                <article class="dbim-hm-card">
+                    <span class="dbim-hm-card__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            <path d="M4 12a8 8 0 0 1 14-5l2 2M20 4v5h-5M20 12a8 8 0 0 1-14 5l-2-2M4 20v-5h5"/>
+                        </svg>
+                    </span>
+                    <h3 class="dbim-hm-card__title">First Appeal</h3>
+                    <p class="dbim-hm-card__text">
+                        Not satisfied with the reply, or no reply received? File a first appeal before the
+                        First Appellate Authority.
                     </p>
-                    <a href="{{ $links['first'] }}" class="dbim-hp-card__link">
+                    <a href="{{ $links['first'] }}" class="dbim-hm-btn">
                         File first appeal<span class="dbim-sr-only"> online</span>
                     </a>
                 </article>
 
-                <article class="dbim-hp-card">
-                    <h3 class="dbim-hp-card__title">Second Appeal</h3>
-                    <p class="dbim-hp-card__text">
+                <article class="dbim-hm-card">
+                    <span class="dbim-hm-card__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor"
+                             stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                            <path d="M12 20V5M5 12l7-7 7 7"/>
+                        </svg>
+                    </span>
+                    <h3 class="dbim-hm-card__title">Second Appeal</h3>
+                    <p class="dbim-hm-card__text">
                         Still not resolved at the first appeal stage? Escalate by filing a second appeal.
                     </p>
-                    <a href="{{ $links['second'] }}" class="dbim-hp-card__link">
+                    <a href="{{ $links['second'] }}" class="dbim-hm-btn">
                         File second appeal<span class="dbim-sr-only"> online</span>
                     </a>
                 </article>
+
             </div>
         </div>
     </section>
 
-    {{-- 3. HOW IT WORKS (white) ---------------------------------- --}}
-    <section class="dbim-hp-section" aria-labelledby="stepsHeading">
-        <div class="dbim-hp-wrap">
-            <h2 id="stepsHeading" class="dbim-hp-heading">How it works</h2>
+    {{-- 3. HOW IT WORKS (white, light-blue step boxes) --------- --}}
+    <section class="dbim-hm-section dbim-hm-how" aria-labelledby="stepsHeading">
+        <div class="dbim-hm-wrap">
+            <h2 id="stepsHeading" class="dbim-hm-heading">How it works</h2>
 
-            <ol class="dbim-hp-steps">
+            <ol class="dbim-hm-steps">
                 <li>
                     <strong>Sign in with OTP</strong>
                     Verify your mobile number and email to log in as an applicant.
@@ -168,17 +204,15 @@
 @endif
 @endsection
 
+@push('scripts')
 @if(session('is_valid'))
-    @push('scripts')
-    <script>
-        document.getElementById('validTestSubmit').addEventListener('click', function () {
-            document.getElementById('valid_test').submit();
-        });
-    </script>
-    @endpush
+<script>
+    document.getElementById('validTestSubmit').addEventListener('click', function () {
+        document.getElementById('valid_test').submit();
+    });
+</script>
 @endif
 
-@push('scripts')
 <script>
     (function () {
         var box  = document.getElementById('dbimNotice');

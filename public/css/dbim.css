@@ -640,7 +640,7 @@ td.text-number,
   display: block;
   font-size: 1.25rem;
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.6;
   color: var(--dbim-deep-earthy-brown);
 }
 .dbim-header__brand .tag {
@@ -2956,7 +2956,7 @@ html.dbim-big-cursor * {
   margin: 2px 0;
   font-size: 1.75rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.5;
   color: var(--dbim-key);
 }
 .dbim-header__brand .tag {
@@ -4993,5 +4993,938 @@ body:has(.dbim-lg) #app > main {
 @media print {
   .dbim-hp-card.dbim-hp-card--grey {
     background: none;
+  }
+}
+/* ============================================================
+   49. HOME PAGE, OPTION A  (resources/views/home.blade.php)
+   APPEND AT THE VERY END of public/css/dbim.css.
+   Self-contained: every class starts with .dbim-hm, so it cannot clash with
+   section 37 (.dbim-hp-*), which the Contact and Search pages still use.
+   Existing variables only. No gradients, no new CSS variables.
+
+   Bands:  notice (Mustard) / About (Linen, round photo left) / Services (white) / How it works (white)
+
+   Contrast, light theme (ratios computed from the hex values):
+     #150202 on #FFFFFF 20:1 | on #EBEAEA 17.2:1 | on #D2DFFF 15.4:1 | on #FFC107 12.6:1
+     #162F6A on #FFFFFF 12.7:1 | on #EBEAEA 10.7:1 | on #D2DFFF 9.6:1
+     #FFFFFF on #162F6A 12.8:1 | #FFFFFF on #214AAB 8.0:1
+     #606060 on #EBEAEA 5.3:1  (muted text)
+     #214AAB on #FFFFFF 8.0:1 | on #EBEAEA 6.7:1 | on #D2DFFF 6.0:1  (bars, icons, focus ring)
+     #5279D7 on #EBEAEA 3.5:1  (chip outline, needs 3:1)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000000 on #FFFF00 19.6:1
+
+   BEFORE YOU PASTE, DELETE these old home page blocks from dbim.css:
+     - "32. HOME PAGE" (.dbim-home__side, .dbim-home__photo and their dark rules)
+     - "36. WIDESCREEN FULL-BLEED HOMEPAGE STYLES" and the three hero blocks after it
+       ("Refined, softer title style", "Hero Banner with Soft Blue Gradient Background",
+        "Hero Banner Styling" + .text-nowrap-lg), up to the line "37. HOME PAGE, CLEAN FULL-WIDTH LAYOUT"
+   KEEP section 37: the Contact and Search pages still use its shared classes
+   (.dbim-hp-section, -band, -wrap, -heading, -card). Its home-only rules
+   (.dbim-hp-notice, -about, -chips, -panel, -steps) are now unused and harmless.
+   ============================================================ */
+
+/* ---- Page frame: no gaps between header, content and footer ---- */
+body:has(.dbim-hm) {
+  background-color: var(--dbim-inclusive-white);
+}
+body:has(.dbim-hm) main,
+body:has(.dbim-hm) .main-content,
+body:has(.dbim-hm) #app > main {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.dbim-hm {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+}
+/* Same left/right edges as the header and footer */
+.dbim-hm-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-hm-wrap {
+    padding: 0 3rem;
+  }
+}
+.dbim-hm-section {
+  padding: 3rem 0;
+  background: var(--dbim-inclusive-white);
+}
+@media (max-width: 575.98px) {
+  .dbim-hm-section {
+    padding: 2rem 0;
+  }
+}
+
+/* ---- Headings: 6px Blue-group bar on the left ---- */
+.dbim-hm-heading {
+  margin: 0 0 1.5rem;
+  padding-left: 1rem;
+  border-left: 6px solid var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  color: var(--dbim-key); /* 10.7:1 on Linen */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.25;
+}
+@media (min-width: 768px) {
+  .dbim-hm-heading {
+    font-size: 1.875rem; /* 30px */
+  }
+}
+.dbim-hm-subheading {
+  margin: 1.75rem 0 0.75rem;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dbim-hm-text {
+  max-width: 70ch; /* comfortable line length */
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+
+/* ============================================================
+   NOTICE: Mustard Yellow (warning), label + slow text + Pause / Play
+   ============================================================ */
+.dbim-hm-notice {
+  background: var(--dbim-warning); /* #FFC107 */
+  border-top: 1px solid var(--dbim-deep-earthy-brown);
+  border-bottom: 1px solid var(--dbim-deep-earthy-brown);
+}
+.dbim-hm-notice__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-hm-notice__inner {
+    padding: 0.625rem 3rem;
+  }
+}
+.dbim-hm-notice__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--dbim-deep-earthy-brown); /* #150202 */
+  color: var(--dbim-warning); /* 12.6:1 on #150202 */
+}
+.dbim-hm-notice__icon svg {
+  width: 24px;
+  height: 24px;
+}
+.dbim-hm-notice__label,
+.dbim-hm-notice__text {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 12.6:1 on #FFC107 */
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-hm-notice__label {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+.dbim-hm-notice__viewport {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow: hidden;
+}
+.dbim-hm-notice__text {
+  line-height: 1.6;
+}
+.dbim-hm-notice__btn {
+  flex: 0 0 auto;
+  min-width: 80px;
+  min-height: 44px; /* touch target */
+  padding: 4px 16px;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-deep-earthy-brown);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-hm-notice__btn:hover {
+  background: var(--dbim-linen);
+}
+.dbim-hm-notice__btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring); /* 5.3:1 on #FFC107 */
+  outline-offset: 2px;
+}
+
+/* Moving state: added by the script only when motion is allowed */
+.dbim-hm-notice.is-moving .dbim-hm-notice__viewport {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+}
+.dbim-hm-notice.is-moving .dbim-hm-notice__text {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  animation: dbim-hm-marquee 35s linear infinite; /* the script sets the real duration */
+}
+.dbim-hm-notice.is-paused .dbim-hm-notice__text,
+.dbim-hm-notice__viewport:hover .dbim-hm-notice__text {
+  animation-play-state: paused; /* pause on hover too (WCAG 2.2.2) */
+}
+@keyframes dbim-hm-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dbim-hm-notice.is-moving .dbim-hm-notice__text {
+    display: block;
+    padding-left: 0;
+    white-space: normal;
+    animation: none;
+  }
+}
+
+/* ============================================================
+   ABOUT: Linen band. Round Chief Minister photo on the left,
+   text on the right, thin blue line, then Payment options | Instructions.
+   ============================================================ */
+.dbim-hm-hero {
+  padding: 3rem 0;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-bottom: 1px solid var(--dbim-grey-01);
+}
+@media (max-width: 575.98px) {
+  .dbim-hm-hero {
+    padding: 2rem 0;
+  }
+}
+.dbim-hm-about {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+/* 992px and up: photo column + text column, no empty space between them */
+@media (min-width: 992px) {
+  .dbim-hm-about {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 3.5rem;
+  }
+}
+
+/* Round photo + name */
+.dbim-hm-person {
+  margin: 0;
+  text-align: center;
+}
+.dbim-hm-person__photo {
+  display: block;
+  width: 230px;
+  max-width: 100%;
+  height: 230px;
+  margin: 0 auto 0.875rem;
+  border: 6px solid #fff; /* photo has a transparent background: keep it white in every theme */
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+  object-position: 50% 12%; /* keeps the face in the circle */
+}
+.dbim-hm-person__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-hm-person__name {
+  color: var(--dbim-key); /* 10.7:1 on Linen */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+}
+
+/* Lead text: semi-bold, Blue-group key colour (10.7:1 on Linen) */
+.dbim-hm-lead p {
+  max-width: 90ch;
+  margin: 0 0 1rem;
+  color: var(--dbim-key);
+  font-size: clamp(1rem, 0.9rem + 0.4vw, 1.1875rem);
+  font-weight: 600;
+  line-height: 1.65;
+}
+.dbim-hm-lead p:last-child {
+  margin-bottom: 0;
+}
+
+/* Payment options | Instructions, under a thin Blue-group line */
+.dbim-hm-pair {
+  display: grid;
+  gap: 1.5rem 2.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dbim-powder-blue);
+}
+@media (min-width: 768px) {
+  .dbim-hm-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dbim-hm-pair .dbim-hm-subheading {
+  margin-top: 0;
+}
+
+/* Payment options: white pills with a Blue-group outline */
+.dbim-hm-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-hm-chips li {
+  padding: 0.375rem 1rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-columbia-blue); /* 3.5:1 on Linen */
+  border-radius: 2rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+
+/* ============================================================
+   SERVICES: three white cards with a 5px Blue-group top edge
+   ============================================================ */
+.dbim-hm-cards {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+.dbim-hm-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 2rem 1.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-azureish-white);
+  border-top: 5px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(22, 47, 106, 0.08); /* decoration only */
+  color: var(--dbim-deep-earthy-brown);
+  transition: box-shadow 0.15s;
+}
+.dbim-hm-card:hover,
+.dbim-hm-card:focus-within {
+  box-shadow: 0 6px 18px rgba(22, 47, 106, 0.18);
+}
+.dbim-hm-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-powder-blue); /* 6.0:1 on #D2DFFF */
+}
+.dbim-hm-card__title {
+  margin: 0;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-hm-card__text {
+  flex: 1 1 auto;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* Button-style link: white on #214AAB (8.0:1), darker on hover */
+.dbim-hm-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* touch target */
+  padding: 0.5rem 1.25rem;
+  background: var(--dbim-powder-blue);
+  border: 2px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: #fff;
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.dbim-hm-btn::after {
+  content: "\2192"/ ""; /* decorative arrow, empty alt text for screen readers */
+  margin-left: 0.5rem;
+}
+.dbim-hm-btn:hover {
+  background: var(--dbim-wintergreen-dream); /* #162F6A, 12.8:1 */
+  border-color: var(--dbim-wintergreen-dream);
+  color: #fff;
+  text-decoration: none;
+}
+.dbim-hm-btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 2px;
+  color: #fff;
+}
+
+/* ============================================================
+   HOW IT WORKS: four light-blue step boxes
+   ============================================================ */
+.dbim-hm-how {
+  border-top: 1px solid var(--dbim-azureish-white);
+}
+.dbim-hm-steps {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: dbim-hm-step;
+}
+.dbim-hm-steps li {
+  padding: 1.5rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 */
+  line-height: 1.7;
+  counter-increment: dbim-hm-step;
+}
+.dbim-hm-steps li::before {
+  content: counter(dbim-hm-step) / ""; /* the <ol> already announces the numbers */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background: var(--dbim-powder-blue); /* white on #214AAB, 8.0:1 */
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.dbim-hm-steps strong {
+  display: block;
+  margin-bottom: 0.375rem;
+  color: var(--dbim-key); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+
+/* ============================================================
+   HIGH-CONTRAST THEME (yellow on near-black)
+   --dbim-powder-blue, --dbim-wintergreen-dream and --dbim-columbia-blue are
+   near-black here and --dbim-azureish-white-bg turns grey, so every fill, bar
+   and outline is redone with --dbim-linen / --dbim-key.
+   ============================================================ */
+[data-theme="dark"] .dbim-hm-heading {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-notice {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-notice__label,
+[data-theme="dark"] .dbim-hm-notice__text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-notice__icon {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hm-notice__btn {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-notice__btn:hover {
+  background: var(--dbim-linen);
+}
+[data-theme="dark"] .dbim-hm-notice__btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-hero {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-pair {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-chips li {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-card {
+  border-color: var(--dbim-key);
+  box-shadow: none;
+}
+[data-theme="dark"] .dbim-hm-card__icon {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-btn {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hm-btn:hover {
+  background: var(--dbim-key);
+  color: #000;
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-hm-btn:focus-visible {
+  outline-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hm-how {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-steps li {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hm-steps li::before {
+  background: var(--dbim-key);
+  color: #000;
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hm-card,
+  .dbim-hm-steps li,
+  .dbim-hm-chips li {
+    border: 2px solid CanvasText;
+  }
+  .dbim-hm-btn {
+    border: 2px solid ButtonText;
+  }
+  .dbim-hm-btn:focus-visible,
+  .dbim-hm-notice__btn:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain backgrounds, no Pause button ---- */
+@media print {
+  .dbim-hm-hero,
+  .dbim-hm-notice,
+  .dbim-hm-steps li {
+    background: none;
+  }
+  .dbim-hm-notice__btn {
+    display: none;
+  }
+}
+/* ============================================================
+   50. SEARCH FOR DEPARTMENT / OFFICE / SUB-OFFICE  (resources/views/search-department.blade.php)
+   APPEND AT THE VERY END of public/css/dbim.css.
+   Grey (Linen) band outside, ONE white card inside. The card holds: main heading, search form, divider,
+   "Search results for", "Detailed Hierarchy" + record count, and the table.
+   Self-contained: every class starts with .dbim-sd, so it does not depend on
+   sections 37 to 47. Existing variables only. No gradients, no shadows.
+
+   Soft look: light-blue (#D2DFFF) table header and Search button, rows alternate
+   WHITE / LINEN (#EBEAEA), hover = #D2DFFF, very light grid lines.
+   "Detailed Hierarchy" is Deep Earthy Brown (#150202),
+   the same colour as the form label.
+
+   Contrast, light theme (ratios computed from the hex values):
+     #162F6A on #FFFFFF 12.7:1  (main + results headings)
+     #150202 on #FFFFFF 20:1    (label, Detailed Hierarchy)
+     #150202 on #FFFFFF 20:1 | on #D2DFFF 15.4:1 | on #A3BBF3 10.7:1  (table text)
+     #606060 on #FFFFFF 6.3:1 | on #D2DFFF 4.7:1  (the "-" for empty cells)
+     #162F6A on #D2DFFF 9.6:1 (table header, button, record count)
+     #150202 on #EBEAEA 17.2:1 (alternate rows)
+     #214AAB on #FFFFFF 8.0:1 (heading bar, focus ring)
+     #606060 on #FFFFFF 6.3:1 (input border, needs 3:1)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000000 on #FFFF00 19.6:1
+
+   OPTIONAL CLEAN-UP after this page is live: sections 40, 41, 44, 45, 46 and 47
+   were only used by the old search page and can be deleted. KEEP 37, 39, 43 and 48
+   (the Contact page still uses them).
+   ============================================================ */
+
+/* ---- Page frame: no gaps between header, content and footer ---- */
+body:has(.dbim-sd) {
+  background-color: var(--dbim-linen);
+}
+body:has(.dbim-sd) main,
+body:has(.dbim-sd) .main-content,
+body:has(.dbim-sd) #app > main {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.dbim-sd {
+  background: var(--dbim-linen);
+  color: var(--dbim-deep-earthy-brown);
+}
+/* Same left/right edges as the header and footer */
+.dbim-sd-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-sd-wrap {
+    padding: 0 3rem;
+  }
+}
+.dbim-sd-section {
+  padding: 2.5rem 0 3rem;
+  background: var(
+    --dbim-linen
+  ); /* grey outside: #EBEAEA band around the card */
+}
+@media (max-width: 575.98px) {
+  .dbim-sd-section {
+    padding: 1.5rem 0 2rem;
+  }
+}
+
+/* ---- The one card: white inside, on the grey band ---- */
+.dbim-sd-card {
+  padding: 2rem;
+  background: var(--dbim-inclusive-white); /* #FFFFFF */
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+@media (max-width: 575.98px) {
+  .dbim-sd-card {
+    padding: 1.25rem;
+  }
+}
+
+/* ---- Main heading: the only one with the blue bar ---- */
+.dbim-sd-heading {
+  margin: 0 0 1.5rem;
+  padding-left: 1rem;
+  border-left: 6px solid var(--dbim-powder-blue); /* 8.0:1 on white */
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+@media (min-width: 768px) {
+  .dbim-sd-heading {
+    font-size: 1.875rem; /* 30px */
+  }
+}
+
+/* ---- Search form ---- */
+.dbim-sd-label {
+  display: block;
+  margin: 0 0 0.5rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+}
+.dbim-sd-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+.dbim-sd-search .form-control {
+  flex: 1 1 20rem;
+  min-width: 0;
+  max-width: 60rem;
+  min-height: 48px; /* touch target */
+  border-color: var(
+    --dbim-grey-02
+  ); /* #8E8E8E, 3.3:1 on white: soft but still passes the 3:1 rule */
+}
+.dbim-sd-search .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-sd-btn {
+  flex: 0 0 auto;
+  min-height: 48px;
+  padding: 0 1.75rem;
+  background: var(
+    --dbim-azureish-white-bg
+  ); /* soft #D2DFFF, same as .download-btn */
+  border: 2px solid var(--dbim-azureish-white-bg);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* #162F6A on #D2DFFF 9.6:1 */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.dbim-sd-btn:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3, text 6.3:1 */
+  border-color: var(--dbim-azureish-white);
+}
+.dbim-sd-btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 575.98px) {
+  .dbim-sd-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- Divider between the form and the results ---- */
+.dbim-sd-divider {
+  height: 0;
+  margin: 1.75rem 0;
+  border: 0;
+  border-top: 1px solid var(--dbim-linen);
+  opacity: 1;
+}
+
+/* ---- Results ---- */
+.dbim-sd-results-heading {
+  margin: 0 0 1.25rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere; /* a long search term never pushes the layout sideways */
+}
+/* focused by script so screen readers announce it; not a control, so no ring */
+.dbim-sd-results-heading:focus {
+  outline: none;
+}
+.dbim-sd-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 0.75rem;
+}
+.dbim-sd-bar__title {
+  margin: 0;
+  color: var(
+    --dbim-deep-earthy-brown
+  ); /* Earthy Brown, same as the label: 20:1 on white */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.dbim-sd-count {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.875rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 2rem;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+}
+
+/* ---- Table ---- */
+.dbim-sd-scroll {
+  overflow-x: auto;
+  overflow-y: hidden; /* no stray vertical scrollbar */
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+}
+.dbim-sd-scroll:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+.dbim-sd-table {
+  width: 100%;
+  min-width: 40rem; /* columns are never squashed: the wrapper scrolls instead */
+  border-collapse: collapse;
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-sd-table th {
+  padding: 0.75rem 1rem;
+  background: var(--dbim-azureish-white-bg); /* soft #D2DFFF header */
+  border: 1px solid var(--dbim-azureish-white);
+  border-bottom: 2px solid var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream); /* #162F6A on #D2DFFF 9.6:1 */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  text-align: left;
+}
+.dbim-sd-table td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--dbim-linen); /* very light lines */
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.5;
+  transition: background-color 0.15s;
+}
+.dbim-sd-table td:first-child {
+  font-weight: 600;
+}
+
+/* Alternate rows: white / Linen (soft neutral), hover = light blue */
+.dbim-sd-table tbody tr:nth-child(odd) td {
+  background-color: var(--dbim-inclusive-white); /* #FFFFFF */
+}
+.dbim-sd-table tbody tr:nth-child(even) td {
+  background-color: var(--dbim-linen); /* #EBEAEA, text 17.2:1 */
+}
+.dbim-sd-table tbody tr:hover td {
+  background-color: var(--dbim-azureish-white-bg); /* #D2DFFF, text 15.4:1 */
+}
+
+/* "-" for empty cells: quieter than real text; 6.3:1 on white, 5.3:1 on Linen, 4.7:1 on #D2DFFF */
+.dbim-sd-dash {
+  color: var(--dbim-text-muted);
+}
+.dbim-sd-empty {
+  font-weight: 600;
+}
+
+/* ============================================================
+   HIGH-CONTRAST THEME (yellow on near-black)
+   --dbim-powder-blue / --dbim-wintergreen-dream are near-black here and
+   --dbim-azureish-white-bg turns grey, so fills and bars use --dbim-linen / --dbim-key.
+   ============================================================ */
+[data-theme="dark"] .dbim-sd-section {
+  border-top: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-card {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-heading {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-btn {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-sd-btn:hover {
+  background: var(--dbim-key);
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-sd-btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-search .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-divider {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-count {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-table th {
+  background-color: var(--dbim-linen); /* #23232A */
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-table td {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-table tbody tr:nth-child(odd) td {
+  background-color: var(--dbim-inclusive-white); /* #0B0C0E */
+}
+[data-theme="dark"] .dbim-sd-table tbody tr:nth-child(even) td {
+  background-color: var(--dbim-linen); /* #23232A */
+}
+[data-theme="dark"] .dbim-sd-table tbody tr:hover td {
+  background-color: var(--dbim-key);
+  color: #000; /* black on yellow, never yellow on yellow */
+}
+[data-theme="dark"] .dbim-sd-dash {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-table tbody tr:hover .dbim-sd-dash {
+  color: #000;
+}
+[data-theme="dark"] .dbim-sd-btn,
+[data-theme="dark"] .dbim-sd-btn:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-sd-scroll {
+  border-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-sd-card {
+    border: 2px solid CanvasText;
+  }
+  .dbim-sd-btn {
+    border: 2px solid ButtonText;
+  }
+  .dbim-sd-btn:focus-visible,
+  .dbim-sd-search .form-control:focus,
+  .dbim-sd-scroll:focus-visible {
+    outline: 3px solid Highlight;
+  }
+  .dbim-sd-table th,
+  .dbim-sd-table td {
+    border-color: CanvasText;
+  }
+  .dbim-sd-table tbody tr:hover td {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+}
+
+/* ---- Print: hide the search form, plain backgrounds ---- */
+@media print {
+  .dbim-sd-search,
+  .dbim-sd-label {
+    display: none;
+  }
+  .dbim-sd-section,
+  .dbim-sd-card,
+  .dbim-sd-table td {
+    background: none !important;
+  }
+  .dbim-sd-table th {
+    background: none;
+    color: #000;
+    border-bottom: 2px solid #000;
   }
 }

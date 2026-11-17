@@ -5633,9 +5633,9 @@ body:has(.dbim-sd) #app > main {
 /* ---- Main heading: the only one with the blue bar ---- */
 .dbim-sd-heading {
   margin: 0 0 1.5rem;
-  padding-left: 1rem;
-  border-left: 6px solid var(--dbim-powder-blue); /* 8.0:1 on white */
-  color: var(--dbim-key); /* 12.7:1 on white */
+  /*padding-bottom: 1rem;
+  border-bottom: 1px solid var(--dbim-powder-blue); */ /* 8.0:1 on white */
+  color: var(--dbim-deep-earthy-brown); /* 12.7:1 on white */
   font-size: var(--dbim-fs-h2);
   font-weight: 700;
   line-height: 1.25;
@@ -7286,5 +7286,145 @@ body:has(.dbim-sd) #app > main {
   }
   .dbim-fq-item {
     break-inside: avoid;
+  }
+}
+/* ============================================================
+   60. PAGE BANNER  (Applicant Login, Option A)
+   APPEND AFTER section 53 in public/css/dbim.css.
+   Full-width blue banner with breadcrumb + page title, placed inside
+   .dbim-sd, directly above .dbim-sd-section (grey band + white card).
+   Gradient = two shades of the selected Blue group (DBIM Figure 2).
+   Existing variables only. Same side padding as header / footer.
+
+   Contrast, light theme:
+     #FFFFFF on #162F6A 12.8:1 | #FFFFFF on #214AAB 8.0:1
+     focus ring #D2DFFF on #162F6A 9.6:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+.dbim-pb {
+  padding: 2rem 0 6rem; /* extra space at the bottom: the card overlaps it */
+  background: linear-gradient(
+    90deg,
+    var(--dbim-wintergreen-dream) 0%,
+    var(--dbim-powder-blue) 100%
+  );
+  color: #fff;
+}
+.dbim-pb-wrap {
+  /* Centred container, text left-aligned inside it: the breadcrumb and title start
+     in the middle-left of the page, about 15rem before the card's left edge on a
+     wide screen (as on the MeitY Feedback page). On narrow screens the container
+     is the full width, so the heading simply sits at the normal side padding.
+     To move the heading: larger max-width = further left, smaller = closer to the card. */
+  width: 100%;
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ---- Overlap: the login card rises into the banner (same card, fields stay in one column) ---- */
+.dbim-pb + .dbim-sd-section {
+  padding-top: 0;
+  /* The card's negative margin pulls this whole section up. Its own grey
+     background would then paint over the banner, so it is made transparent:
+     the grey band comes from .dbim-sd behind it (section 50). */
+  background: transparent;
+}
+.dbim-pb + .dbim-sd-section .dbim-lo-card {
+  position: relative; /* paints above the banner */
+  margin-top: -4rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-pb {
+    padding-bottom: 4rem;
+  }
+  .dbim-pb + .dbim-sd-section .dbim-lo-card {
+    margin-top: -2.5rem;
+  }
+}
+
+[data-theme="dark"] .dbim-pb + .dbim-sd-section {
+  border-top: 0; /* the banner already ends with its own line */
+}
+
+/* ---- Breadcrumb ---- */
+.dbim-pb-crumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-pb-crumb li + li::before {
+  content: "/" / ""; /* decorative separator, skipped by screen readers */
+  margin-right: 0.5rem;
+}
+.dbim-pb-crumb a {
+  color: #fff;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-pb-crumb a:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-pb-crumb a:focus-visible {
+  outline: 2px solid var(--dbim-azureish-white-bg);
+  outline-offset: 2px;
+}
+
+/* ---- Title ---- */
+.dbim-pb-title {
+  margin: 0.75rem 0 0;
+  color: #fff;
+  font-family: var(--dbim-font-family); /* Noto Sans + Noto Sans Devanagari */
+  font-size: 1.75rem; /* 28px, as the MeitY Feedback heading */
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-pb-title {
+    font-size: 1.5rem; /* 24px */
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-pb {
+  background: var(--dbim-linen);
+  border-bottom: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pb-title,
+[data-theme="dark"] .dbim-pb-crumb a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pb-crumb a:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-pb {
+    border-bottom: 2px solid CanvasText;
+  }
+  .dbim-pb-crumb a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain heading ---- */
+@media print {
+  .dbim-pb {
+    background: none;
+    color: #000;
+  }
+  .dbim-pb-title,
+  .dbim-pb-crumb a {
+    color: #000;
   }
 }

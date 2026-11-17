@@ -1,11 +1,11 @@
 {{-- ============================================================
      Officers Login  (DBIM / GIGW 3.0, WCAG 2.1 AA)
-     Same look as the Search and Contact pages: grey band outside,
-     ONE white card inside, main heading with the blue bar.
+     Page banner (breadcrumb + title) on top, ONE white card overlapping
+     its bottom edge. Same look as the Applicant Login page.
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      No inline styles, no autofocus, no jQuery.
-     Styles: section 50 (frame, heading, label, button) + section 52 (login form)
-             in public/css/dbim.css
+     Styles: section 50 (frame, label, button) + section 52 (login form)
+             + section 60 (page banner) in public/css/dbim.css
      ============================================================ --}}
 @extends('layouts.app')
 
@@ -13,11 +13,23 @@
 
 @section('content')
 <div class="dbim-sd">
+
+    {{-- Page banner: breadcrumb + the only <h1> of the page --}}
+    <div class="dbim-pb">
+        <div class="dbim-pb-wrap">
+            <nav aria-label="Breadcrumb">
+                <ol class="dbim-pb-crumb">
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li aria-current="page">Officer's Login</li>
+                </ol>
+            </nav>
+            <h1 id="loginHeading" class="dbim-pb-title">Officer's Login</h1>
+        </div>
+    </div>
+
     <section class="dbim-sd-section" aria-labelledby="loginHeading">
         <div class="dbim-sd-wrap">
             <div class="dbim-sd-card dbim-lo-card">
-
-                <h1 id="loginHeading" class="dbim-sd-heading">Officer's Login</h1>
 
                 {{-- Status message from the session (e.g. after password reset). Announced politely. --}}
                 @if (session('status'))

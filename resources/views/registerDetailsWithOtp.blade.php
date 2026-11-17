@@ -21,11 +21,22 @@
 @endphp
 
 <div class="dbim-sd">
+    <div class="dbim-sd">
+    <div class="dbim-pb">
+        <div class="dbim-pb-wrap">
+            <nav aria-label="Breadcrumb">
+                <ol class="dbim-pb-crumb">
+                    <li><a href="{{ url('/') }}">Home</a></li>
+                    <li aria-current="page">Applicant Login</li>
+                </ol>
+            </nav>
+            <h1 id="loginHeading" class="dbim-pb-title">Applicant Login</h1>
+        </div>
+    </div>
+
     <section class="dbim-sd-section" aria-labelledby="loginHeading">
         <div class="dbim-sd-wrap">
             <div class="dbim-sd-card dbim-lo-card">
-
-                <h1 id="loginHeading" class="dbim-sd-heading">Applicant Login</h1>
 
                 {{-- Status messages from the server --}}
                 @if($timedOut)

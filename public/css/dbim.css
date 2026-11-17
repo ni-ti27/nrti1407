@@ -7428,3 +7428,482 @@ body:has(.dbim-sd) #app > main {
     color: #000;
   }
 }
+/* ============================================================
+   60. PAYMENT VERIFICATION  (resources/views/payment/dashboard.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar,
+   label, Search button, divider, results heading) and the soft table
+   (light-blue header, white / Linen rows, scroll wrapper) come from section 50:
+   .dbim-sd, .dbim-sd-section, .dbim-sd-wrap, .dbim-sd-card, .dbim-sd-heading,
+   .dbim-sd-label, .dbim-sd-btn, .dbim-sd-divider, .dbim-sd-results-heading,
+   .dbim-sd-scroll, .dbim-sd-table.
+   This section adds the filter grid, the Clear button, the status badges, the
+   action buttons and the pagination spacing.
+   Existing variables only. No gradients, no shadows.
+
+   Status badges always show the WORD (Success / Failed / Verify), so colour is
+   never the only cue.
+
+   Contrast, light theme:
+     #FFFFFF on #198754 4.5:1 (Success) | #FFFFFF on #DC3545 4.5:1 (Failed / Verify)
+     #150202 on #FFC107 12.6:1 (pending) | #162F6A on #D2DFFF 9.6:1 (Payment Verify button)
+     #162F6A on #FFFFFF 12.7:1 (outline buttons, Clear) | #150202 on #EBEAEA 17.2:1 (empty message)
+     #8E8E8E (field border) on #FFFFFF 3.3:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #000000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Error summary inside the card ---- */
+.dbim-pv-alert {
+  margin-bottom: 1.25rem;
+}
+.dbim-pv-alert:focus {
+  outline: none; /* focused by script so screen readers announce it; the bar already marks it */
+}
+
+/* ---- Filters: fields in a responsive grid ---- */
+.dbim-pv-filters {
+  display: grid;
+  gap: 1rem 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .dbim-pv-field--wide {
+    grid-column: span 2; /* the search box gets twice the width */
+  }
+}
+.dbim-pv-form .form-control,
+.dbim-pv-form .form-select {
+  min-height: 48px; /* touch target */
+  border-color: var(--dbim-grey-02); /* #8E8E8E, 3.3:1 on white */
+}
+.dbim-pv-form .form-control:focus,
+.dbim-pv-form .form-select:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-pv-form .is-invalid {
+  border-color: var(--dbim-error);
+}
+.dbim-pv-form .invalid-feedback {
+  margin-top: 0.375rem;
+  color: var(--dbim-error); /* 4.5:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+
+/* ---- Buttons: Clear | Search ---- */
+.dbim-pv-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+.dbim-pv-clear {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 2px solid var(--dbim-azureish-white); /* #A3BBF3 */
+  border-radius: 4px;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.dbim-pv-clear:hover {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+.dbim-pv-clear:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 575.98px) {
+  .dbim-pv-actions .dbim-sd-btn,
+  .dbim-pv-clear {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+}
+
+/* ---- Results ---- */
+.dbim-pv-count {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-pv-empty {
+  padding: 1rem 1.25rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 6px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  font-weight: 600;
+}
+
+/* ---- Table: 8 columns, so it is wider than the Search table ---- */
+.dbim-pv-table {
+  min-width: 62rem;
+}
+.dbim-pv-table td:first-child {
+  font-weight: 400; /* Sr. number is not a name: no bold */
+}
+.dbim-pv-table .dbim-pv-num {
+  text-align: right; /* amounts line up on the right */
+  white-space: nowrap;
+}
+.dbim-pv-table td,
+.dbim-pv-table th {
+  vertical-align: middle;
+}
+
+/* ---- Status badge ---- */
+.dbim-pv-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 2rem;
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.dbim-pv-badge--success {
+  background: var(--dbim-success); /* #198754 */
+  color: #fff; /* 4.5:1 */
+}
+.dbim-pv-badge--error {
+  background: var(--dbim-error); /* #DC3545 */
+  color: #fff; /* 4.5:1 */
+}
+.dbim-pv-badge--pending {
+  background: var(--dbim-warning); /* #FFC107 */
+  color: var(--dbim-deep-earthy-brown); /* 12.6:1 */
+}
+
+/* ---- Action buttons in the table ---- */
+.dbim-pv-btn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* touch target */
+  padding: 0 1rem;
+  background: var(--dbim-azureish-white-bg); /* soft #D2DFFF */
+  border: 2px solid var(--dbim-azureish-white-bg);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dbim-pv-btn:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+  border-color: var(--dbim-azureish-white);
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+.dbim-pv-btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+/* already verified: quieter outline version */
+.dbim-pv-btn--outline {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-grey-02);
+}
+
+/* ---- Pagination spacing (the page numbers come from section 14) ---- */
+.dbim-pv-pager {
+  margin-top: 1.5rem;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-pv-form .form-control:focus,
+[data-theme="dark"] .dbim-pv-form .form-select:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+/* red text on near-black is only 4.3:1, so field errors turn yellow;
+   the summary text, aria-invalid and the red border still mark the state */
+[data-theme="dark"] .dbim-pv-form .invalid-feedback {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-clear {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-clear:hover {
+  background: var(--dbim-linen);
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-pv-clear:focus-visible,
+[data-theme="dark"] .dbim-pv-btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-count {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-empty {
+  border-left-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+/* badges: the word carries the meaning, the outline carries the shape */
+[data-theme="dark"] .dbim-pv-badge {
+  background: var(--dbim-inclusive-white);
+  border: 2px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-btn,
+[data-theme="dark"] .dbim-pv-btn:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-pv-btn--outline,
+[data-theme="dark"] .dbim-pv-btn--outline:hover {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pv-btn:hover {
+  text-decoration: underline;
+}
+/* on the yellow hover row the badge and outline button must stay readable */
+[data-theme="dark"] .dbim-sd-table tbody tr:hover .dbim-pv-badge {
+  background: #000;
+  color: var(--dbim-key);
+  border-color: #000;
+}
+[data-theme="dark"] .dbim-sd-table tbody tr:hover .dbim-pv-btn {
+  background: #000;
+  border-color: #000;
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-pv-badge {
+    border: 1px solid CanvasText;
+    forced-color-adjust: none;
+  }
+  .dbim-pv-btn,
+  .dbim-pv-clear {
+    border: 2px solid ButtonText;
+  }
+  .dbim-pv-btn:focus-visible,
+  .dbim-pv-clear:focus-visible,
+  .dbim-pv-form .form-control:focus,
+  .dbim-pv-form .form-select:focus {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: no filters, plain table ---- */
+@media print {
+  .dbim-pv-form,
+  .dbim-pv-pager,
+  .dbim-pv-btn {
+    display: none;
+  }
+  .dbim-pv-badge {
+    background: none;
+    border: 1px solid #000;
+    color: #000;
+  }
+}
+/* ============================================================
+   61. PAYMENT VERIFICATION: card overlaps the page banner
+   APPEND AFTER section 60 (Payment Verification).
+   Same overlap as the login card, for the wide card.
+   ============================================================ */
+.dbim-pb + .dbim-sd-section .dbim-sd-card {
+  position: relative; /* paints above the banner */
+  margin-top: -4rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-pb + .dbim-sd-section .dbim-sd-card {
+    margin-top: -2.5rem;
+  }
+}
+/* 62. PAYMENT VERIFICATION: more space left and right
+   The banner and the card share the same side padding,
+   so the title lines up with the card's left edge. */
+.dbim-pv .dbim-sd-wrap,
+.dbim-pv .dbim-pb-wrap {
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+@media (min-width: 992px) {
+  .dbim-pv .dbim-sd-wrap,
+  .dbim-pv .dbim-pb-wrap {
+    padding: 0 6rem;
+  }
+}
+@media (min-width: 1400px) {
+  .dbim-pv .dbim-sd-wrap,
+  .dbim-pv .dbim-pb-wrap {
+    padding: 0 8rem;
+  }
+}
+
+/* Slightly roomier inside the card */
+@media (min-width: 992px) {
+  .dbim-pv .dbim-sd-card {
+    padding: 2.5rem 3rem;
+  }
+}
+/* ============================================================
+   63. PAYMENT VERIFICATION: filter layout (desktop)
+   Row 1: four equal fields. Row 2: wide Search box + Clear + Search
+   on one line, buttons aligned with the bottom of the input.
+   Below 992px the fields wrap as before and the buttons sit on their own row.
+   ============================================================ */
+.dbim-pv-actions {
+  grid-column: 1 / -1; /* own row on small screens */
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 992px) {
+  .dbim-pv-filters {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+  .dbim-pv-field {
+    grid-column: span 3; /* four fields per row */
+  }
+  .dbim-pv-field--wide {
+    grid-column: span 8; /* Search box takes most of row 2 */
+  }
+  .dbim-pv-actions {
+    grid-column: span 4; /* buttons fill the rest of row 2 */
+    align-self: end; /* line up with the bottom of the input */
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    margin-top: 0;
+  }
+  /* the error text under Search must not push the buttons down */
+  .dbim-pv-field--wide .invalid-feedback:empty {
+    display: none;
+  }
+}
+/* ============================================================
+   64. APPLICATION STATUS  (resources/views/applicant/application-status.blade.php)
+   Reuses: section 50 (frame, card, label, button, table), 55/58 (table links),
+   61 + 62 (banner overlap, side padding via .dbim-pv).
+   Adds: radio group, search row, 10-column table width, Pay button.
+   ============================================================ */
+
+/* ---- Radio group ---- */
+.dbim-as-views {
+  min-width: 0;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  border: 0;
+}
+.dbim-as-views legend {
+  float: none;
+  width: auto;
+  padding: 0;
+}
+.dbim-as-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+}
+.dbim-as-radios .form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px; /* touch target */
+  margin: 0;
+  padding: 0;
+}
+.dbim-as-radios .form-check-input {
+  float: none;
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+}
+.dbim-as-radios .form-check-label {
+  color: var(--dbim-deep-earthy-brown);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-as-radios .form-check-input:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* ---- Search: field + button on one row ---- */
+.dbim-as-search .input-group {
+  flex-wrap: nowrap;
+  max-width: 60rem;
+}
+.dbim-as-search .form-control {
+  min-height: 48px;
+  border-color: var(--dbim-grey-02);
+}
+.dbim-as-search .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-as-search .dbim-sd-btn {
+  border-radius: 0 4px 4px 0;
+  margin: 0;
+}
+
+/* ---- Tables: 9 / 10 columns, so wider than the Help tables ---- */
+.dbim-as-table {
+  min-width: 75rem;
+}
+.dbim-as-table td:first-child {
+  font-weight: 400; /* Sr No. is not a name */
+}
+.dbim-as-table form {
+  margin: 0;
+}
+.dbim-as-pay {
+  min-height: 44px;
+  margin: 0;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+/* The second and third lists start right under the divider, like the first */
+.dbim-as [data-status-panel] .dbim-sd-results-heading {
+  margin-top: 0;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-as-radios .form-check-label {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-as-search .form-control:focus,
+[data-theme="dark"] .dbim-as-radios .form-check-input:focus-visible {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Print: no search or radios ---- */
+@media print {
+  .dbim-as-views,
+  .dbim-as-search {
+    display: none;
+  }
+}

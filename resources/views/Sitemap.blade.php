@@ -1,8 +1,9 @@
 {{-- ============================================================
      Sitemap  (DBIM / GIGW 3.0)
+     Same look as Search, Contact, Login, About Us and Related Links:
+     grey band outside, ONE white card inside, main heading with the blue bar.
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
-     Styles: .dbim-form-card, .dbim-about (sections 16, 17) and
-             .dbim-sitemap (section 20).
+     Styles: section 50 (frame, heading) + section 56 (Sitemap) in public/css/dbim.css
 
      To add or change a link, edit the $sitemap array below only.
      TODO: every 'url' is a placeholder path. Replace it with your real
@@ -77,28 +78,30 @@
 @section('title', 'Sitemap | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-9">
+<div class="dbim-sd">
+    <section class="dbim-sd-section" aria-labelledby="sitemapHeading">
+        <div class="dbim-sd-wrap">
+            <div class="dbim-sd-card dbim-sm-card">
 
-            <div class="card dbim-form-card">
-                <h1 class="card-header h4 mb-0">Sitemap</h1>
-                <div class="card-body dbim-about dbim-sitemap">
+                <h1 id="sitemapHeading" class="dbim-sd-heading">Sitemap</h1>
 
-                    <p>
-                        This page lists all the pages of RTI Online, Government of Goa, grouped by topic.
-                        Select a link to open the page.
-                    </p>
+                <p class="dbim-sm-intro">
+                    This page lists all the pages of RTI Online, Government of Goa, grouped by topic.
+                    Select a link to open the page.
+                </p>
 
+                <hr class="dbim-sd-divider">
+
+                <div class="dbim-sm-grid">
                     @foreach($sitemap as $group)
-                        <section aria-labelledby="{{ $group['id'] }}">
-                            <h2 id="{{ $group['id'] }}" class="h3">{{ $group['title'] }}</h2>
-                            <ul class="dbim-sitemap__list">
+                        <section class="dbim-sm-group" aria-labelledby="{{ $group['id'] }}">
+                            <h2 id="{{ $group['id'] }}" class="dbim-sm-group__title">{{ $group['title'] }}</h2>
+                            <ul class="dbim-sm-list">
                                 @foreach($group['links'] as $link)
                                     <li>
                                         <a href="{{ $link['url'] }}"@if(!empty($link['download'])) download @endif>{{ $link['label'] }}</a>
                                         @if(!empty($link['children']))
-                                            <ul class="dbim-sitemap__list dbim-sitemap__list--nested">
+                                            <ul class="dbim-sm-list dbim-sm-list--nested">
                                                 @foreach($link['children'] as $child)
                                                     <li><a href="{{ $child['url'] }}">{{ $child['label'] }}</a></li>
                                                 @endforeach
@@ -109,11 +112,10 @@
                             </ul>
                         </section>
                     @endforeach
-
                 </div>
-            </div>
 
+            </div>
         </div>
-    </div>
+    </section>
 </div>
 @endsection

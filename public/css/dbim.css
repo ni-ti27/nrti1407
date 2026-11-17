@@ -2957,7 +2957,7 @@ html.dbim-big-cursor * {
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.5;
-  color: var(--dbim-key);
+  color: var(--dbim-deep-earthy-brown);
 }
 .dbim-header__brand .tag {
   font-size: 0.8125rem;
@@ -5926,5 +5926,1365 @@ body:has(.dbim-sd) #app > main {
     background: none;
     color: #000;
     border-bottom: 2px solid #000;
+  }
+}
+/* ============================================================
+   51. CONTACT US PAGE  (resources/views/contact.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar,
+   divider) comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading, .dbim-sd-divider.
+   This section only adds the note, the details list and the map.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #EBEAEA 17.2:1 (note text) | #150202 on #FFFFFF 20:1 (details)
+     #162F6A on #FFFFFF 12.7:1 (headings)
+     #0D6EFD on #FFFFFF 4.5:1 (links: underlined, so colour is not the only cue)
+     #214AAB on #EBEAEA 6.7:1 (note bar)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Note: soft grey box with a blue bar on the left ---- */
+.dbim-ct-note {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 6px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.6;
+}
+.dbim-ct-note a {
+  text-decoration: underline;
+}
+
+/* ---- Two columns: details | map ---- */
+.dbim-ct-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .dbim-ct-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+  }
+}
+
+/* Sub-headings: plain, no bar (only the main heading has the bar) */
+.dbim-ct-heading {
+  margin: 0 0 1rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ---- Details: label | value rows with thin lines ---- */
+.dbim-ct-dl {
+  margin: 0;
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-ct-row {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: 0.25rem 1.25rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--dbim-linen);
+}
+.dbim-ct-row dt {
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-weight: 600;
+}
+.dbim-ct-row dd {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.6;
+  overflow-wrap: anywhere; /* long emails never push the layout sideways */
+}
+.dbim-ct-address {
+  margin: 0;
+  font-style: normal;
+}
+.dbim-ct-row a {
+  text-decoration: underline; /* link is not shown by colour alone */
+}
+@media (max-width: 575.98px) {
+  .dbim-ct-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- Map ---- */
+.dbim-ct-maplink {
+  margin: 0 0 0.75rem;
+}
+.dbim-ct-maplink a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* touch target */
+  text-decoration: underline;
+}
+.dbim-ct-map {
+  overflow: hidden;
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-ct-note {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ct-dl,
+[data-theme="dark"] .dbim-ct-row {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ct-row dt,
+[data-theme="dark"] .dbim-ct-row dd {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ct-map {
+  border-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-ct-note {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print: the map is not useful on paper ---- */
+@media print {
+  .dbim-ct-note {
+    background: none;
+  }
+  .dbim-ct-map,
+  .dbim-ct-maplink {
+    display: none;
+  }
+}
+/* ============================================================
+   52. OFFICERS LOGIN  (resources/views/auth/login.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar,
+   field label, Login button) comes from section 50:
+   .dbim-sd, .dbim-sd-section, .dbim-sd-wrap, .dbim-sd-card, .dbim-sd-heading,
+   .dbim-sd-label, .dbim-sd-btn.
+   This section adds the narrow card, the fields, the password toggle and the
+   button row. Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (labels) | #606060 on #FFFFFF 6.3:1 (required note)
+     #162F6A on #FFFFFF 12.7:1 (Forgot Password link)
+     #162F6A on #D2DFFF 9.6:1 (show / hide button)
+     #8E8E8E (input border) on #FFFFFF 3.3:1 | #DC3545 (error text) on #FFFFFF 4.5:1
+     #214AAB (focus ring) on #FFFFFF 8.0:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #000000 on #FFFF00 19.6:1
+
+   KEEP the sticky-footer rules in section 27 (html / body / #app / footer).
+   The .dbim-login__* rules in sections 27, 31 and 33 to 35 are no longer used by
+   this page; delete them once no other page uses them.
+   ============================================================ */
+
+/* ---- Narrow, centred card (a login form does not need the full width) ---- */
+.dbim-lo-card {
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+/* ---- Form ---- */
+.dbim-lo-required {
+  margin: 0 0 1.25rem;
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-lo-field {
+  margin: 0 0 1.25rem;
+}
+.dbim-lo-form .form-control {
+  min-height: 48px; /* touch target */
+  border-color: var(--dbim-grey-02); /* #8E8E8E, 3.3:1 on white */
+}
+.dbim-lo-form .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-lo-form .form-control.is-invalid {
+  border-color: var(--dbim-error);
+}
+.dbim-lo-form .form-control.is-invalid:focus {
+  border-color: var(--dbim-error);
+  outline-color: var(--dbim-error);
+}
+/* Error text: coral red 4.5:1 on white. The word is in the summary and the
+   field is marked aria-invalid, so colour is never the only cue. */
+.dbim-lo-form .invalid-feedback {
+  margin-top: 0.375rem;
+  color: var(--dbim-error);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+
+/* Error / status boxes inside the card: no extra bottom gap before the form */
+.dbim-lo-card .alert {
+  margin-bottom: 1.25rem;
+}
+.dbim-lo-card .alert:focus {
+  outline: none; /* focused by script so screen readers announce it; the bar already marks it */
+}
+.dbim-lo-card .alert a {
+  color: var(--dbim-key);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ---- Show / hide password button: sits flush with the field ---- */
+.dbim-lo-form .input-group {
+  flex-wrap: nowrap;
+}
+.dbim-lo-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0 0.75rem;
+  background: var(--dbim-azureish-white-bg); /* soft #D2DFFF */
+  border: 1px solid var(--dbim-grey-02);
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  color: var(--dbim-wintergreen-dream);
+  cursor: pointer;
+}
+.dbim-lo-toggle:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+}
+.dbim-lo-toggle:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+.dbim-lo-toggle img {
+  max-width: none;
+}
+
+/* ---- Buttons: Forgot Password (link style) | Login ---- */
+.dbim-lo-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-top: 1.75rem;
+}
+.dbim-lo-link {
+  min-height: 44px; /* touch target */
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.dbim-lo-link:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-lo-link:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+@media (max-width: 575.98px) {
+  .dbim-lo-actions .dbim-sd-btn {
+    flex: 1 1 100%;
+    order: -1; /* Login first, Forgot Password under it */
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-lo-required {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lo-form .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+/* Red text on near-black is only 4.3:1, so error text turns yellow;
+   the summary text, aria-invalid and the red field border still mark the state. */
+[data-theme="dark"] .dbim-lo-form .invalid-feedback {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lo-toggle {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-lo-toggle:focus-visible,
+[data-theme="dark"] .dbim-lo-link:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lo-link {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lo-card .alert a {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-lo-toggle {
+    border: 1px solid ButtonText;
+  }
+  .dbim-lo-form .form-control:focus,
+  .dbim-lo-toggle:focus-visible,
+  .dbim-lo-link:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: a login form is not printed ---- */
+@media print {
+  .dbim-lo-actions {
+    display: none;
+  }
+}
+/* ============================================================
+   53. APPLICANT LOGIN WITH OTP  (resources/views/auth/applicant-login.blade.php)
+   APPEND AFTER section 52 in public/css/dbim.css.
+   Sections 50 (frame, heading, label, button) and 52 (narrow card, fields,
+   error boxes, input-group button) do most of the work. This section only adds
+   what the OTP page needs on top: the Send OTP button text, the right-aligned
+   Login button, the hint and note text, and the disabled states.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #606060 on #FFFFFF 6.3:1 (hints, notes) | #162F6A on #D2DFFF 9.6:1 (Send OTP)
+     #162F6A on #FFFFFF 12.7:1 (note links, underlined)
+     #606060 on #EBEAEA 5.3:1 (disabled buttons; disabled controls are exempt)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #000000 on #FFFF00 19.6:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Send OTP: text button joined to the mobile field ---- */
+.dbim-lo-send {
+  padding: 0 1rem;
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---- Hints under a field ("Enter 10 digits...", "Enter the OTP...") ---- */
+.dbim-lo-form .form-text {
+  margin-top: 0.375rem;
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p2);
+}
+
+/* ---- Login button on its own, right-aligned ---- */
+.dbim-lo-actions--end {
+  justify-content: flex-end;
+}
+
+/* ---- Privacy note and manual link ---- */
+.dbim-lo-note {
+  margin: 1.25rem 0 0;
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p2);
+  line-height: 1.6;
+}
+.dbim-lo-note a {
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-lo-note a:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-lo-note--last {
+  margin-top: 0; /* the divider above already gives the space */
+}
+
+/* ---- Disabled while a request is being sent (the script locks both buttons) ---- */
+.dbim-sd-btn:disabled,
+.dbim-sd-btn:disabled:hover,
+.dbim-lo-toggle:disabled,
+.dbim-lo-toggle:disabled:hover {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-linen);
+  color: var(--dbim-grey-03);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-lo-form .form-text,
+[data-theme="dark"] .dbim-lo-note {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-lo-note a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sd-btn:disabled,
+[data-theme="dark"] .dbim-sd-btn:disabled:hover,
+[data-theme="dark"] .dbim-lo-toggle:disabled,
+[data-theme="dark"] .dbim-lo-toggle:disabled:hover {
+  background: var(--dbim-linen); /* #23232A */
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-sd-btn:disabled,
+  .dbim-lo-toggle:disabled {
+    border: 1px solid GrayText;
+    color: GrayText;
+  }
+}
+
+/* ---- Print: the OTP form is not printed ---- */
+@media print {
+  .dbim-lo-note {
+    display: none;
+  }
+}
+/* ============================================================
+   54. ABOUT US PAGE  (resources/views/about.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar)
+   comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading.
+   This section adds the reading width, the sub-headings, the role / payment
+   tiles and the support box. Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (text) | on #EBEAEA 17.2:1 (tiles) | on #D2DFFF 15.4:1 (support)
+     #162F6A on #FFFFFF 12.7:1 (sub-headings) | on #D2DFFF 9.6:1 (support title)
+     #214AAB on #EBEAEA 6.7:1 (tile bar)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Reading card: narrower than the table pages, centred on the grey band ---- */
+.dbim-ab-card {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+/* ---- Sections: thin line between them ---- */
+.dbim-ab-section + .dbim-ab-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+
+/* Sub-headings: plain, no bar (only the main heading has the bar) */
+.dbim-ab-heading {
+  margin: 0 0 1rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Body text: comfortable line length and spacing */
+.dbim-ab-text {
+  max-width: 75ch;
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+.dbim-ab-section > .dbim-ab-text:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Roles / payment tiles: soft grey with a blue bar ---- */
+.dbim-ab-list {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-ab-list li {
+  padding: 0.75rem 1rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 4px solid var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  line-height: 1.5;
+}
+
+/* ---- Support box: soft light blue ---- */
+.dbim-ab-support {
+  padding: 1.25rem 1.5rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 on #D2DFFF */
+}
+.dbim-ab-support__title {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-ab-support__text {
+  margin: 0 0 0.75rem;
+  line-height: 1.6;
+}
+.dbim-ab-support__text--last {
+  margin-bottom: 0;
+}
+.dbim-ab-support a {
+  color: var(--dbim-wintergreen-dream);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+}
+
+@media (max-width: 575.98px) {
+  .dbim-ab-support {
+    padding: 1rem;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-ab-section + .dbim-ab-section {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ab-text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ab-list li {
+  border-left-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ab-support {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ab-support__title,
+[data-theme="dark"] .dbim-ab-support a {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-ab-list li,
+  .dbim-ab-support {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print: plain backgrounds ---- */
+@media print {
+  .dbim-ab-list li,
+  .dbim-ab-support {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+/* ============================================================
+   55. RELATED LINKS PAGE  (resources/views/related-links.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar)
+   comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading.
+   This section adds the narrow card, the search box, the link rows, the
+   "Visit Website" button, the empty message and the pagination spacing.
+   The inline SVG icons follow the text colour, so they work in every theme.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #EBEAEA 17.2:1 (link names) | #162F6A on #D2DFFF 9.6:1 (buttons)
+     #162F6A on #FFFFFF 12.7:1 (empty-message link) | #606060 on #FFFFFF 6.3:1 (placeholder)
+     #214AAB on #EBEAEA 6.7:1 (row bar) | #8E8E8E (input border) on #FFFFFF 3.3:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Reading card: narrower than the table pages, centred on the grey band ---- */
+.dbim-rl-card {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+/* ---- Search: field with the icon button on its right ---- */
+.dbim-rl-search {
+  max-width: 34rem;
+  margin: 0 0 1.5rem;
+}
+.dbim-rl-search .input-group {
+  flex-wrap: nowrap;
+}
+.dbim-rl-search .form-control {
+  min-height: 48px; /* touch target */
+  border-color: var(--dbim-grey-02); /* #8E8E8E, 3.3:1 on white */
+}
+.dbim-rl-search .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-rl-search__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  min-width: 52px;
+  min-height: 48px;
+  padding: 0 0.75rem;
+  background: var(--dbim-azureish-white-bg); /* soft #D2DFFF */
+  border: 1px solid var(--dbim-grey-02);
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  cursor: pointer;
+}
+.dbim-rl-search__btn:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+}
+.dbim-rl-search__btn:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+.dbim-rl-search__btn svg {
+  width: 24px;
+  height: 24px;
+}
+/* the SVG files have a fixed fill: this makes them follow the text colour */
+.dbim-rl-search__btn svg path,
+.dbim-rl-visit svg path {
+  fill: currentColor;
+}
+
+/* ---- List: soft grey rows with a blue bar ---- */
+.dbim-rl-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-rl-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 4px solid var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  border-radius: 4px;
+}
+.dbim-rl-item__name {
+  flex: 1 1 14rem;
+  min-width: 0;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ---- "Visit Website" button ---- */
+.dbim-rl-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  min-height: 44px; /* touch target */
+  padding: 0 1rem;
+  background: var(--dbim-azureish-white-bg); /* soft #D2DFFF */
+  border: 1px solid var(--dbim-azureish-white);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.dbim-rl-visit:hover {
+  background: var(--dbim-azureish-white); /* #A3BBF3 */
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+.dbim-rl-visit:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+.dbim-rl-visit svg {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Message when a search finds nothing ---- */
+.dbim-rl-empty {
+  padding: 1rem 1.25rem;
+  background: var(--dbim-linen);
+  border-left: 6px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+  line-height: 1.6;
+}
+.dbim-rl-empty a {
+  color: var(--dbim-key); /* 12.7:1 on white, 10.7:1 on Linen */
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+}
+
+/* ---- Pagination spacing (the page numbers come from section 14) ---- */
+.dbim-rl-pager {
+  margin-top: 1.5rem;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-rl-search .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rl-search__btn {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000; /* 19.6:1 on yellow */
+}
+[data-theme="dark"] .dbim-rl-search__btn:focus-visible,
+[data-theme="dark"] .dbim-rl-visit:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rl-item {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rl-item__name {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rl-visit,
+[data-theme="dark"] .dbim-rl-visit:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-rl-visit:hover {
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-rl-empty {
+  border-left-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rl-empty a {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-rl-item,
+  .dbim-rl-empty {
+    border: 2px solid CanvasText;
+  }
+  .dbim-rl-visit,
+  .dbim-rl-search__btn {
+    border: 1px solid ButtonText;
+  }
+  .dbim-rl-visit:focus-visible,
+  .dbim-rl-search__btn:focus-visible,
+  .dbim-rl-search .form-control:focus {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: no search box or pagination ---- */
+@media print {
+  .dbim-rl-search,
+  .dbim-rl-pager {
+    display: none;
+  }
+  .dbim-rl-item,
+  .dbim-rl-empty {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+/* ============================================================
+   56. SITEMAP PAGE  (resources/views/sitemap.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar,
+   divider) comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading, .dbim-sd-divider.
+   This section adds the card width, the intro, the group grid and the link
+   lists (chevron + thin line, as on the MeitY sitemap).
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (intro, group titles)
+     #162F6A on #FFFFFF 12.7:1 (links)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- Reading card: centred on the grey band ---- */
+.dbim-sm-card {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+.dbim-sm-intro {
+  max-width: 75ch;
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+
+/* ---- Groups: two columns on wide screens, one on small ---- */
+.dbim-sm-grid {
+  display: grid;
+  gap: 2rem 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+/* Group titles: Earthy Brown, so they differ from the blue links */
+.dbim-sm-group__title {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--dbim-azureish-white); /* #A3BBF3 */
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* ---- Link lists ---- */
+.dbim-sm-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-sm-list > li {
+  border-bottom: 1px solid var(--dbim-linen);
+}
+.dbim-sm-list > li > a {
+  display: inline-flex;
+  align-items: flex-start;
+  min-height: 44px; /* touch target */
+  padding: 0.625rem 0;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-weight: 600;
+  text-decoration: none;
+}
+.dbim-sm-list > li > a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.dbim-sm-list > li > a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+/* chevron: decorative, empty alt text so screen readers skip it */
+.dbim-sm-list a::before {
+  content: "\203A"; /* fallback for browsers without alt-text syntax */
+  content: "\203A"/ "";
+  flex: 0 0 auto;
+  margin-right: 0.625rem;
+  font-weight: 700;
+}
+
+/* Second level (only when a link has 'children') */
+.dbim-sm-list--nested {
+  margin: 0 0 0.5rem 1.5rem;
+}
+.dbim-sm-list--nested > li {
+  border-bottom: 0;
+}
+.dbim-sm-list--nested > li > a {
+  min-height: 36px;
+  padding: 0.375rem 0;
+  font-weight: 400;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-sm-intro,
+[data-theme="dark"] .dbim-sm-group__title {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sm-group__title,
+[data-theme="dark"] .dbim-sm-list > li {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-sm-list > li > a:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-sm-list > li > a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain list ---- */
+@media print {
+  .dbim-sm-group {
+    break-inside: avoid;
+  }
+}
+/* ============================================================
+   57. WEBSITE POLICIES PAGE WITH TABS  (resources/views/policy.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar)
+   comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading.
+   This section adds the tab bar, the panels, the text and the closing box.
+
+   Tabs look like the header menu: plain text, light-blue block + 4px bar for the
+   selected tab. Without JavaScript the bar is a row of links and all policies
+   are shown one after the other (.is-tabs is added by the script).
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (tab text, body text) | on #D2DFFF 15.4:1 (closing box)
+     #162F6A on #D2DFFF 9.6:1 (selected tab) | #162F6A on #FFFFFF 12.7:1 (headings)
+     #214AAB / #162F6A bar on white 8.0:1 / 12.7:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Reading card: centred on the grey band ---- */
+.dbim-pl-card {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+/* ---- Tab bar ---- */
+.dbim-pl-tablist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0 0 1.75rem;
+  padding: 0;
+  list-style: none;
+  border-bottom: 2px solid var(--dbim-azureish-white); /* #A3BBF3 */
+}
+.dbim-pl-tablist a {
+  display: block;
+  min-height: 48px; /* touch target */
+  margin-bottom: -2px; /* the selected bar sits on top of the line */
+  padding: 0.75rem 1.25rem;
+  border-bottom: 4px solid transparent;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+.dbim-pl-tablist a:hover {
+  background: var(--dbim-linen);
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+.dbim-pl-tablist a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: -2px;
+}
+/* selected tab (only exists once the script has run) */
+.dbim-pl-tablist a[aria-selected="true"] {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-bottom-color: var(--dbim-key);
+  color: var(--dbim-key); /* 9.6:1 on #D2DFFF */
+  font-weight: 700;
+}
+
+/* ---- Panels ---- */
+/* Without JavaScript: all policies one after the other, with a thin line between */
+.dbim-pl-panel + .dbim-pl-panel {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+/* With JavaScript: one panel at a time, so no line or gap is needed */
+.dbim-pl-tabs.is-tabs .dbim-pl-panel + .dbim-pl-panel {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+/* the panel is focusable so keyboard users can scroll it; the ring stays inside */
+.dbim-pl-panel:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 4px;
+}
+
+.dbim-pl-heading {
+  margin: 0 0 1rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-pl-text {
+  max-width: 75ch; /* comfortable line length */
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+
+/* ---- Closing box: soft light blue ---- */
+.dbim-pl-thanks {
+  margin-top: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 on #D2DFFF */
+}
+.dbim-pl-thanks p {
+  margin: 0 0 0.5rem;
+  line-height: 1.6;
+}
+.dbim-pl-thanks p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Small screens: tabs wrap onto two lines instead of scrolling ---- */
+@media (max-width: 575.98px) {
+  .dbim-pl-tablist a {
+    padding: 0.625rem 0.875rem;
+  }
+  .dbim-pl-thanks {
+    padding: 1rem;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-pl-tablist {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-tablist a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-tablist a:hover {
+  background: var(--dbim-linen); /* #23232A */
+  color: var(--dbim-key);
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-pl-tablist a[aria-selected="true"] {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-tablist a:focus-visible,
+[data-theme="dark"] .dbim-pl-panel:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-panel + .dbim-pl-panel {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-pl-thanks {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours: selected tab must not rely on a background ---- */
+@media (forced-colors: active) {
+  .dbim-pl-tablist a[aria-selected="true"] {
+    border-bottom: 4px solid Highlight;
+  }
+  .dbim-pl-tablist a:focus-visible,
+  .dbim-pl-panel:focus-visible {
+    outline: 3px solid Highlight;
+  }
+  .dbim-pl-thanks {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print: show every policy, hide the tab bar ---- */
+@media print {
+  .dbim-pl-tablist {
+    display: none;
+  }
+  .dbim-pl-panel[hidden] {
+    display: block !important;
+  }
+  .dbim-pl-tabs.is-tabs .dbim-pl-panel + .dbim-pl-panel {
+    margin-top: 1.5rem;
+  }
+  .dbim-pl-thanks {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+/* ============================================================
+   58. HELP PAGE  (resources/views/help.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar) and
+   the soft table (light-blue header, white / Linen rows, scroll wrapper)
+   come from section 50:
+   .dbim-sd, .dbim-sd-section, .dbim-sd-wrap, .dbim-sd-card, .dbim-sd-heading,
+   .dbim-sd-scroll, .dbim-sd-table.
+   This section only adds the sections, the sub-headings, the text, and the
+   link colour inside the tables. Existing variables only. No gradients, no shadows.
+
+   Why the table links need their own colour: the default link blue (#0D6EFD)
+   is only 3.8:1 on the Linen rows (#EBEAEA). Navy (#162F6A) is 10.7:1 there
+   and 12.7:1 on white, and the links are underlined.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (text) | #162F6A on #FFFFFF 12.7:1 (headings)
+     #162F6A on #EBEAEA 10.7:1 | on #D2DFFF 9.6:1 (table links, row hover)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Sections: thin line between them ---- */
+.dbim-hl-section + .dbim-hl-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+
+/* Sub-headings: plain, no bar (only the main heading has the bar) */
+.dbim-hl-heading {
+  margin: 0 0 1rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Body text: comfortable line length and spacing */
+.dbim-hl-text {
+  max-width: 75ch;
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+
+/* ---- Tables: smaller minimum width than the Search results table ---- */
+.dbim-hl-table {
+  min-width: 28rem;
+}
+.dbim-hl-table a {
+  color: var(--dbim-key); /* 10.7:1 on Linen, 12.7:1 on white */
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-hl-table a:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-hl-table a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-hl-section + .dbim-hl-section {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hl-text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hl-table a {
+  color: var(--dbim-key);
+}
+/* black text on the yellow hover row, never yellow on yellow */
+[data-theme="dark"] .dbim-sd-table tbody tr:hover .dbim-hl-table a,
+[data-theme="dark"] .dbim-hl-table tbody tr:hover a {
+  color: #000;
+}
+[data-theme="dark"] .dbim-hl-table a:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hl-table a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain tables ---- */
+@media print {
+  .dbim-hl-section {
+    break-inside: avoid;
+  }
+}
+/* ============================================================
+   59. FAQ PAGE  (resources/views/faq.blade.php)
+   APPEND AFTER section 50 in public/css/dbim.css.
+   The page frame (grey band, white card, main heading with the blue bar)
+   comes from section 50: .dbim-sd, .dbim-sd-section, .dbim-sd-wrap,
+   .dbim-sd-card, .dbim-sd-heading.
+   This section adds the centred (not full width) card, the question index,
+   and the question / answer items.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #FFFFFF 20:1 (answers) | on #EBEAEA 17.2:1 (index box)
+     #162F6A on #FFFFFF 12.7:1 (questions, links) | on #EBEAEA 10.7:1 (index links)
+     #214AAB on #EBEAEA 6.7:1 (index bar)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Reading card: centred on the grey band, not full width ---- */
+.dbim-fq-card {
+  max-width: 64rem;
+  margin: 0 auto;
+}
+
+/* Department name: plain sub-heading, no bar */
+.dbim-fq-dept {
+  margin: 0 0 1.25rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---- Index: soft grey box with a blue bar ---- */
+.dbim-fq-index {
+  margin: 0 0 2rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 6px solid var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  border-radius: 4px;
+}
+.dbim-fq-index__title {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.dbim-fq-index__list {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-fq-index__list li {
+  padding: 0.125rem 0;
+  line-height: 1.6;
+}
+.dbim-fq-index__list a {
+  color: var(--dbim-key); /* 10.7:1 on Linen */
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-fq-index__list a:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-fq-index__list a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ---- Questions and answers: thin line between items ---- */
+.dbim-fq-item + .dbim-fq-item {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-fq-question {
+  margin: 0 0 0.75rem;
+  color: var(--dbim-key); /* 12.7:1 on white (blue group, not red) */
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+.dbim-fq-text {
+  max-width: 75ch; /* comfortable line length */
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+.dbim-fq-item > .dbim-fq-text:last-child {
+  margin-bottom: 0;
+}
+.dbim-fq-list {
+  max-width: 75ch;
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.75;
+}
+.dbim-fq-list li + li {
+  margin-top: 0.375rem;
+}
+.dbim-fq-list--last {
+  margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-fq-index {
+    padding: 1rem;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-fq-dept,
+[data-theme="dark"] .dbim-fq-index__title,
+[data-theme="dark"] .dbim-fq-index__list,
+[data-theme="dark"] .dbim-fq-text,
+[data-theme="dark"] .dbim-fq-list {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fq-index {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fq-index__list a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fq-index__list a:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fq-item + .dbim-fq-item {
+  border-top-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-fq-index {
+    border: 2px solid CanvasText;
+  }
+  .dbim-fq-index__list a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain index, keep each question together ---- */
+@media print {
+  .dbim-fq-index {
+    background: none;
+    border: 1px solid #000;
+  }
+  .dbim-fq-item {
+    break-inside: avoid;
   }
 }

@@ -1,120 +1,123 @@
 {{-- ============================================================
      Officers Login  (DBIM / GIGW 3.0, WCAG 2.1 AA)
+     Same look as the Search and Contact pages: grey band outside,
+     ONE white card inside, main heading with the blue bar.
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      No inline styles, no autofocus, no jQuery.
-     Styles: sections 27 and 28 of public/css/dbim.css
+     Styles: section 50 (frame, heading, label, button) + section 52 (login form)
+             in public/css/dbim.css
      ============================================================ --}}
 @extends('layouts.app')
 
 @section('title', 'Officers Login | RTI Online, Government of Goa')
 
 @section('content')
-<div class="dbim-login">
-    <section class="dbim-login__card" aria-labelledby="loginHeading">
+<div class="dbim-sd">
+    <section class="dbim-sd-section" aria-labelledby="loginHeading">
+        <div class="dbim-sd-wrap">
+            <div class="dbim-sd-card dbim-lo-card">
 
-        <div class="dbim-login__head">
-            <h1 id="loginHeading" class="dbim-login__title">Officer's Login</h1>
-        </div>
+                <h1 id="loginHeading" class="dbim-sd-heading">Officer's Login</h1>
 
-        <div class="dbim-login__body">
+                {{-- Status message from the session (e.g. after password reset). Announced politely. --}}
+                @if (session('status'))
+                    <div class="alert alert-success" role="status">
+                        <strong>Success:</strong> {{ session('status') }}
+                    </div>
+                @endif
 
-            {{-- Status message from the session (e.g. after password reset). Announced politely. --}}
-            @if (session('status'))
-                <div class="alert alert-success" role="status">
-                    <strong>Success:</strong> {{ session('status') }}
-                </div>
-            @endif
-
-            {{-- Error summary: filled by script or by the server; receives focus --}}
-            <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
-                 @if(!$errors->any()) hidden @endif>
-                <p class="fw-bold mb-2">Please correct the following:</p>
-                <ul class="mb-0" id="errorSummaryList">
-                    @foreach($errors->all() as $message)
-                        <li>{{ $message }}</li>
-                    @endforeach
-                </ul>
-            </div>
-
-            <form id="loginForm" method="POST" action="{{ route('login') }}" novalidate>
-                @csrf
-
-                <p class="dbim-login__required">
-                    Fields marked with
-                    (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>)
-                    are required.
-                </p>
-
-                {{-- Username --}}
-                <div class="mb-3">
-                    <label for="username" class="form-label fw-bold">
-                        Username <span class="dbim-required" aria-hidden="true">*</span>
-                    </label>
-                    <input type="text"
-                           class="form-control @error('username') is-invalid @enderror"
-                           id="username" name="username" value="{{ old('username') }}"
-                           placeholder="Enter your username"
-                           autocomplete="username" required aria-required="true"
-                           aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
-                           aria-describedby="usernameError">
-                    <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
+                {{-- Error summary: filled by script or by the server; receives focus --}}
+                <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                     @if(!$errors->any()) hidden @endif>
+                    <p class="fw-bold mb-2">Please correct the following:</p>
+                    <ul class="mb-0" id="errorSummaryList">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
                 </div>
 
-                {{-- System password (with show / hide button) --}}
-                <div class="mb-3">
-                    <label for="systemPass" class="form-label fw-bold">
-                        Password <span class="dbim-required" aria-hidden="true">*</span>
-                    </label>
-                    <div class="input-group">
+                <form id="loginForm" class="dbim-lo-form" method="POST" action="{{ route('login') }}" novalidate>
+                    @csrf
+
+                    <p class="dbim-lo-required">
+                        Fields marked with
+                        (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>)
+                        are required.
+                    </p>
+
+                    {{-- Username --}}
+                    <div class="dbim-lo-field">
+                        <label for="username" class="dbim-sd-label">
+                            Username <span class="dbim-required" aria-hidden="true">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control @error('username') is-invalid @enderror"
+                               id="username" name="username" value="{{ old('username') }}"
+                               placeholder="Enter your username"
+                               autocomplete="username" required aria-required="true"
+                               aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                               aria-describedby="usernameError">
+                        <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
+                    </div>
+
+                    {{-- System password (with show / hide button) --}}
+                    <div class="dbim-lo-field">
+                        <label for="systemPass" class="dbim-sd-label">
+                            Password <span class="dbim-required" aria-hidden="true">*</span>
+                        </label>
+                        <div class="input-group">
+                            <input type="password"
+                                   class="form-control @error('systemPass') is-invalid @enderror"
+                                   id="systemPass" name="systemPass"
+                                   placeholder="Enter your system password"
+                                   autocomplete="off" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('systemPass') ? 'true' : 'false' }}"
+                                   aria-describedby="systemPassError">
+                            <button type="button" id="togglePassword" class="dbim-lo-toggle"
+                                    aria-controls="systemPass" aria-pressed="false"
+                                    aria-label="Show password" title="Show password">
+                                <img id="eyeIcon" src="{{ asset('images/closeeye.svg') }}" alt="" width="24" height="24" data-a11y-keep>
+                            </button>
+                        </div>
+                        <div id="systemPassError" class="invalid-feedback @error('systemPass') d-block @enderror">@error('systemPass'){{ $message }}@enderror</div>
+                    </div>
+
+                    {{-- Passcode --}}
+                    <div class="dbim-lo-field">
+                        <label for="password" class="dbim-sd-label">
+                            Passcode (Digit Code) <span class="dbim-required" aria-hidden="true">*</span>
+                        </label>
                         <input type="password"
-                               class="form-control @error('systemPass') is-invalid @enderror"
-                               id="systemPass" name="systemPass"
-                               placeholder="Enter your system password"
-                               autocomplete="off" required aria-required="true"
-                               aria-invalid="{{ $errors->has('systemPass') ? 'true' : 'false' }}"
-                               aria-describedby="systemPassError" value ="rTiGoA@#2005">
-                        <button type="button" id="togglePassword" class="download-btn mt-0"
-                                aria-controls="systemPass" aria-pressed="false"
-                                aria-label="Show password" title="Show password">
-                            <img id="eyeIcon" src="{{ asset('images/closeeye.svg') }}" alt="" width="24" height="24" data-a11y-keep>
+                               class="form-control @error('password') is-invalid @enderror"
+                               id="password" name="password"
+                               placeholder="Enter your passcode"
+                               inputmode="numeric" autocomplete="current-password"
+                               required aria-required="true"
+                               aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                               aria-describedby="passwordError">
+                        <div id="passwordError" class="invalid-feedback @error('password') d-block @enderror">@error('password'){{ $message }}@enderror</div>
+                    </div>
+
+                    <x-captcha/>
+
+                    {{-- First submit button in the form: pressing Enter in a field logs in
+                         instead of starting a password reset. Hidden from everyone; the
+                         visible Login button below is the one people use. --}}
+                    <button type="submit" name="action" value="login" class="visually-hidden"
+                            tabindex="-1" aria-hidden="true">Login</button>
+
+                    <div class="dbim-lo-actions">
+                        <button type="submit" name="action" value="forgot_password" class="dbim-lo-link" title="Forgot password">
+                            Forgot Password
+                        </button>
+                        <button type="submit" name="action" value="login" class="dbim-sd-btn" title="Login">
+                            Login
                         </button>
                     </div>
-                    <div id="systemPassError" class="invalid-feedback @error('systemPass') d-block @enderror">@error('systemPass'){{ $message }}@enderror</div>
-                </div>
+                </form>
 
-                {{-- Passcode --}}
-                <div class="mb-3">
-                    <label for="password" class="form-label fw-bold">
-                        Passcode (Digit Code) <span class="dbim-required" aria-hidden="true">*</span>
-                    </label>
-                    <input type="password"
-                           class="form-control @error('password') is-invalid @enderror"
-                           id="password" name="password"
-                           placeholder="Enter your passcode"
-                           inputmode="numeric" autocomplete="current-password"
-                           required aria-required="true"
-                           aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
-                           aria-describedby="passwordError">
-                    <div id="passwordError" class="invalid-feedback @error('password') d-block @enderror">@error('password'){{ $message }}@enderror</div>
-                </div>
-
-                <x-captcha/>
-
-                {{-- First submit button in the form: pressing Enter in a field logs in
-                     instead of starting a password reset. Hidden from everyone; the
-                     visible Login button below is the one people use. --}}
-                <button type="submit" name="action" value="login" class="visually-hidden"
-                        tabindex="-1" aria-hidden="true">Login</button>
-
-                <div class="d-flex justify-content-between align-items-center mt-4">
-                    <button type="submit" name="action" value="forgot_password" class="btn btn-link px-0" title="Forgot password">
-                        Forgot Password
-                    </button>
-                    <button type="submit" name="action" value="login" class="download-btn text-uppercase w-ft" title="Login">
-                        Login
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </section>
 </div>

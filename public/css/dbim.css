@@ -7907,3 +7907,581 @@ body:has(.dbim-sd) #app > main {
     display: none;
   }
 }
+/* ============================================================
+   65. APPEAL FORM  (first / second appeal)   .dbim-fa-*
+   REPLACE the earlier "65. APPEAL FORM: NOTE + HELP BOXES" block with this one.
+   Blue colour group, existing variables only. No shadows, no gradients.
+   Spacing scale: 8 / 16 / 24 / 32px.
+
+   Contrast (light):  #150202 on #D2DFFF 15.4:1 | #150202 on #FFFFFF 20:1
+                      #162F6A on #FFFFFF 12.7:1 | #FFFFFF on #162F6A 12.8:1
+                      #606060 on #EBEAEA 5.3:1 (legend) | #8E8E8E input border on #FFFFFF 3.3:1
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Title + legend (inside the card) ---- */
+.dbim-fa-title {
+  margin: 0 0 0.5rem;
+  color: var(
+    --dbim-key
+  ); /* #162F6A, darkest of the Blue group: 12.7:1 on white */
+  font-size: 1.25rem; /* 20px, smaller than the header "RTI Online" (28px) */
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-fa-legend {
+  margin: 0 0 1.5rem;
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p1);
+}
+
+/* ---- Left column: note + help ---- */
+.dbim-fa-note {
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 1rem;
+  padding: 1.5rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 12px;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-fa-note p {
+  margin: 0;
+  line-height: 1.6;
+}
+.dbim-fa-help {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 12px;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-fa-icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--dbim-key);
+}
+.dbim-fa-note .dbim-fa-icon {
+  margin-top: 2px;
+}
+.dbim-fa-help a {
+  color: var(--dbim-key);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-fa-help a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---- Right column: form card ---- */
+.dbim-fa-card {
+  padding: 2rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 12px;
+}
+.dbim-fa-card__title {
+  margin: 0 0 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dbim-linen);
+  color: var(--dbim-key); /* same colour as the page title */
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  line-height: 1.3;
+}
+.dbim-fa-card .alert {
+  margin-bottom: 1.5rem;
+}
+.dbim-fa-field {
+  margin: 0 0 1.5rem;
+}
+.dbim-fa-label {
+  display: block;
+  margin: 0 0 0.5rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+}
+.dbim-fa-card .form-control {
+  min-height: 48px; /* touch target */
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 8px;
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-fa-card .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-fa-card .form-control.is-invalid {
+  border-color: var(--dbim-error);
+}
+.dbim-fa-card .form-control.is-invalid:focus {
+  outline-color: var(--dbim-error);
+}
+.dbim-fa-card .invalid-feedback {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+/* ---- Buttons ---- */
+.dbim-fa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-fa-btn {
+  min-height: 48px;
+  padding: 0 2rem;
+  background: var(--dbim-wintergreen-dream); /* #162F6A */
+  border: 1px solid var(--dbim-wintergreen-dream);
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-fa-btn:hover {
+  background: var(--dbim-powder-blue); /* #214AAB, white 8.0:1 */
+  border-color: var(--dbim-powder-blue);
+}
+.dbim-fa-btn--outline {
+  padding: 0 1.5rem;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-wintergreen-dream); /* 12.7:1 on white */
+}
+.dbim-fa-btn--outline:hover {
+  background: var(--dbim-azureish-white-bg);
+  border-color: var(--dbim-wintergreen-dream);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-fa-btn:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-fa-card {
+    padding: 1.25rem;
+  }
+  .dbim-fa-actions .dbim-fa-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-fa-title,
+[data-theme="dark"] .dbim-fa-legend,
+[data-theme="dark"] .dbim-fa-card__title,
+[data-theme="dark"] .dbim-fa-label,
+[data-theme="dark"] .dbim-fa-note,
+[data-theme="dark"] .dbim-fa-help,
+[data-theme="dark"] .dbim-fa-help a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-note {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-help,
+[data-theme="dark"] .dbim-fa-card {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-actions {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-card .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-btn,
+[data-theme="dark"] .dbim-fa-btn:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-fa-btn:hover {
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-fa-btn--outline,
+[data-theme="dark"] .dbim-fa-btn--outline:hover {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+@media (forced-colors: active) {
+  .dbim-fa-note,
+  .dbim-fa-help,
+  .dbim-fa-card {
+    border: 2px solid CanvasText;
+  }
+  .dbim-fa-btn {
+    border: 2px solid ButtonText;
+  }
+}
+/* ============================================================
+   65. APPEAL FORM  (first / second appeal)   .dbim-fa-*
+   REPLACE the earlier "65. APPEAL FORM: NOTE + HELP BOXES" block with this one.
+   Blue colour group, existing variables only. No shadows, no gradients.
+   Spacing scale: 8 / 16 / 24 / 32px.
+
+   Contrast (light):  #150202 on #D2DFFF 15.4:1 | #150202 on #FFFFFF 20:1
+                      #162F6A on #FFFFFF 12.7:1 | #FFFFFF on #162F6A 12.8:1
+                      #606060 on #EBEAEA 5.3:1 (legend) | #8E8E8E input border on #FFFFFF 3.3:1
+   Contrast (dark):   #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Title + legend (inside the card) ---- */
+.dbim-fa-title {
+  margin: 0 0 0.5rem;
+  color: var(
+    --dbim-key
+  ); /* #162F6A, darkest of the Blue group: 12.7:1 on white */
+  font-size: 1.25rem; /* 20px, smaller than the header "RTI Online" (28px) */
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-fa-legend {
+  margin: 0 0 1.5rem;
+  color: var(--dbim-text-muted); /* 6.3:1 on white */
+  font-size: var(--dbim-fs-p1);
+}
+
+/* ---- Left column: note + help ---- */
+.dbim-fa-note {
+  display: flex;
+  gap: 1rem;
+  margin: 0 0 1rem;
+  padding: 1.5rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 12px;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-fa-note p {
+  margin: 0;
+  line-height: 1.6;
+}
+.dbim-fa-note__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.dbim-fa-note ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  line-height: 1.6;
+}
+.dbim-fa-note li + li {
+  margin-top: 0.5rem;
+}
+.dbim-fa-help {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 12px;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-fa-icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  color: var(--dbim-key);
+}
+.dbim-fa-note .dbim-fa-icon {
+  margin-top: 2px;
+}
+.dbim-fa-help a {
+  color: var(--dbim-key);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+.dbim-fa-help a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* ---- Right column: form card ---- */
+.dbim-fa-card {
+  padding: 2rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 12px;
+}
+.dbim-fa-card__title {
+  margin: 0 0 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dbim-linen);
+  color: var(--dbim-key); /* same colour as the page title */
+  font-size: 1.125rem; /* 18px */
+  font-weight: 600;
+  line-height: 1.3;
+}
+.dbim-fa-card .alert {
+  margin-bottom: 1.5rem;
+}
+.dbim-fa-field {
+  margin: 0 0 1.5rem;
+}
+.dbim-fa-label {
+  display: block;
+  margin: 0 0 0.5rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+}
+.dbim-fa-card .form-control {
+  min-height: 48px; /* touch target */
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 8px;
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-fa-card .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-fa-card .form-control.is-invalid {
+  border-color: var(--dbim-error);
+}
+.dbim-fa-card .form-control.is-invalid:focus {
+  outline-color: var(--dbim-error);
+}
+.dbim-fa-card .invalid-feedback {
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+/* ---- Buttons ---- */
+.dbim-fa-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--dbim-linen);
+}
+.dbim-fa-btn {
+  min-height: 48px;
+  padding: 0 2rem;
+  background: var(--dbim-wintergreen-dream); /* #162F6A */
+  border: 1px solid var(--dbim-wintergreen-dream);
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-fa-btn:hover {
+  background: var(--dbim-powder-blue); /* #214AAB, white 8.0:1 */
+  border-color: var(--dbim-powder-blue);
+}
+.dbim-fa-btn--outline {
+  padding: 0 1.5rem;
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-wintergreen-dream); /* 12.7:1 on white */
+}
+.dbim-fa-btn--outline:hover {
+  background: var(--dbim-azureish-white-bg);
+  border-color: var(--dbim-wintergreen-dream);
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-fa-btn:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-fa-card {
+    padding: 1.25rem;
+  }
+  .dbim-fa-actions .dbim-fa-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-fa-title,
+[data-theme="dark"] .dbim-fa-legend,
+[data-theme="dark"] .dbim-fa-card__title,
+[data-theme="dark"] .dbim-fa-label,
+[data-theme="dark"] .dbim-fa-note,
+[data-theme="dark"] .dbim-fa-help,
+[data-theme="dark"] .dbim-fa-help a {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-note {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-help,
+[data-theme="dark"] .dbim-fa-card {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-actions {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-card .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-btn,
+[data-theme="dark"] .dbim-fa-btn:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-fa-btn:hover {
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-fa-btn--outline,
+[data-theme="dark"] .dbim-fa-btn--outline:hover {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+@media (forced-colors: active) {
+  .dbim-fa-note,
+  .dbim-fa-help,
+  .dbim-fa-card {
+    border: 2px solid CanvasText;
+  }
+  .dbim-fa-btn {
+    border: 2px solid ButtonText;
+  }
+}
+
+/* ============================================================
+   65b. APPEAL FORM: RADIO OPTIONS  (request type page)
+   Bordered rows; the whole row is the click target (label fills it).
+   Selected row = light Blue tint + key colour border.
+   Contrast (light): #150202 on #D2DFFF 15.4:1 | #162F6A border on white 12.7:1
+   Contrast (dark):  #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+fieldset.dbim-fa-field {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+.dbim-fa-legend-label {
+  float: none;
+  width: auto;
+  padding: 0;
+}
+.dbim-fa-option {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  min-height: 56px;
+  margin: 0 0 0.75rem;
+  padding: 0 1rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 8px;
+}
+.dbim-fa-option .form-check-input {
+  float: none;
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+}
+.dbim-fa-option label {
+  flex: 1 1 auto;
+  padding: 1rem 0;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.dbim-fa-option:hover {
+  background: var(--dbim-linen);
+}
+.dbim-fa-option:has(input:checked) {
+  background: var(--dbim-azureish-white-bg);
+  border-color: var(--dbim-key);
+}
+.dbim-fa-option:has(input:focus-visible) {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+.dbim-fa-option:has(input.is-invalid) {
+  border-color: var(--dbim-error);
+}
+.dbim-fa-field .invalid-feedback {
+  margin-top: 0.25rem;
+}
+
+[data-theme="dark"] .dbim-fa-option {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-option label {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-fa-option:hover,
+[data-theme="dark"] .dbim-fa-option:has(input:checked) {
+  background: var(--dbim-linen);
+}
+[data-theme="dark"] .dbim-fa-option:has(input:focus-visible) {
+  outline-color: var(--dbim-key);
+}
+@media (forced-colors: active) {
+  .dbim-fa-option:has(input:checked) {
+    border: 3px solid Highlight;
+  }
+}
+.dbim-fa-btn:disabled,
+.dbim-fa-btn:disabled:hover {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-grey-01);
+  color: var(--dbim-grey-03);
+  cursor: not-allowed;
+  text-decoration: none;
+}
+[data-theme="dark"] .dbim-fa-btn:disabled,
+[data-theme="dark"] .dbim-fa-btn:disabled:hover {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+.dbim-fa-card .form-control,
+.dbim-fa-card .form-select {
+  min-height: 48px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--dbim-grey-02);
+  border-radius: 8px;
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-fa-card .form-control:focus,
+.dbim-fa-card .form-select:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-fa-card .form-select.is-invalid {
+  border-color: var(--dbim-error);
+}

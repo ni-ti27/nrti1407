@@ -3,77 +3,71 @@
      (DBIM / GIGW 3.0, keyboard accessible)
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      No inline styles, no auto-hiding messages.
+     Styles: section 65 in public/css/dbim.css (.dbim-fa-*)
      ============================================================ --}}
 @extends('layouts.app')
 
 @section('title', 'Online RTI Second Appeal Form | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container py-4">
+<div class="container pt-4 pb-5">
+
+    @include('partials.flash-messages')
+
     <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-6">
+        <div class="col-12 col-lg-8">
+            <section class="dbim-fa-card" aria-labelledby="pageTitle">
 
-            @include('partials.flash-messages')
+                <h1 id="pageTitle" class="dbim-fa-title">Online RTI Second Appeal Form</h1>
+                <p class="dbim-fa-legend">
+                    Fields marked with (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>) are required.
+                </p>
 
-            <div class="card shadow-sm">
-                <h1 class="card-header h4 mb-0">Online RTI Second Appeal Form</h1>
+                <h2 id="formTitle" class="dbim-fa-card__title">Select how your First Appeal was filed</h2>
 
-                <div class="card-body">
-
-                    {{-- Error summary: filled by script or by the server; receives focus --}}
-                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
-                         @if(!$errors->any()) hidden @endif>
-                        <p class="fw-bold mb-2">Please correct the following:</p>
-                        <ul class="mb-0" id="errorSummaryList">
-                            @foreach($errors->all() as $message)
-                                <li>{{ $message }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-
-                    <form id="requestTypeForm" method="post" enctype="multipart/form-data"
-                          action="{{ route('request-form-handle') }}" novalidate>
-                        @csrf
-
-                        <p class="text-end mb-4">Note: Field marked with (<span class="dbim-required">*</span>) are required.</p>
-
-                        <fieldset class="mb-4" aria-describedby="request_typeError">
-                            <legend class="fs-6 fw-bold">
-                                Request Type <span class="dbim-required" aria-hidden="true">*</span>
-                            </legend>
-
-                            <div class="form-check">
-                                <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
-                                       name="request_type" id="online_request" value="online"
-                                       required {{ old('request_type') == 'online' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="online_request">
-                                    Previously Filed First Appeal Was Online
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
-                                       name="request_type" id="offline_request" value="offline"
-                                       required {{ old('request_type') == 'offline' ? 'checked' : '' }}>
-                                <label class="form-check-label" for="offline_request">
-                                    Previously Filed First Appeal Was Offline
-                                </label>
-                            </div>
-
-                            <div id="request_typeError" class="invalid-feedback @error('request_type') d-block @enderror">@error('request_type'){{ $message }}@enderror</div>
-                        </fieldset>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="reset" class="download-outline-btn text-uppercase w-ft" title="Reset">
-                                Reset
-                            </button>
-                            <button type="submit" class="download-btn text-uppercase w-ft" title="Submit">
-                                Submit
-                            </button>
-                        </div>
-                    </form>
+                {{-- Error summary: filled by script or by the server; receives focus --}}
+                <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                     @if(!$errors->any()) hidden @endif>
+                    <p class="fw-bold mb-2">Please correct the following:</p>
+                    <ul class="mb-0" id="errorSummaryList">
+                        @foreach($errors->all() as $message)
+                            <li>{{ $message }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-            </div>
 
+                <form id="requestTypeForm" method="post" enctype="multipart/form-data"
+                      action="{{ route('request-form-handle') }}" novalidate>
+                    @csrf
+
+                    <fieldset class="dbim-fa-field" aria-describedby="request_typeError">
+                        <legend class="dbim-fa-label dbim-fa-legend-label">
+                            Request Type <span class="dbim-required" aria-hidden="true">*</span>
+                        </legend>
+
+                        <div class="dbim-fa-option">
+                            <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
+                                   name="request_type" id="online_request" value="online"
+                                   required {{ old('request_type') == 'online' ? 'checked' : '' }}>
+                            <label for="online_request">Previously Filed First Appeal Was Online</label>
+                        </div>
+                        <div class="dbim-fa-option">
+                            <input class="form-check-input @error('request_type') is-invalid @enderror" type="radio"
+                                   name="request_type" id="offline_request" value="offline"
+                                   required {{ old('request_type') == 'offline' ? 'checked' : '' }}>
+                            <label for="offline_request">Previously Filed First Appeal Was Offline</label>
+                        </div>
+
+                        <div id="request_typeError" class="invalid-feedback @error('request_type') d-block @enderror">@error('request_type'){{ $message }}@enderror</div>
+                    </fieldset>
+
+                    <div class="dbim-fa-actions">
+                        <button type="reset" class="dbim-fa-btn dbim-fa-btn--outline">Reset</button>
+                        <button type="submit" class="dbim-fa-btn">Submit</button>
+                    </div>
+                </form>
+
+            </section>
         </div>
     </div>
 </div>

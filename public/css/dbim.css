@@ -9499,3 +9499,686 @@ fieldset.dbim-fa-field {
     text-decoration: underline;
   }
 }
+/* ============================================================
+   79. OFFICER DASHBOARD: MATCH THE LAYOUT B MOCK-UP  (dashboardCommon.blade.php)
+   APPEND AFTER section 76. Replaces section 78 (do not use 78; its classes are no longer used).
+   Heading, light-blue details strip in one row, light-blue table header,
+   white / Linen rows and a plain status pill, as in the approved mock-up.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #162F6A on #D2DFFF 9.6:1 (strip text, table header, status pill)
+     #150202 on #FFFFFF 20:1 | on #EBEAEA 17.2:1 (rows)
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1 | #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- Heading: no line below, the strip follows directly ---- */
+.dbim-nr-head {
+  margin: 0 0 0.75rem;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* ---- Details strip: Department | Username | Role in one row ---- */
+.dbim-nr-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 2rem;
+  margin: 0 0 1.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-nr-strip__item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  min-width: 0;
+}
+.dbim-nr-strip dt {
+  margin: 0;
+  font-weight: 700;
+}
+.dbim-nr-strip dd {
+  margin: 0;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Status: plain light-blue pill, no dot ---- */
+.dbim-nr-status {
+  padding: 0.125rem 0.625rem;
+  font-weight: 500;
+}
+.dbim-nr-status::before {
+  display: none;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-nr-strip {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-nr-strip {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-nr-strip {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+
+/* ---- "No Data Present": one centred row inside the table ----
+   Colours come from the table cell rules (section 50), so light, hover and
+   high-contrast themes already work. */
+.dbim-nr-none {
+  padding: 2rem 1rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ============================================================
+   81. OFFICER REQUEST DETAILS: ONE CARD  (request-processing.blade.php)
+   APPEND AT THE VERY END of public/css/dbim.css (after section 79).
+   DELETE section 80 (.dbim-rd-*) if you added it: no longer used.
+   Frame (grey band, side space) comes from section 50:
+   .dbim-sd, .dbim-sd-section, .dbim-sd-wrap.
+   One white card holds: title, light-blue Department / Username / Role strip,
+   and every section. Section headings are light-blue bars, the same look as
+   the table headers on the list pages.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #162F6A on #D2DFFF 9.6:1 (strip, section bars) | #162F6A on #FFFFFF 12.7:1 (labels)
+     #150202 on #FFFFFF 20:1 (values, title) | #150202 on #EBEAEA 17.2:1 (page band)
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1 | #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- The one card ---- */
+.dbim-rq-card {
+  padding: 2rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+@media (max-width: 575.98px) {
+  .dbim-rq-card {
+    padding: 1.25rem;
+  }
+}
+
+/* ---- Title ---- */
+.dbim-rq-title {
+  margin: 0 0 1.25rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+@media (max-width: 575.98px) {
+  .dbim-rq-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* ---- Strip: Department | Username | Role in one row ---- */
+.dbim-rq-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 2rem;
+  margin: 0 0 1.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 2px;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 */
+}
+.dbim-rq-strip > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  min-width: 0;
+}
+.dbim-rq-strip dt {
+  margin: 0;
+  font-weight: 700;
+}
+.dbim-rq-strip dd {
+  margin: 0;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Sections inside the card ---- */
+.dbim-rq-sec + .dbim-rq-sec {
+  margin-top: 1.75rem;
+}
+.dbim-rq-sec__head {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-bottom: 2px solid var(--dbim-powder-blue); /* 6.0:1 on #D2DFFF */
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+  line-height: 1.4;
+}
+.dbim-rq-sec__body {
+  padding: 1.25rem 1rem 0.25rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-rq-sec__body {
+    padding: 1rem 0.5rem 0.25rem;
+  }
+}
+
+/* ---- Labels and values ---- */
+.dbim-rq-sec dt {
+  margin: 0;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-weight: 700;
+}
+.dbim-rq-sec dd {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  overflow-wrap: anywhere; /* long emails never push the layout sideways */
+}
+.dbim-rq-sec a:not(.download-outline-btn):not(.download-btn) {
+  color: var(--dbim-key);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 3px;
+}
+
+/* Reg No. left, Filed Date right */
+.dbim-rq-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 2rem;
+  margin: 0;
+}
+.dbim-rq-meta > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+}
+.dbim-rq-hr {
+  margin: 1rem 0;
+  border: 0;
+  border-top: 1px solid var(--dbim-linen);
+  opacity: 1;
+}
+
+/* Label column + value column (Department / Office / Sub Office) */
+.dbim-rq-grid {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+}
+@media (max-width: 575.98px) {
+  .dbim-rq-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+  .dbim-rq-grid dd {
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Two columns of "Label: value" lines */
+.dbim-rq-cols {
+  display: grid;
+  gap: 0 2.5rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 768px) {
+  .dbim-rq-cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dbim-rq-list {
+  margin: 0;
+}
+.dbim-rq-pair {
+  margin: 0 0 0.75rem;
+  line-height: 1.5;
+}
+.dbim-rq-pair dt,
+.dbim-rq-pair dd {
+  display: inline;
+}
+.dbim-rq-pair--block dt,
+.dbim-rq-pair--block dd {
+  display: block;
+}
+.dbim-rq-pair--block dd.dbim-rq-text {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--dbim-grey-01);
+  border-radius: 4px;
+}
+
+/* ---- Payment table: same header look as the list pages ---- */
+.dbim-rq-sec .table-responsive:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: -2px;
+}
+
+/* ---- Take Action panel ---- */
+.dbim-rq-action__title {
+  margin: 0 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--dbim-linen);
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-rq-sec .form-label {
+  color: var(--dbim-deep-earthy-brown);
+  font-weight: 600;
+}
+.dbim-rq-sec .form-control:focus,
+.dbim-rq-sec .form-select:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-rq-sec .form-control.is-invalid,
+.dbim-rq-sec .form-select.is-invalid {
+  border-color: var(--dbim-error);
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-rq-card {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-title,
+[data-theme="dark"] .dbim-rq-sec dt,
+[data-theme="dark"] .dbim-rq-sec dd,
+[data-theme="dark"] .dbim-rq-sec a:not(.download-outline-btn):not(.download-btn),
+[data-theme="dark"] .dbim-rq-sec .form-label,
+[data-theme="dark"] .dbim-rq-action__title {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-strip,
+[data-theme="dark"] .dbim-rq-sec__head {
+  background: var(--dbim-linen); /* #23232A */
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-strip {
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-sec__head {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-hr,
+[data-theme="dark"] .dbim-rq-action__title,
+[data-theme="dark"] .dbim-rq-pair--block dd.dbim-rq-text {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-rq-sec .form-control:focus,
+[data-theme="dark"] .dbim-rq-sec .form-select:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-rq-card {
+    border: 2px solid CanvasText;
+  }
+  .dbim-rq-strip {
+    border: 1px solid CanvasText;
+  }
+  .dbim-rq-sec__head {
+    border-bottom: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-rq-strip,
+  .dbim-rq-sec__head {
+    background: none;
+    color: #000;
+  }
+  .dbim-rq-sec__head {
+    border-bottom: 2px solid #000;
+  }
+  #actionForm {
+    display: none;
+  }
+}
+
+/* ============================================================
+   82. OFFICER REQUEST DETAILS: THINNER CARD, MORE SIDE SPACE
+   APPEND AFTER section 81. Spacing only, no colour changes.
+   - card is centred and limited to 64rem (same reading width as the
+     About / FAQ / Policy pages), so the grey band shows on both sides
+   - more padding inside the card, and inside each section body
+   - form fields get a comfortable maximum width
+   Existing values only.
+   ============================================================ */
+
+/* ---- Thinner, centred card ---- */
+.dbim-rq-card {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2.5rem 3.5rem;
+}
+
+/* ---- More room inside each section ---- */
+.dbim-rq-sec__body {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+/* Two-column "Label: value" lines: a wider gap between the columns */
+.dbim-rq-cols {
+  gap: 0 3.5rem;
+}
+
+/* ---- Take Action form: fields never stretch edge to edge ---- */
+.dbim-rq-sec .form-control,
+.dbim-rq-sec .form-select {
+  max-width: 100%;
+}
+.dbim-rq-action {
+  max-width: 52rem;
+}
+
+/* ---- Tablets ---- */
+@media (max-width: 991.98px) {
+  .dbim-rq-card {
+    padding: 2rem 2rem;
+  }
+}
+
+/* ---- Phones: keep a little breathing room, card uses the full width ---- */
+@media (max-width: 575.98px) {
+  .dbim-rq-card {
+    padding: 1.25rem 1rem;
+  }
+  .dbim-rq-sec__body {
+    padding: 1rem 0.25rem 0.25rem;
+  }
+}
+/* ============================================================
+   83. OFFICER REQUEST DETAILS: STATUS LINE + SUB-HEADING
+   APPEND AFTER section 82. Used by the Reverted / Rejected / Closed page.
+   Existing variables only. The status shows as text, so colour is not
+   the only cue.
+
+   Contrast, light theme:
+     #150202 on #EBEAEA 17.2:1 (status text) | #214AAB bar on #EBEAEA 6.7:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-rq-status {
+  margin: -0.75rem 0 1.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 6px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+  font-weight: 700;
+}
+
+/* "Additional Files" / "Re-Upload Reply" sub-headings reuse
+   .dbim-rq-action__title (section 81); inside a bootstrap row they need full width */
+.dbim-rq-sec .row > .dbim-rq-action__title {
+  width: 100%;
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+}
+
+[data-theme="dark"] .dbim-rq-status {
+  border-left-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+@media (forced-colors: active) {
+  .dbim-rq-status {
+    border: 2px solid CanvasText;
+  }
+}
+@media print {
+  .dbim-rq-status {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+
+/* ============================================================
+   84. OFFICER LIST PAGES: CENTRED CARD, MORE SIDE SPACE
+   APPEND AFTER section 83. Spacing only, no colour changes.
+   Applies to the card that contains the Department / Username / Role
+   strip (.dbim-nr-strip): New, In Process and Closed request lists.
+   - card is centred and limited to 80rem (wider than the request details
+     card, because the table has 6 columns), so the grey band shows on
+     both sides on large screens
+   - more padding inside the card, so the title, strip and table start
+     well inside the card edges
+   Existing values only.
+   ============================================================ */
+.dbim-sd-card:has(.dbim-nr-strip) {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 2.5rem 3.5rem;
+}
+
+/* Strip and table get a little more room from the heading */
+.dbim-sd-card:has(.dbim-nr-strip) .dbim-nr-head {
+  margin-bottom: 1rem;
+}
+.dbim-sd-card:has(.dbim-nr-strip) .dbim-nr-strip {
+  margin-bottom: 2rem;
+  padding: 1rem 1.25rem;
+}
+
+/* ---- Tablets ---- */
+@media (max-width: 991.98px) {
+  .dbim-sd-card:has(.dbim-nr-strip) {
+    padding: 2rem;
+  }
+}
+
+/* ---- Phones: card uses the full width, table scrolls inside its wrapper ---- */
+@media (max-width: 575.98px) {
+  .dbim-sd-card:has(.dbim-nr-strip) {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* ============================================================
+   85. OFFICER LIST STRIP: LABEL AND VALUE ON ONE LINE
+   APPEND AFTER section 84.
+   Section 79 styles .dbim-nr-strip__item, but the wrapper divs on the
+   Department / Application wise page have no class. This styles them
+   directly, so "Office: Vigilance Department" sits on one line, the same
+   as the other list pages. Existing values only.
+   ============================================================ */
+.dbim-nr-strip > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  min-width: 0;
+}
+.dbim-nr-strip > div > dt,
+.dbim-nr-strip > div > dd {
+  margin: 0;
+}
+
+/* ============================================================
+   86. APPLICATION STATS  (resources/views/.../application-stats.blade.php)
+   APPEND AFTER section 85. Frame, strip and card spacing come from sections
+   50, 79, 84 and 85; categories, badges and report card from section 22.
+   This section adds: the two-column grid, the report panel, the date row
+   and the info note. Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #162F6A on #FFFFFF 12.7:1 (report title) | #150202 on #EBEAEA 17.2:1 (info note)
+     #FFFFFF on #214AAB 8.0:1 (total badge) | #162F6A on #D2DFFF 9.6:1 (Show Data)
+     #214AAB bar on #EBEAEA 6.7:1 | #8E8E8E date field border on white 3.3:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Two columns: categories | report (stacked below 992px) ---- */
+.dbim-ar-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .dbim-ar-grid {
+    grid-template-columns: 18rem minmax(0, 1fr);
+    gap: 2rem;
+  }
+}
+.dbim-ar-main {
+  min-width: 0; /* the table scrolls in its own wrapper, never the page */
+}
+
+/* ---- Report panel ---- */
+.dbim-ar-panel {
+  padding: 1.5rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-ar-panel {
+    padding: 1rem;
+  }
+}
+.dbim-ar-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.25rem;
+}
+.dbim-ar-title {
+  margin: 0;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h2);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-ar-results {
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* ---- Date row: From | To | (All Departments) | Show Data ---- */
+.dbim-ar-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end; /* button lines up with the bottom of the inputs */
+  gap: 1rem 1.25rem;
+}
+.dbim-ar-field {
+  flex: 1 1 12rem;
+  max-width: 16rem;
+  min-width: 0;
+}
+.dbim-ar-field .form-label {
+  margin-bottom: 0.375rem;
+}
+.dbim-ar-field .form-control {
+  min-height: 44px; /* touch target */
+  border-color: var(--dbim-grey-02); /* 3.3:1 on white */
+}
+.dbim-ar-field .form-control:focus {
+  border-color: var(--dbim-powder-blue);
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.dbim-ar-check {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+.dbim-ar-submit .dbim-filter-btn {
+  min-height: 44px;
+  margin: 0;
+  padding: 0 1.5rem;
+}
+@media (max-width: 575.98px) {
+  .dbim-ar-field {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+  .dbim-ar-submit,
+  .dbim-ar-submit .dbim-filter-btn {
+    width: 100%;
+  }
+}
+
+/* ---- Error summary + info note ---- */
+.dbim-ar-panel .alert[role="alert"] {
+  margin-bottom: 1.25rem;
+}
+.dbim-ar-note {
+  margin: 1.5rem 0 0;
+  padding: 0.875rem 1.25rem;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-left: 6px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  line-height: 1.6;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-ar-title,
+[data-theme="dark"] .dbim-ar-results,
+[data-theme="dark"] .dbim-ar-note {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ar-note {
+  border-left-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-ar-field .form-control:focus {
+  border-color: var(--dbim-key);
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-ar-note {
+    border: 2px solid CanvasText;
+  }
+  .dbim-ar-field .form-control:focus {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: keep the results, hide categories and the filter ---- */
+@media print {
+  .dbim-ar-grid > nav,
+  .dbim-ar-filter,
+  .dbim-ar-note {
+    display: none;
+  }
+  .dbim-ar-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

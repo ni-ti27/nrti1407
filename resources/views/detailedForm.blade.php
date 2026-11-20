@@ -1,8 +1,8 @@
 {{-- ============================================================
      Request processing (officer): New / In Process request
-     DBIM / GIGW 3.0. Uses layouts/app.blade.php for <head>, header,
-     <main>, footer. Take Action panels are shown/hidden by the script
-     below (data-action = action id).
+     DBIM / GIGW 3.0. One card on the grey band (.dbim-sd frame).
+     Take Action panels are shown/hidden by the script below
+     (data-action = action id).
      ============================================================ --}}
 @extends('layouts.app')
 
@@ -27,532 +27,527 @@
 @section('title', $pageTitle . ' | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-12">
+<div class="dbim-sd">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
 
-            @include('partials.flash-messages')
+      @include('partials.flash-messages')
 
-            {{-- ============ Title: department, username, role ============ --}}
-            <div class="card shadow-sm dbim-detail mb-4">
-                <h1 class="card-header h4 mb-0">{{ $pageTitle }}</h1>
-                <div class="card-body">
-                    <p class="h5 mb-3">{{ $deptDetails }}</p>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Username:</dt>
-                                <dd class="col-sm-8">{{ $userDetails['name'] }}</dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Role:</dt>
-                                <dd class="col-sm-8">{{ $userDetails['role_name'] }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
+      <div class="dbim-rq-card">
+
+        {{-- ============ Title + department / username / role strip ============ --}}
+        <h1 class="dbim-rq-title">{{ $pageTitle }}</h1>
+
+        <dl class="dbim-rq-strip">
+            <div>
+                <dt>Department:</dt>
+                <dd>{{ $deptDetails }}</dd>
             </div>
-
-            {{-- ============ Public Authority Details ============ --}}
-            <div class="card shadow-sm dbim-detail mb-4">
-                <h2 class="card-header h4 mb-0">Public Authority Details:</h2>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Reg No.:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->reg_no }}</dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Filed Date:</dt>
-                                <dd class="col-sm-8">{{ \Carbon\Carbon::parse($submitRequest->created_at)->format('d-m-Y H:i') }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Department:</dt>
-                                <dd class="col-sm-8">{{ $deptDetails }}</dd>
-
-                                <dt class="col-sm-4">Office:</dt>
-                                <dd class="col-sm-8">{{ $officeDetails }}</dd>
-
-                                <dt class="col-sm-4">Sub Office:</dt>
-                                <dd class="col-sm-8">{{ $subOfficeDetails }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <dt>Username:</dt>
+                <dd>{{ $userDetails['name'] }}</dd>
             </div>
+            <div>
+                <dt>Role:</dt>
+                <dd>{{ $userDetails['role_name'] }}</dd>
+            </div>
+        </dl>
 
-            {{-- ============ Personal Details ============ --}}
-            <div class="card shadow-sm dbim-detail mb-4">
-                <h2 class="card-header h4 mb-0">Personal Details of RTI Applicant</h2>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Applicant Name:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->name }}</dd>
+        {{-- ============ Public Authority Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqAuthority">
+            <h2 class="dbim-rq-sec__head" id="rqAuthority">Public Authority Details</h2>
+            <div class="dbim-rq-sec__body">
+                <dl class="dbim-rq-meta">
+                    <div>
+                        <dt>Reg No.:</dt>
+                        <dd>{{ $submitRequest->reg_no }}</dd>
+                    </div>
+                    <div>
+                        <dt>Filed Date:</dt>
+                        <dd>{{ \Carbon\Carbon::parse($submitRequest->created_at)->format('d-m-Y H:i') }}</dd>
+                    </div>
+                </dl>
 
-                                <dt class="col-sm-4">Gender:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->gender === 'female' ? 'Female' : ($submitRequest->gender === 'male' ? 'Male' : 'Other') }}</dd>
+                <hr class="dbim-rq-hr">
 
-                                <dt class="col-sm-4">Address:</dt>
-                                <dd class="col-sm-8">
-                                    {{ $submitRequest->address_line1 }}<br>
-                                    {{ $submitRequest->address_line2 }}<br>
-                                    {{ $submitRequest->address_line3 }}
-                                </dd>
+                <dl class="dbim-rq-grid">
+                    <dt>Department:</dt>
+                    <dd>{{ $deptDetails }}</dd>
+                    <dt>Office:</dt>
+                    <dd>{{ $officeDetails }}</dd>
+                    <dt>Sub Office:</dt>
+                    <dd>{{ $subOfficeDetails }}</dd>
+                </dl>
+            </div>
+        </section>
 
-                                <dt class="col-sm-4">Pincode:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->pincode }}</dd>
-
-                                <dt class="col-sm-4">Education:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->edu_status === 1 ? 'Educated' : 'Non-Educated' }}</dd>
-
-                                <dt class="col-sm-4">BPL:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->is_bpl == 1 ? 'BPL User' : 'Non BPL User' }}</dd>
-                            </dl>
+        {{-- ============ Personal Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqPersonal">
+            <h2 class="dbim-rq-sec__head" id="rqPersonal">Personal Details of RTI Applicant</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Applicant Name:</dt>
+                            <dd>{{ $submitRequest->name }}</dd>
                         </div>
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                @if($submitRequest->state === 0)
-                                    <dt class="col-sm-4">Village:</dt>
-                                    <dd class="col-sm-8">Others</dd>
-                                    <dt class="col-sm-4">District:</dt>
-                                    <dd class="col-sm-8">Others</dd>
-                                    <dt class="col-sm-4">State:</dt>
-                                    <dd class="col-sm-8">Others</dd>
-                                @else
-                                    <dt class="col-sm-4">Village:</dt>
-                                    <dd class="col-sm-8">{{ $submitRequest->Village->name ?? 'Others' }}</dd>
-                                    <dt class="col-sm-4">District:</dt>
-                                    <dd class="col-sm-8">{{ $submitRequest->District->name ?? 'Others' }}</dd>
-                                    <dt class="col-sm-4">State:</dt>
-                                    <dd class="col-sm-8">{{ $submitRequest->State->name ?? 'Others' }}</dd>
+                        <div class="dbim-rq-pair">
+                            <dt>Gender:</dt>
+                            <dd>{{ $submitRequest->gender === 'female' ? 'Female' : ($submitRequest->gender === 'male' ? 'Male' : 'Other') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair dbim-rq-pair--block">
+                            <dt>Address:</dt>
+                            <dd>
+                                @foreach(array_filter([$submitRequest->address_line1, $submitRequest->address_line2, $submitRequest->address_line3]) as $line)
+                                    <span class="d-block">{{ $line }}</span>
+                                @endforeach
+                            </dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Pincode:</dt>
+                            <dd>{{ $submitRequest->pincode }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Education:</dt>
+                            <dd>{{ $submitRequest->edu_status === 1 ? 'Educated' : 'Non-Educated' }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>BPL:</dt>
+                            <dd>{{ $submitRequest->is_bpl == 1 ? 'BPL User' : 'Non BPL User' }}</dd>
+                        </div>
+                    </dl>
+
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Village:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->Village->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>District:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->District->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>State:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->State->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Phone:</dt>
+                            <dd>{{ $submitRequest->phone_no }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Mobile:</dt>
+                            <dd>{{ $submitRequest->mobile_no }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Email:</dt>
+                            <dd>{{ $submitRequest->email_id }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Qualification:</dt>
+                            <dd>
+                                @if($submitRequest->edu_status === 0) N/A
+                                @elseif($submitRequest->qualification == 1) SSC
+                                @elseif($submitRequest->qualification == 2) HSSC
+                                @elseif($submitRequest->qualification == 3) Graduate
+                                @elseif($submitRequest->qualification == 4) Post Graduate
                                 @endif
-
-                                <dt class="col-sm-4">Phone:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->phone_no }}</dd>
-
-                                <dt class="col-sm-4">Mobile:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->mobile_no }}</dd>
-
-                                <dt class="col-sm-4">Email:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->email_id }}</dd>
-
-                                <dt class="col-sm-4">Qualification:</dt>
-                                <dd class="col-sm-8">
-                                    @if($submitRequest->edu_status === 0)
-                                        N/A
-                                    @elseif($submitRequest->qualification == 1)
-                                        SSC
-                                    @elseif($submitRequest->qualification == 2)
-                                        HSSC
-                                    @elseif($submitRequest->qualification == 3)
-                                        Graduate
-                                    @elseif($submitRequest->qualification == 4)
-                                        Post Graduate
-                                    @endif
-                                </dd>
-
-                                <dt class="col-sm-4">Card No.:</dt>
-                                <dd class="col-sm-8">{{ $submitRequest->card_no === 0 ? 'N/A' : $submitRequest->card_no }}</dd>
-                            </dl>
+                            </dd>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- ============ Application Details ============ --}}
-            <div class="card shadow-sm dbim-detail mb-4">
-                <h2 class="card-header h4 mb-0">Application Details</h2>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                @if($submitRequest->is_bpl === 0)
-                                    <dt class="col-sm-4">Amount Paid (Rs.):</dt>
-                                    <dd class="col-sm-8">10</dd>
-                                @endif
-
-                                <dt class="col-sm-4">Other Options:</dt>
-                                <dd class="col-sm-8">N/A</dd>
-                            </dl>
+                        <div class="dbim-rq-pair">
+                            <dt>Card No.:</dt>
+                            <dd>{{ $submitRequest->card_no === 0 ? 'N/A' : $submitRequest->card_no }}</dd>
                         </div>
-                        <div class="col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4">Does it concern life or liberty of a person:</dt>
-                                <dd class="col-sm-8">N/A</dd>
-
-                                <dt class="col-sm-4">File Uploaded by Applicant:</dt>
-                                <dd class="col-sm-8">
-                                    <a href="{{ asset($filePath) }}" target="_blank" rel="noopener">{{ $submitRequest->document_name_original }}<span class="visually-hidden"> (opens in a new tab)</span></a>
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <hr>
-
-                    {{-- Full width row: col-sm-2 here equals col-sm-4 in a half-width column --}}
-                    <dl class="row mb-0">
-                        <dt class="col-sm-2">Text From Applicant:</dt>
-                        <dd class="col-sm-10"><div class="border rounded p-3 text-break">{{ $submitRequest->request_text }}</div></dd>
                     </dl>
                 </div>
             </div>
+        </section>
 
-            {{-- ============ Payment Details ============ --}}
-            @if(!$paymentDetails->isEmpty())
-                <div class="card shadow-sm mb-4">
-                    <h2 class="card-header h4 mb-0">Payment Details:</h2>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-light table-bordered">
-                                <caption class="visually-hidden">Payments made for this request</caption>
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Sr. No</th>
-                                        <th scope="col">Registration No.</th>
-                                        <th scope="col">Amount (Rs.)</th>
-                                        <th scope="col">e-Challan No.</th>
-                                        <th scope="col">Transaction Date &amp; Time</th>
-                                        <th scope="col">Mobile Number</th>
-                                        <th scope="col">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($paymentDetails as $index => $payment)
-                                        <tr>
-                                            <td>{{ $index + 1 }}</td>
-                                            <td>{{ $submitRequest->reg_no }}</td>
-                                            <td>{{ $payment->total_amt }}</td>
-                                            <td>{{ $payment->echallan_no }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('d-m-Y H:i') }}</td>
-                                            <td>{{ $submitRequest->mobile_no }}</td>
-                                            <td>Success</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+        {{-- ============ Application Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqApplication">
+            <h2 class="dbim-rq-sec__head" id="rqApplication">Application Details</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        @if($submitRequest->is_bpl === 0)
+                            <div class="dbim-rq-pair">
+                                <dt>Amount Paid (Rs.):</dt>
+                                <dd>10</dd>
+                            </div>
+                        @endif
+                        <div class="dbim-rq-pair">
+                            <dt>Other Options:</dt>
+                            <dd>N/A</dd>
                         </div>
+                    </dl>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Does it concern life or liberty of a person:</dt>
+                            <dd>N/A</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>File Uploaded by Applicant:</dt>
+                            <dd>
+                                <a href="{{ asset($filePath) }}" target="_blank" rel="noopener">{{ $submitRequest->document_name_original }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <hr class="dbim-rq-hr">
+
+                <dl class="dbim-rq-list">
+                    <div class="dbim-rq-pair dbim-rq-pair--block">
+                        <dt>Text From Applicant:</dt>
+                        <dd class="dbim-rq-text">{{ $submitRequest->request_text }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        {{-- ============ Payment Details ============ --}}
+        @if(!$paymentDetails->isEmpty())
+            <section class="dbim-rq-sec" aria-labelledby="rqPayment">
+                <h2 class="dbim-rq-sec__head" id="rqPayment">Payment Details</h2>
+                <div class="dbim-rq-sec__body">
+                    <div class="table-responsive">
+                        <table class="table table-light table-bordered mb-0">
+                            <caption class="visually-hidden">Payments made for this request</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sr. No</th>
+                                    <th scope="col">Registration No.</th>
+                                    <th scope="col">Amount (Rs.)</th>
+                                    <th scope="col">e-Challan No.</th>
+                                    <th scope="col">Transaction Date &amp; Time</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($paymentDetails as $index => $payment)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $submitRequest->reg_no }}</td>
+                                        <td>{{ $payment->total_amt }}</td>
+                                        <td>{{ $payment->echallan_no }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('d-m-Y H:i') }}</td>
+                                        <td>{{ $submitRequest->mobile_no }}</td>
+                                        <td>Success</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            @endif
+            </section>
+        @endif
 
-            {{-- ============ Print ============ --}}
-            <div class="card shadow-sm mb-4">
-                <h2 class="card-header h4 mb-0">Print Details:</h2>
-                <div class="card-body">
-                    <a href="{{ url('/generate-pdf/' . $submitRequest->id) }}" class="download-outline-btn w-ft mt-0"
-                       target="_blank" rel="noopener">
-                        Print As PDF<span class="visually-hidden"> (opens in a new tab)</span>
-                    </a>
-                </div>
+        {{-- ============ Print ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqPrint">
+            <h2 class="dbim-rq-sec__head" id="rqPrint">Print Details</h2>
+            <div class="dbim-rq-sec__body">
+                <a href="{{ url('/generate-pdf/' . $submitRequest->id) }}" class="download-outline-btn w-ft mt-0"
+                   target="_blank" rel="noopener">
+                    Print As PDF<span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
             </div>
+        </section>
 
-            {{-- ============ Take Action ============ --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <form id="actionForm" enctype="multipart/form-data" action="{{ route('changeAction.form') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="submitRequestDetails" value="{{ $submitRequest }}">
+        {{-- ============ Take Action ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqAction">
+            <h2 class="dbim-rq-sec__head" id="rqAction">Take Action</h2>
+            <div class="dbim-rq-sec__body">
+                <form id="actionForm" enctype="multipart/form-data" action="{{ route('changeAction.form') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="submitRequestDetails" value="{{ $submitRequest }}">
 
-                        <div class="row justify-content-center">
-                            <div class="col-md-6">
-                                <label for="selectedAction" class="form-label fw-bold">Take Action:</label>
-                                <select name="selectedAction" id="selectedAction" class="form-select">
-                                    <option value="">Select Action</option>
-                                    @foreach($actionDetails as $action)
-                                        <option value="{{ $action->id }}">{{ $action->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="selectedAction" class="form-label fw-bold">Select Action:</label>
+                            <select name="selectedAction" id="selectedAction" class="form-select">
+                                <option value="">Select Action</option>
+                                @foreach($actionDetails as $action)
+                                    <option value="{{ $action->id }}">{{ $action->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
 
-                        @foreach([1, 2, 3, 4, 5, 6, 7, 8, 9, 18] as $i)
-                            <div class="hiddenAction mt-4" data-action="{{ $i }}" role="group"
-                                 aria-labelledby="actionTitle{{ $i }}" style="display: none">
+                    @foreach([1, 2, 3, 4, 5, 6, 7, 8, 9, 18] as $i)
+                        <div class="hiddenAction dbim-rq-action mt-4" data-action="{{ $i }}" role="group"
+                             aria-labelledby="actionTitle{{ $i }}" style="display: none">
 
-                                <h2 class="h4 text-center mb-3" id="actionTitle{{ $i }}">{{ $actionTitles[$i] }}</h2>
+                            <h3 class="dbim-rq-action__title" id="actionTitle{{ $i }}">{{ $actionTitles[$i] }}</h3>
 
-                                {{-- 1: Acceptance - no extra fields --}}
+                            {{-- 1: Acceptance - no extra fields --}}
 
-                                {{-- 2 / 3: Forward to PIO / APIO --}}
-                                @if($i == 2 || $i == 3)
-                                    @php
-                                        $deptField   = $i == 2 ? 'applied_dept_forward' : 'applied_dept_forward_apio';
-                                        $subField    = $i == 2 ? 'applied_subdept_forward' : 'applied_subdept_forward_apio';
-                                        $officeField = $i == 2 ? 'applied_office_forward' : 'applied_office_forward_apio';
-                                        $userField   = $i == 2 ? 'pioUser' : 'apioUser';
-                                        $userLabel   = $i == 2 ? 'PIO Officer Name' : 'APIO Officer Name';
-                                        $reasonField = $i == 2 ? 'forwardReasonPio' : 'forwardReasonApio';
-                                    @endphp
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-4">
-                                            <label for="{{ $deptField }}" class="form-label">Department / Public Authority <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="applied_dept_forward" class="form-select" id="{{ $deptField }}" readonly aria-required="true">
-                                                <option value="{{ $fullDeptData['department']->dept_code }}">{{ $fullDeptData['department']->department }}</option>
-                                            </select>
-                                            @error('applied_dept_forward')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="{{ $subField }}" class="form-label">Select Office <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="{{ $subField }}" class="form-select @error($subField) is-invalid @enderror" id="{{ $subField }}" aria-required="true">
-                                                <option value="">Select Office</option>
-                                            </select>
-                                            @error($subField)
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="{{ $officeField }}" class="form-label">Select Sub Office <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="{{ $officeField }}" class="form-select @error($officeField) is-invalid @enderror" id="{{ $officeField }}" aria-required="true">
-                                                <option value="">Select Sub Office</option>
-                                            </select>
-                                            @error($officeField)
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
+                            {{-- 2 / 3: Forward to PIO / APIO --}}
+                            @if($i == 2 || $i == 3)
+                                @php
+                                    $deptField   = $i == 2 ? 'applied_dept_forward' : 'applied_dept_forward_apio';
+                                    $subField    = $i == 2 ? 'applied_subdept_forward' : 'applied_subdept_forward_apio';
+                                    $officeField = $i == 2 ? 'applied_office_forward' : 'applied_office_forward_apio';
+                                    $userField   = $i == 2 ? 'pioUser' : 'apioUser';
+                                    $userLabel   = $i == 2 ? 'PIO Officer Name' : 'APIO Officer Name';
+                                    $reasonField = $i == 2 ? 'forwardReasonPio' : 'forwardReasonApio';
+                                @endphp
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="{{ $deptField }}" class="form-label">Department / Public Authority <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="applied_dept_forward" class="form-select" id="{{ $deptField }}" readonly aria-required="true">
+                                            <option value="{{ $fullDeptData['department']->dept_code }}">{{ $fullDeptData['department']->department }}</option>
+                                        </select>
+                                        @error('applied_dept_forward')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="{{ $subField }}" class="form-label">Select Office <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="{{ $subField }}" class="form-select @error($subField) is-invalid @enderror" id="{{ $subField }}" aria-required="true">
+                                            <option value="">Select Office</option>
+                                        </select>
+                                        @error($subField)
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="{{ $officeField }}" class="form-label">Select Sub Office <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="{{ $officeField }}" class="form-select @error($officeField) is-invalid @enderror" id="{{ $officeField }}" aria-required="true">
+                                            <option value="">Select Sub Office</option>
+                                        </select>
+                                        @error($officeField)
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label for="{{ $userField }}" class="form-label">{{ $userLabel }}</label>
+                                        <input class="form-control @error($userField) is-invalid @enderror" type="text" id="{{ $userField }}" name="{{ $userField }}" readonly>
+                                        @error($userField)
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-8">
+                                        <label for="{{ $reasonField }}" class="form-label">Reason for Forwarding <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <textarea class="form-control @error($reasonField) is-invalid @enderror" name="{{ $reasonField }}" id="{{ $reasonField }}" rows="4" maxlength="3000" aria-required="true"></textarea>
+                                        @error($reasonField)
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- 4: Document upload reason --}}
+                            @if($i == 4)
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label for="req_dispose_reason" class="form-label">Enter Reason for RTI Application Document Upload (1000 Characters Max) <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <textarea class="form-control" name="req_dispose_reason" id="req_dispose_reason" rows="6" maxlength="1000" aria-required="true"></textarea>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- 5: Transfer to another department --}}
+                            @if($i == 5)
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="applied_dept" class="form-label">Select Department / Public Authority <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="applied_dept" class="form-select @error('applied_dept') is-invalid @enderror" id="applied_dept" aria-required="true">
+                                            <option value="">Select Department</option>
+                                            @foreach ($deptData as $id => $department)
+                                                <option value="{{ $department->dept_code }}" {{ old('applied_dept') == $department->dept_code ? 'selected' : '' }}>
+                                                    {{ $department->department }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('applied_dept')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="applied_subdept" class="form-label">Select Office <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="applied_subdept" class="form-select @error('applied_subdept') is-invalid @enderror" id="applied_subdept" aria-required="true">
+                                            <option value="">Select Office</option>
+                                        </select>
+                                        @error('applied_subdept')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="applied_office" class="form-label">Select Sub Office <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <select name="applied_office" class="form-select @error('applied_office') is-invalid @enderror" id="applied_office" aria-required="true">
+                                            <option value="">Select Sub Office</option>
+                                        </select>
+                                        @error('applied_office')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label for="nodel_name" class="form-label">Nodal Officer Name</label>
+                                        <input class="form-control" type="text" id="nodel_name" name="nodel_name" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="pio_name" class="form-label">PIO Officer Name</label>
+                                        <input class="form-control" type="text" id="pio_name" name="pio_name" readonly>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="apio_name" class="form-label">APIO Officer Name</label>
+                                        <input class="form-control" type="text" id="apio_name" name="apio_name" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-8">
+                                        <label for="transferReason" class="form-label">Reason for Forwarding <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <textarea class="form-control @error('transferReason') is-invalid @enderror" name="transferReason" id="transferReason" rows="4" maxlength="3000" aria-required="true"></textarea>
+                                        @error('transferReason')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- 6: Return to applicant --}}
+                            @if($i == 6)
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label for="doc_req_reason" class="form-label">Enter Reason for Request Return <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <textarea class="form-control" name="doc_req_reason" id="doc_req_reason" rows="6" maxlength="500" aria-required="true"></textarea>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- 7: Additional payment --}}
+                            @if($i == 7)
+                                <div class="row g-3">
+                                    <div class="col-md-8">
+                                        <label for="mode_info_suppy" class="form-label">Select Model of Information Supply</label>
+                                        <select name="mode_info_suppy" id="mode_info_suppy" class="form-select">
+                                            <option value="" class="d-none">Select Model</option>
+                                            <option value="1">Hard Copy</option>
+                                            <option value="2">Electronic Media</option>
+                                            <option value="3">Priced Publications</option>
+                                            <option value="4">Certified Samples of Material</option>
+                                            <option value="5">Inspection of Work,Documents,Records</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="additional_amount" class="form-label">Additional Payment Demanded</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">₹</span>
+                                            <input type="text" name="additional_amount" id="additional_amount" class="form-control">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-8">
+                                        <label for="additional_amount_reason" class="form-label">Reason for Additional Payment (Max 255 characters) <span class="dbim-required" aria-hidden="true">*</span></label>
+                                        <textarea class="form-control" name="additional_amount_reason" id="additional_amount_reason" rows="6" aria-required="true"></textarea>
+                                    </div>
+                                </div>
+                            @endif
 
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-4">
-                                            <label for="{{ $userField }}" class="form-label">{{ $userLabel }}</label>
-                                            <input class="form-control @error($userField) is-invalid @enderror" type="text" id="{{ $userField }}" name="{{ $userField }}" readonly>
-                                            @error($userField)
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                            {{-- 8: Dispose of --}}
+                            @if($i == 8)
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="dispose_of" class="form-label">Interim / Final Action</label>
+                                        <select name="dispose_of" id="dispose_of" class="form-select">
+                                            <option value="1">Request Dispose of</option>
+                                            <option value=""></option>
+                                        </select>
                                     </div>
+                                    <div class="col-md-4">
+                                        <label for="file_no_dispose" class="form-label">File Number</label>
+                                        <input type="text" name="file_no_dispose" id="file_no_dispose" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-8">
+                                        <label for="info_provided_citizen" class="form-label">Information Provided to Citizen</label>
+                                        <textarea name="info_provided_citizen" id="info_provided_citizen" class="form-control" rows="4"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label for="disposal_type" class="form-label">Type of Disposal</label>
+                                        <select name="disposal_type" id="disposal_type" class="form-select">
+                                            <option value="0">Select Disposal Type</option>
+                                            <option value="FullInfo">Full Information Supplied</option>
+                                            <option value="PartInfo">Part of Information Supplied</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="reply_doc" class="form-label">Upload Document 1</label>
+                                        <input type="file" class="form-control" name="reply_doc" id="reply_doc" aria-describedby="reply_doc_hint">
+                                        <div id="reply_doc_hint" class="form-text">(File Type .pdf)</div>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-1">
+                                    <div class="col-md-4">
+                                        <label for="reply_doc1" class="form-label">Upload Document 2</label>
+                                        <input type="file" class="form-control" name="reply_doc1" id="reply_doc1" aria-describedby="reply_doc1_hint">
+                                        <div id="reply_doc1_hint" class="form-text">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="reply_doc2" class="form-label">Upload Document 3</label>
+                                        <input type="file" class="form-control" name="reply_doc2" id="reply_doc2" aria-describedby="reply_doc2_hint">
+                                        <div id="reply_doc2_hint" class="form-text">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</div>
+                                    </div>
+                                </div>
+                            @endif
 
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-8">
-                                            <label for="{{ $reasonField }}" class="form-label">Reason for Forwarding <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <textarea class="form-control @error($reasonField) is-invalid @enderror" name="{{ $reasonField }}" id="{{ $reasonField }}" rows="4" maxlength="3000" aria-required="true"></textarea>
-                                            @error($reasonField)
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
+                            {{-- 9: Rejected --}}
+                            @if($i == 9)
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label for="file_no" class="form-label">File Number</label>
+                                        <input type="text" name="file_no" id="file_no" class="form-control">
                                     </div>
-                                @endif
+                                    <div class="col-md-4">
+                                        <label for="reason_therefore" class="form-label">Reason Therefore</label>
+                                        <select name="reason_therefore" id="reason_therefore" class="form-select">
+                                            <option value="0" class="d-none">Select Reason</option>
+                                            <option value="1">Section 9</option>
+                                            <option value="2">Section 11</option>
+                                            <option value="3">Section 24</option>
+                                            <option value="4">Section 8(1)(a)</option>
+                                        </select>
+                                        <a href="{{ asset($filePath) }}" target="_blank" rel="noopener" class="d-inline-block mt-2">View Details of Sections for Rejection<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                    </div>
+                                </div>
+                            @endif
 
-                                {{-- 4: Document upload reason --}}
-                                @if($i == 4)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-8">
-                                            <label for="req_dispose_reason" class="form-label">Enter Reason for RTI Application Document Upload (1000 Characters Max) <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <textarea class="form-control" name="req_dispose_reason" id="req_dispose_reason" rows="6" maxlength="1000" aria-required="true"></textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 5: Transfer to another department --}}
-                                @if($i == 5)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-4">
-                                            <label for="applied_dept" class="form-label">Select Department / Public Authority <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="applied_dept" class="form-select @error('applied_dept') is-invalid @enderror" id="applied_dept" aria-required="true">
-                                                <option value="">Select Department</option>
-                                                @foreach ($deptData as $id => $department)
-                                                    <option value="{{ $department->dept_code }}" {{ old('applied_dept') == $department->dept_code ? 'selected' : '' }}>
-                                                        {{ $department->department }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('applied_dept')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="applied_subdept" class="form-label">Select Office <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="applied_subdept" class="form-select @error('applied_subdept') is-invalid @enderror" id="applied_subdept" aria-required="true">
-                                                <option value="">Select Office</option>
-                                            </select>
-                                            @error('applied_subdept')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="applied_office" class="form-label">Select Sub Office <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <select name="applied_office" class="form-select @error('applied_office') is-invalid @enderror" id="applied_office" aria-required="true">
-                                                <option value="">Select Sub Office</option>
-                                            </select>
-                                            @error('applied_office')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-4">
-                                            <label for="nodel_name" class="form-label">Nodal Officer Name</label>
-                                            <input class="form-control" type="text" id="nodel_name" name="nodel_name" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="pio_name" class="form-label">PIO Officer Name</label>
-                                            <input class="form-control" type="text" id="pio_name" name="pio_name" readonly>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="apio_name" class="form-label">APIO Officer Name</label>
-                                            <input class="form-control" type="text" id="apio_name" name="apio_name" readonly>
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-8">
-                                            <label for="transferReason" class="form-label">Reason for Forwarding <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <textarea class="form-control @error('transferReason') is-invalid @enderror" name="transferReason" id="transferReason" rows="4" maxlength="3000" aria-required="true"></textarea>
-                                            @error('transferReason')
-                                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 6: Return to applicant --}}
-                                @if($i == 6)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-8">
-                                            <label for="doc_req_reason" class="form-label">Enter Reason for Request Return <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <textarea class="form-control" name="doc_req_reason" id="doc_req_reason" rows="6" maxlength="500" aria-required="true"></textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 7: Additional payment --}}
-                                @if($i == 7)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-8">
-                                            <label for="mode_info_suppy" class="form-label">Select Model of Information Supply</label>
-                                            <select name="mode_info_suppy" id="mode_info_suppy" class="form-select">
-                                                <option value="" class="d-none">Select Model</option>
-                                                <option value="1">Hard Copy</option>
-                                                <option value="2">Electronic Media</option>
-                                                <option value="3">Priced Publications</option>
-                                                <option value="4">Certified Samples of Material</option>
-                                                <option value="5">Inspection of Work,Documents,Records</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="additional_amount" class="form-label">Additional Payment Demanded</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">₹</span>
-                                                <input type="text" name="additional_amount" id="additional_amount" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-8">
-                                            <label for="additional_amount_reason" class="form-label">Reason for Additional Payment (Max 255 characters) <span class="dbim-required" aria-hidden="true">*</span></label>
-                                            <textarea class="form-control" name="additional_amount_reason" id="additional_amount_reason" rows="6" aria-required="true"></textarea>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 8: Dispose of --}}
-                                @if($i == 8)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-4">
-                                            <label for="dispose_of" class="form-label">Interim / Final Action</label>
-                                            <select name="dispose_of" id="dispose_of" class="form-select">
-                                                <option value="1">Request Dispose of</option>
-                                                <option value=""></option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="file_no_dispose" class="form-label">File Number</label>
-                                            <input type="text" name="file_no_dispose" id="file_no_dispose" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-8">
-                                            <label for="info_provided_citizen" class="form-label">Information Provided to Citizen</label>
-                                            <textarea name="info_provided_citizen" id="info_provided_citizen" class="form-control" rows="4"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-4">
-                                            <label for="disposal_type" class="form-label">Type of Disposal</label>
-                                            <select name="disposal_type" id="disposal_type" class="form-select">
-                                                <option value="0">Select Disposal Type</option>
-                                                <option value="FullInfo">Full Information Supplied</option>
-                                                <option value="PartInfo">Part of Information Supplied</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="reply_doc" class="form-label">Upload Document 1</label>
-                                            <input type="file" class="form-control" name="reply_doc" id="reply_doc" aria-describedby="reply_doc_hint">
-                                            <div id="reply_doc_hint" class="form-text">(File Type .pdf)</div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 justify-content-center mt-1">
-                                        <div class="col-md-4">
-                                            <label for="reply_doc1" class="form-label">Upload Document 2</label>
-                                            <input type="file" class="form-control" name="reply_doc1" id="reply_doc1" aria-describedby="reply_doc1_hint">
-                                            <div id="reply_doc1_hint" class="form-text">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="reply_doc2" class="form-label">Upload Document 3</label>
-                                            <input type="file" class="form-control" name="reply_doc2" id="reply_doc2" aria-describedby="reply_doc2_hint">
-                                            <div id="reply_doc2_hint" class="form-text">(File Type .pdf, .doc, .docx, .txt, .xls, .xlsx, .jpg, .jpeg)</div>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 9: Rejected --}}
-                                @if($i == 9)
-                                    <div class="row g-3 justify-content-center">
-                                        <div class="col-md-4">
-                                            <label for="file_no" class="form-label">File Number</label>
-                                            <input type="text" name="file_no" id="file_no" class="form-control">
-                                        </div>
-                                        <div class="col-md-4">
-                                            <label for="reason_therefore" class="form-label">Reason Therefore</label>
-                                            <select name="reason_therefore" id="reason_therefore" class="form-select">
-                                                <option value="0" class="d-none">Select Reason</option>
-                                                <option value="1">Section 9</option>
-                                                <option value="2">Section 11</option>
-                                                <option value="3">Section 24</option>
-                                                <option value="4">Section 8(1)(a)</option>
-                                            </select>
-                                            <a href="{{ asset($filePath) }}" target="_blank" rel="noopener" class="d-inline-block mt-2">View Details of Sections for Rejection<span class="visually-hidden"> (opens in a new tab)</span></a>
-                                        </div>
-                                    </div>
-                                @endif
-
-                                {{-- 18: Partial transfer (blocks are added by the script) --}}
-                                @if($i == 18)
-                                    <div class="text-center">
-                                        <button type="button" class="download-btn text-uppercase w-ft mt-0" id="add-dropdown">Add Dropdown</button>
-                                    </div>
-                                    <div id="dropdown-container" class="mt-3"></div>
-                                @endif
-                            </div>
-                        @endforeach
-
-                        <div class="d-flex justify-content-end mt-4" id="submitDivElement">
-                            <button type="submit" name="send" value="Submit" class="download-btn text-uppercase w-ft mt-0" onclick="validateForm()">Submit</button>
+                            {{-- 18: Partial transfer (blocks are added by the script) --}}
+                            @if($i == 18)
+                                <div>
+                                    <button type="button" class="download-btn text-uppercase w-ft mt-0" id="add-dropdown">Add Dropdown</button>
+                                </div>
+                                <div id="dropdown-container" class="mt-3"></div>
+                            @endif
                         </div>
-                    </form>
-                </div>
+                    @endforeach
+
+                    <div class="d-flex justify-content-end mt-4" id="submitDivElement">
+                        <button type="submit" name="send" value="Submit" class="download-btn text-uppercase w-ft mt-0" onclick="validateForm()">Submit</button>
+                    </div>
+                </form>
             </div>
+        </section>
 
-        </div>
-    </div>
-</div>
+      </div>{{-- .dbim-rq-card --}}
+
+    </div>{{-- .dbim-sd-wrap --}}
+  </div>{{-- .dbim-sd-section --}}
+</div>{{-- .dbim-sd --}}
 @endsection
 
 @push('scripts')
@@ -1377,7 +1372,8 @@
                 const departmentDropdowns = document.querySelectorAll('.department-dropdown');
                 const subDepartmentDropdowns = document.querySelectorAll('.sub-department-dropdown');
                 const officeDropdowns = document.querySelectorAll('.office-department-dropdown');
-                const reasonTextareas = document.querySelectorAll('textarea[name="partialReason"]');
+                // FIX: the fields are named partialReason[], so the old selector never matched
+                const reasonTextareas = document.querySelectorAll('textarea[name="partialReason[]"]');
 
                 departmentDropdowns.forEach(dropdown => {
                     if (dropdown.value === '') {

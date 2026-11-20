@@ -1,34 +1,52 @@
 {{-- ============================================================
      Officer: View Comments / Reply (DBIM / GIGW 3.0)
-     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     One card on the grey band (.dbim-sd frame).
      Pagination: resources/views/pagination.blade.php
+     Styles: dbim.css sections 50, 58, 79, 84, 85.
      ============================================================ --}}
 @extends('layouts.app')
 
 @section('title', 'View Comments / Reply | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container px-3 px-lg-5 py-4">
+<div class="dbim-sd">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
 
-    <h1 class="h2 mb-4 dbim-text-key">View Comments / Reply</h1>
+      @include('partials.flash-messages')
 
-    {{-- ===== Reusable Department / User Header Card ===== --}}
-    @include('OfficerView.officer-header-card')
+      <div class="dbim-sd-card">
 
-    {{-- ===== Flash messages ===== --}}
-    @include('partials.flash-messages')
+        <h1 class="dbim-sd-heading dbim-nr-head">View Comments / Reply</h1>
 
-    {{-- ===== Comments table ===== --}}
-    <section aria-labelledby="commentsHeading">
-        <h2 id="commentsHeading" class="visually-hidden">Comments and replies list</h2>
+        {{-- ===== Office / username / role strip ===== --}}
+        <dl class="dbim-nr-strip">
+            <div>
+                <dt>Office:</dt>
+                <dd>{{ session('officeName') }}</dd>
+            </div>
+            <div>
+                <dt>Username:</dt>
+                <dd>{{ session('username') }}</dd>
+            </div>
+            <div>
+                <dt>Role:</dt>
+                <dd>{{ session('role_name') }}</dd>
+            </div>
+        </dl>
 
-        @if($requestLines->count() == 0)
-            <div class="alert alert-info" role="status">No Data Present</div>
-        @else
-            <div class="table-responsive" role="region" tabindex="0" aria-labelledby="commentsHeading">
-                <table class="table table-striped table-bordered align-middle">
+        {{-- ===== Comments table ===== --}}
+        <section aria-labelledby="commentsHeading">
+            <h2 id="commentsHeading" class="visually-hidden">Comments and replies list</h2>
+
+            @php
+                $colCount = session('role') == 1 ? 7 : 6;
+            @endphp
+
+            <div class="dbim-sd-scroll" role="region" tabindex="0" aria-labelledby="commentsHeading">
+                <table class="dbim-sd-table dbim-hl-table">
                     <caption class="visually-hidden">View comments / reply</caption>
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th scope="col">Sr. No</th>
                             <th scope="col">Registration Number</th>
@@ -45,7 +63,7 @@
                         @php
                             $serialNumber = $requestLines->firstItem();
                         @endphp
-                        @foreach($requestLines as $request)
+                        @forelse($requestLines as $request)
                             <tr>
                                 <td class="text-center">{{ $serialNumber++ }}</td>
                                 <td>
@@ -61,15 +79,26 @@
                                 @endif
                                 <td>{{ $request->status }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="{{ $colCount }}" class="dbim-nr-none">No Data Present</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
-            {{ $requestLines->onEachSide(1)
-                            ->links('Pagination', ['label' => 'Comments and replies pages']) }}
-        @endif
-    </section>
+            @if($requestLines->count() > 0)
+                <div class="mt-4">
+                    {{ $requestLines->onEachSide(1)
+                                    ->links('Pagination', ['label' => 'Comments and replies pages']) }}
+                </div>
+            @endif
+        </section>
 
-</div>
+      </div>{{-- .dbim-sd-card --}}
+
+    </div>{{-- .dbim-sd-wrap --}}
+  </div>{{-- .dbim-sd-section --}}
+</div>{{-- .dbim-sd --}}
 @endsection

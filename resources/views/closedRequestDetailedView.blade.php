@@ -1,370 +1,404 @@
-<link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+{{-- ============================================================
+     Request details (officer): Reverted / Rejected / Closed
+     DBIM / GIGW 3.0. One card on the grey band (.dbim-sd frame).
+     ============================================================ --}}
+@extends('layouts.app')
 
-<style>
-.container.mt-5
-    {
-        /* border: 2px solid black; */
-        /* border-bottom: none; */
-        border-top:none;
-        margin-top:0 !important;
-    }
-</style>
+@php
+    $statusId = optional($submitRequest->actionDetails->first())->status_id;
 
-<body>
-    @include('OfficerView.Header')
-        <div class="container mt-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row justify-content-center">
-                        <div class="col-md-6">
-                            <div class="text-center">
-                                <br>
-                            <h5 class="mb-0"> {{ $deptDetails }}</h5><br>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="text-start">
-                                        <h5 class="mb-0">Username: {{ $userDetails['name'] }}</h5>
-                                    </div>
-                                    <div class="text-end">
-                                        <h5 class="mb-0">Role: {{ $userDetails['role_name'] }} </h5>
-                                    </div>
-                                </div>
-                                <br>
-                                @if ($submitRequest->actionDetails->first()->status_id == 1)
-                                    <h5 class="mb-0">New Request</h5>
-                                @elseif ($submitRequest->actionDetails->first()->status_id == 2)
-                                    <h5 class="mb-0">In Process Request</h5>
-                                @endif
-                                <br>
-                                <br>
-                            </div>
-                        </div>
+    $pageTitle = match ((int) $statusId) {
+        1       => 'New Request',
+        2       => 'In Process Request',
+        3       => 'Reverted Request',
+        4       => 'Rejected Request',
+        5       => 'Closed Request',
+        default => 'Request Details',
+    };
+
+    $statusText = match ((int) $statusId) {
+        3       => 'Status - Reverted',
+        4       => 'Status - Rejected',
+        5       => 'Status - Closed',
+        default => null,
+    };
+@endphp
+
+@section('title', $pageTitle . ' | RTI Online, Government of Goa')
+
+@section('content')
+<div class="dbim-sd">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
+
+      @include('partials.flash-messages')
+
+      <div class="dbim-rq-card">
+
+        {{-- ============ Title + department / username / role strip ============ --}}
+        <h1 class="dbim-rq-title">{{ $pageTitle }}</h1>
+
+        <dl class="dbim-rq-strip">
+            <div>
+                <dt>Department:</dt>
+                <dd>{{ $deptDetails }}</dd>
+            </div>
+            <div>
+                <dt>Username:</dt>
+                <dd>{{ $userDetails['name'] }}</dd>
+            </div>
+            <div>
+                <dt>Role:</dt>
+                <dd>{{ $userDetails['role_name'] }}</dd>
+            </div>
+        </dl>
+
+        @if($statusText)
+            <p class="dbim-rq-status" role="status">{{ $statusText }}</p>
+        @endif
+
+        {{-- ============ Public Authority Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqAuthority">
+            <h2 class="dbim-rq-sec__head" id="rqAuthority">Public Authority Details</h2>
+            <div class="dbim-rq-sec__body">
+                <dl class="dbim-rq-meta">
+                    <div>
+                        <dt>Reg No.:</dt>
+                        <dd>{{ $submitRequest->reg_no }}</dd>
                     </div>
+                    <div>
+                        <dt>Filed Date:</dt>
+                        <dd>{{ \Carbon\Carbon::parse($submitRequest->created_at)->format('d-m-Y H:i') }}</dd>
+                    </div>
+                </dl>
+
+                <hr class="dbim-rq-hr">
+
+                <dl class="dbim-rq-grid">
+                    <dt>Department:</dt>
+                    <dd>{{ $deptDetails }}</dd>
+                    <dt>Office:</dt>
+                    <dd>{{ $officeDetails }}</dd>
+                    <dt>Sub Office:</dt>
+                    <dd>{{ $subOfficeDetails }}</dd>
+                </dl>
+            </div>
+        </section>
+
+        {{-- ============ Personal Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqPersonal">
+            <h2 class="dbim-rq-sec__head" id="rqPersonal">Personal Details of RTI Applicant</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Applicant Name:</dt>
+                            <dd>{{ $submitRequest->name }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Gender:</dt>
+                            <dd>{{ $submitRequest->gender === 'female' ? 'Female' : ($submitRequest->gender === 'male' ? 'Male' : 'Other') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair dbim-rq-pair--block">
+                            <dt>Address:</dt>
+                            <dd>
+                                @foreach(array_filter([$submitRequest->address_line1, $submitRequest->address_line2, $submitRequest->address_line3]) as $line)
+                                    <span class="d-block">{{ $line }}</span>
+                                @endforeach
+                            </dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Pincode:</dt>
+                            <dd>{{ $submitRequest->pincode }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Education:</dt>
+                            <dd>{{ $submitRequest->edu_status === 1 ? 'Educated' : 'Non-Educated' }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>BPL:</dt>
+                            <dd>{{ $submitRequest->is_bpl == 1 ? 'BPL User' : 'Non BPL User' }}</dd>
+                        </div>
+                    </dl>
+
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Village:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->Village->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>District:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->District->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>State:</dt>
+                            <dd>{{ $submitRequest->state === 0 ? 'Others' : ($submitRequest->State->name ?? 'Others') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Phone:</dt>
+                            <dd>{{ $submitRequest->phone_no }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Mobile:</dt>
+                            <dd>{{ $submitRequest->mobile_no }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Email:</dt>
+                            <dd>{{ $submitRequest->email_id }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Qualification:</dt>
+                            <dd>
+                                @if($submitRequest->edu_status === 0) N/A
+                                @elseif($submitRequest->qualification == 1) SSC
+                                @elseif($submitRequest->qualification == 2) HSSC
+                                @elseif($submitRequest->qualification == 3) Graduate
+                                @elseif($submitRequest->qualification == 4) Post Graduate
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Card No.:</dt>
+                            <dd>{{ $submitRequest->card_no === 0 ? 'N/A' : $submitRequest->card_no }}</dd>
+                        </div>
+                    </dl>
                 </div>
             </div>
-        </div>
-            <div class="container mt-5">
-                <br>
-                <br>
-                <div class="row justify-content-center">
-                    <div class="col-md-9">
-                        <div>
-                            <div class="text-center alert alert-success">
-                            @if($submitRequest->actionDetails[0]['status_id'] == 3)
-                                Status - Reverted
-                            @elseif($submitRequest->actionDetails[0]['status_id'] == 4)
-                                Status - Rejected
-                            @elseif($submitRequest->actionDetails[0]['status_id'] == 5)
-                                Status - Closed
+        </section>
+
+        {{-- ============ Application Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqApplication">
+            <h2 class="dbim-rq-sec__head" id="rqApplication">Application Details</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        @if($submitRequest->is_bpl === 0)
+                            <div class="dbim-rq-pair">
+                                <dt>Amount Paid (Rs.):</dt>
+                                <dd>10</dd>
+                            </div>
+                        @endif
+                        <div class="dbim-rq-pair">
+                            <dt>Other Options:</dt>
+                            <dd>N/A</dd>
+                        </div>
+                    </dl>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Does it concern life or liberty of a person:</dt>
+                            <dd>N/A</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>File Uploaded by Applicant:</dt>
+                            <dd>
+                                <a href="{{ asset($filePath) }}" target="_blank" rel="noopener">{{ $submitRequest->document_name_original }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <hr class="dbim-rq-hr">
+
+                <dl class="dbim-rq-list">
+                    <div class="dbim-rq-pair dbim-rq-pair--block">
+                        <dt>Text From Applicant:</dt>
+                        <dd class="dbim-rq-text">{{ $submitRequest->request_text }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        {{-- ============ Payment Details ============ --}}
+        @if(!$paymentDetails->isEmpty())
+            <section class="dbim-rq-sec" aria-labelledby="rqPayment">
+                <h2 class="dbim-rq-sec__head" id="rqPayment">Payment Details</h2>
+                <div class="dbim-rq-sec__body">
+                    <div class="table-responsive">
+                        <table class="table table-light table-bordered mb-0">
+                            <caption class="visually-hidden">Payments made for this request</caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sr. No</th>
+                                    <th scope="col">Registration No.</th>
+                                    <th scope="col">Amount (Rs.)</th>
+                                    <th scope="col">e-Challan No.</th>
+                                    <th scope="col">Transaction Date &amp; Time</th>
+                                    <th scope="col">Mobile Number</th>
+                                    <th scope="col">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($paymentDetails as $index => $payment)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $submitRequest->reg_no }}</td>
+                                        <td>{{ $payment->total_amt }}</td>
+                                        <td>{{ $payment->echallan_no }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('d-m-Y H:i') }}</td>
+                                        <td>{{ $submitRequest->mobile_no }}</td>
+                                        <td>Success</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        @endif
+
+        {{-- ============ Officer's Reply: disposed ============ --}}
+        @if($reqestDisposeOf != null)
+            <section class="dbim-rq-sec" aria-labelledby="rqReplyDisposed">
+                <h2 class="dbim-rq-sec__head" id="rqReplyDisposed">Officer's Reply</h2>
+                <div class="dbim-rq-sec__body">
+                    <div class="dbim-rq-cols">
+                        <dl class="dbim-rq-list">
+                            <div class="dbim-rq-pair">
+                                <dt>Disposed Date &amp; Time:</dt>
+                                <dd>{{ \Carbon\Carbon::parse($reqestDisposeOf->created_at)->format('d-m-Y H:i') }}</dd>
+                            </div>
+                            <div class="dbim-rq-pair">
+                                <dt>File Number:</dt>
+                                <dd>{{ $reqestDisposeOf->file_no ? $reqestDisposeOf->file_no : 'N/A' }}</dd>
+                            </div>
+                            <div class="dbim-rq-pair">
+                                <dt>Upload Document 1:</dt>
+                                <dd>
+                                    <a href="{{ asset($officerFile[0]) }}" target="_blank" rel="noopener">{{ $reqestDisposeOf->original_doc_name }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                </dd>
+                            </div>
+                        </dl>
+                        <dl class="dbim-rq-list">
+                            <div class="dbim-rq-pair">
+                                <dt>Disposed Date &amp; Time (Re-Uploaded):</dt>
+                                <dd>{{ \Carbon\Carbon::parse($reqestDisposeOf->updated_at)->format('d-m-Y H:i') }}</dd>
+                            </div>
+                            <div class="dbim-rq-pair">
+                                <dt>Disposal Type:</dt>
+                                <dd>{{ $reqestDisposeOf->disposal_type }}</dd>
+                            </div>
+                            <div class="dbim-rq-pair">
+                                <dt>Disposal Reason:</dt>
+                                <dd>{{ $reqestDisposeOf->reason }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+
+                    @if($reqestDisposeOf->document_path1 || $reqestDisposeOf->document_path2)
+                        <hr class="dbim-rq-hr">
+                        <h3 class="dbim-rq-action__title">Additional Files</h3>
+                        <dl class="dbim-rq-list">
+                            @if($reqestDisposeOf->document_path1)
+                                <div class="dbim-rq-pair">
+                                    <dt>Upload Document 2:</dt>
+                                    <dd>
+                                        <a href="{{ asset($officerFile[1]) }}" target="_blank" rel="noopener">{{ $reqestDisposeOf->original_doc_name1 }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                    </dd>
+                                </div>
                             @endif
-                            </div>
-
-                        </div>
-                        <!-- Public Authority Details -->
-                        <div class="card mb-4 mx-auto">
-                            <h5 class="card-header">Public Authority Details:</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p style="text-align: left;"><strong>Reg No.:</strong> {{ $submitRequest->reg_no }}</p>
-                                    </div>
-                                    <div class="col-md-6 text-end">
-                                        <p><strong>Filed Date:</strong> {{ \Carbon\Carbon::parse($submitRequest->created_at)->format('d-m-Y H:i') }}</p>
-                                    </div>
+                            @if($reqestDisposeOf->document_path2)
+                                <div class="dbim-rq-pair">
+                                    <dt>Upload Document 3:</dt>
+                                    <dd>
+                                        <a href="{{ asset($officerFile[2]) }}" target="_blank" rel="noopener">{{ $reqestDisposeOf->original_doc_name2 }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                    </dd>
                                 </div>
-
-                                <div class="row justify-content-center">
-                                    <div class="col-md-3">
-                                        <p><strong>Department:</strong></p>
-                                        <p><strong>Office:</strong></p>
-                                        <p><strong>Sub Office:</strong></p>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <p>{{ $deptDetails }}</p>
-                                        <p>{{ $officeDetails }}</p>
-                                        <p>{{ $subOfficeDetails }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Personal Details -->
-                        <div class="card">
-                            <h5 class="card-header">Personal Details of RTI Applicant</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Applicant Name:</strong> {{ $submitRequest->name }}</p>
-                                        <p><strong>Gender:</strong> {{ $submitRequest->gender === 'female' ? 'Female' : ($submitRequest->gender === 'male' ? 'Male' : 'Other') }}</p>
-                                        <p><strong>Address:</strong><br>
-                                            {{ $submitRequest->address_line1 }}<br>
-                                            {{ $submitRequest->address_line2 }}<br>
-                                            {{ $submitRequest->address_line3 }}
-                                        </p>
-                                        <p><strong>Pincode:</strong> {{ $submitRequest->pincode }} </p>
-
-                                    </div>
-                                    <div class="col-md-6">
-                                        @if($submitRequest->state === 0)
-                                            <p><strong>Village:</strong> Others</p>
-                                            <p><strong>District:</strong> Others</p>
-                                            <p><strong>State:</strong> Others</p>
-                                        @else
-                                            <p><strong>Village:</strong> {{ $submitRequest->Village->name ?? 'Others' }}</p>
-                                            <p><strong>District:</strong> {{ $submitRequest->District->name  ?? 'Others' }}</p>
-                                            <p><strong>State:</strong> {{ $submitRequest->State->name ?? 'Others' }}</p>
-                                        @endif
-                                        <p><strong>Phone:</strong> {{ $submitRequest->phone_no }}</p>
-                                        <p><strong>Mobile:</strong> {{ $submitRequest->mobile_no }}</p>
-                                        <p><strong>Email:</strong> {{ $submitRequest->email_id }}</p>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                    <p><strong>Education:</strong> {{ $submitRequest->edu_status === 1 ? 'Educated' : 'Non-Educated' }}</p>
-                                    <p><strong>BPL:</strong> {{ $submitRequest->is_bpl == 1 ? 'BPL User' : 'Non BPL User' }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Qualification:</strong>
-                                            @if($submitRequest->edu_status === 0)
-                                                N/A
-                                            @elseif($submitRequest->qualification == 1)
-                                                SSC
-                                            @elseif($submitRequest->qualification == 2)
-                                                HSSC
-                                            @elseif($submitRequest->qualification == 3)
-                                                Graduate
-                                            @elseif($submitRequest->qualification == 4)
-                                                Post Graduate
-                                            @endif
-                                        </p>
-                                        <p><strong>Card No.:</strong> {{ $submitRequest->card_no === 0 ? 'N/A' : $submitRequest->card_no }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <!-- Application Details -->
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    @if($submitRequest->is_bpl === 0)
-                                    <div class="col-md-6">
-                                        <p><strong>Amount Paid (Rs.):</strong> 10 </p>
-                                    </div>
-                                    @endif
-                                    <div class="col-md-6">
-                                        <p><strong>Other Options:</strong> N/A</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <p style="padding-top: 15px"><strong>Text From Applicant:</strong></p>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="border p-3">
-                                        <p>{{ $submitRequest->request_text }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 10px">
-                                    <div class="col-md-8">
-                                        <p><strong>Does it concern life or liberty of a person: </strong> N/A</p>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 10px">
-                                    <div class="col-md-6">
-                                        <p><strong>File Uploaded by Applicant: </strong><a href="{{ asset($filePath) }}" target="_blank">{{ $submitRequest->document_name_original }}</a></p>
-                                    </div>
-                                    {{-- <embed src="{{ asset($filePath) }}" type="application/pdf" width="100%" height="600px" /> --}}
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-
-                        @if(!$paymentDetails->isEmpty())
-                        <div class="card">
-                            <h5 class="card-header">Payment Details:</h5>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Sr. No</th>
-                                                <th>Registration No.</th>
-                                                <th>Amount (Rs.)</th>
-                                                <th>e-Challan No.</th>
-                                                <th>Transaction Date & Time</th>
-                                                <th>Mobile Number</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($paymentDetails as $index => $payment)
-                                            <tr>
-                                                <td>{{$index + 1}}</td>
-                                                <td>{{$submitRequest->reg_no}}</td>
-                                                <td>{{$payment->total_amt}}</td>
-                                                <td>{{$payment->echallan_no}}</td>
-                                                <td>{{ \Carbon\Carbon::parse($payment->created_at)->format('d-m-Y H:i') }}</td>
-                                                <td>{{$submitRequest->mobile_no}}</td>
-                                                <td>Success</td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
+                            @endif
+                        </dl>
                     @endif
 
+                    @if($reqestDisposeOf->updated_at >= \Carbon\Carbon::now()->subDays(3) || $reqestDisposeOf->allow_reupload == true)
+                        <hr class="dbim-rq-hr">
 
-                        @if($reqestDisposeOf != null)
-                        <div class="card">
-                                <h5 class="card-header">Officer's Reply:</h5>
+                        <form id="actionForm" enctype="multipart/form-data" action="{{ route('updateOfficerReplyFile') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="submitRequestDetails" value="{{ $submitRequest }}">
 
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Disposed Date & Time: </strong>{{ \Carbon\Carbon::parse($reqestDisposeOf->created_at)->format('d-m-Y H:i') }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Disposed Date & Time (Re-Uploaded): </strong>{{ \Carbon\Carbon::parse($reqestDisposeOf->updated_at)->format('d-m-Y H:i') }}</p>
-                                    </div>
+                            <button type="button" id="edit-button" class="download-btn text-uppercase w-ft mt-0"
+                                    aria-expanded="false" aria-controls="file-upload">Edit</button>
+
+                            <div class="row g-3 mt-2" style="display:none" id="file-upload">
+                                <h3 class="dbim-rq-action__title">Re-Upload Reply</h3>
+
+                                <div class="col-md-4">
+                                    <label for="file-input1" class="form-label">Replacement for File 1:</label>
+                                    <input type="file" id="file-input1" name="officerFile1" class="form-control">
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>File Number: </strong>{{ $reqestDisposeOf->file_no ? $reqestDisposeOf->file_no : 'N/A' }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Disposal Type: </strong>{{ $reqestDisposeOf->disposal_type }}</p>
-                                    </div>
+                                <div class="col-md-4">
+                                    <label for="file-input2" class="form-label">Replacement for File 2:</label>
+                                    <input type="file" id="file-input2" name="officerFile2" class="form-control">
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Upload Document 1: </strong> <a href="{{ asset($officerFile[0]) }}" target="_blank">{{ $reqestDisposeOf->original_doc_name }}</a></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Disposal Reason: </strong>{{ $reqestDisposeOf->reason }}</p>
-                                    </div>
+                                <div class="col-md-4">
+                                    <label for="file-input3" class="form-label">Replacement for File 3:</label>
+                                    <input type="file" id="file-input3" name="officerFile3" class="form-control">
                                 </div>
-                                @if($reqestDisposeOf->document_path1 || $reqestDisposeOf->document_path2)
-                                <hr>
-                                <div class="row">
-                                    <p><strong>Additional Files: </strong></p>
-                                    @if($reqestDisposeOf->document_path1)
-                                    <div class="col-md-6">
-                                        <p><strong>Upload Document 2: </strong> <a href="{{ asset($officerFile[1]) }}" target="_blank">{{ $reqestDisposeOf->original_doc_name1 }}</a></p>
-                                    </div>
-                                    @endif
-
-                                    @if($reqestDisposeOf->document_path2)
-                                    <div class="col-md-6">
-                                        <p><strong>Upload Document 3: </strong> <a href="{{ asset($officerFile[2]) }}" target="_blank">{{ $reqestDisposeOf->original_doc_name2 }}</a></p>
-                                    </div>
-                                    @endif
-                                </div>
-                                @endif
-
-                                @if($reqestDisposeOf->updated_at >= \Carbon\Carbon::now()->subDays(3) || $reqestDisposeOf->allow_reupload == true)
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <form id="actionForm" enctype="multipart/form-data" action="{{ route('updateOfficerReplyFile') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="submitRequestDetails" value="{{ $submitRequest }}">
-
-                                            <div class="row">
-                                                <button type="button" id="edit-button" style="width:100%" class="btn btn-primary">Edit</button>
-                                            </div>
-
-                                            <br>
-
-                                            <div class="row" style="display:none" id="file-upload">
-                                                <p style="margin-top:20px"><strong>Re-Upload Reply: &nbsp;</strong></p>
-
-                                                <div class="col-md-4">
-                                                    <label for="officerFile1">Replacement for File 1:</label>
-                                                    <input type="file" id="file-input1" name="officerFile1" class="form-control">
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <label for="officerFile2">Replacement for File 2:</label>
-                                                    <input type="file" id="file-input2" name="officerFile2" class="form-control">
-                                                </div>
-
-                                                <div class="col-md-4">
-                                                    <label for="officerFile3">Replacement for File 3:</label>
-                                                    <input type="file" id="file-input3" name="officerFile3" class="form-control">
-                                                </div>
-                                            </div>
-                                            <br>
-                                            <div class="row justify-content-center">
-                                                <div class="col-auto">
-                                                    <button type="submit" id="submit-button" class="btn btn-success" style="display: none;">Submit</button>
-                                                </div>
-                                            </div>
-
-                                        </form>
-                                    </div>
-                                </div>
-                                @endif
                             </div>
-                        </div>
-                        @endif
 
-                        @if($requestToApplicant != null)
-                        <div class="card">
-                            <h5 class="card-header">Officer's Reply:</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Reverted Date & Time: </strong>{{ \Carbon\Carbon::parse($requestToApplicant->created_at)->format('d-m-Y H:i') }}</p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <p><strong>Reverted Reason: </strong> {{$requestToApplicant->reason}} </p>
-                                    </div>
-                                </div>
-
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" id="submit-button" class="download-btn text-uppercase w-ft mt-0" style="display: none;">Submit</button>
                             </div>
-                        </div>
-                        @endif
-
-                        <br>
-                        <div class="card">
-                            <h5 class="card-header">Print Details:</h5>
-                            <div class="card-body">
-                                <a href="/generate-pdf/{{$submitRequest->id}}" target="_blank">Print As PDF</a>
-                            </div>
-                        </div>
-                    </div>
+                        </form>
+                    @endif
                 </div>
-                <br>
-            </div>
-        </div>
-        <script src="{{ asset('js/bootstrap.bundle.min.js') }}"></script>
-    @include('UsersView.footer')
-</body>
+            </section>
+        @endif
 
+        {{-- ============ Officer's Reply: reverted to applicant ============ --}}
+        @if($requestToApplicant != null)
+            <section class="dbim-rq-sec" aria-labelledby="rqReplyReverted">
+                <h2 class="dbim-rq-sec__head" id="rqReplyReverted">Officer's Reply</h2>
+                <div class="dbim-rq-sec__body">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Reverted Date &amp; Time:</dt>
+                            <dd>{{ \Carbon\Carbon::parse($requestToApplicant->created_at)->format('d-m-Y H:i') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Reverted Reason:</dt>
+                            <dd>{{ $requestToApplicant->reason }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            </section>
+        @endif
+
+        {{-- ============ Print ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rqPrint">
+            <h2 class="dbim-rq-sec__head" id="rqPrint">Print Details</h2>
+            <div class="dbim-rq-sec__body">
+                <a href="{{ url('/generate-pdf/' . $submitRequest->id) }}" class="download-outline-btn w-ft mt-0"
+                   target="_blank" rel="noopener">
+                    Print As PDF<span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+            </div>
+        </section>
+
+      </div>{{-- .dbim-rq-card --}}
+
+    </div>{{-- .dbim-sd-wrap --}}
+  </div>{{-- .dbim-sd-section --}}
+</div>{{-- .dbim-sd --}}
+@endsection
+
+@push('scripts')
+{{-- jQuery: loads only if the layout has not already loaded it --}}
+<script>
+    window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.6.4.min.js"><\/script>');
+</script>
 
 <script type="text/javascript">
 $(document).ready(function() {
     $('#file-upload').hide();
 
-    $('#edit-button').click(function() {
+    $('#edit-button').on('click', function() {
         $('#file-upload').show().addClass('d-flex');
+        $(this).attr('aria-expanded', 'true');
     });
 
-    $('input[type="file"]').on('change', function(){
+    $('input[type="file"]').on('change', function() {
         const anyFileSelected = $('input[type="file"]').toArray().some(input => input.files.length > 0);
         $('#submit-button').toggle(anyFileSelected);
     });
-
-    // $('#file-input1').change(function() {
-    //     $('#submit-button').toggle(!!$(this).val());
-    // });
 });
 </script>
-
+@endpush

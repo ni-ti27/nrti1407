@@ -1,7 +1,7 @@
 {{-- ============================================================
-     Home Page (DBIM / GIGW 3.0), Option A layout
-     Styles: section 49 in public/css/dbim.css (existing variables only)
-     Order : notice / About (Linen, round photo left) / Online Services (white) / How it works (white)
+     Home Page (DBIM / GIGW 3.0), Blue colour group
+     Styles: section 49 (services, steps) + section 68 (headline bar, hero, info cards)
+     Order : moving headline / blue hero / info cards / Online Services / How it works
      Header and footer come from layouts.app (unchanged).
      ============================================================ --}}
 @extends('layouts.app')
@@ -18,56 +18,35 @@
     ];
 @endphp
 
-<div class="dbim-hm">
+<div class="dbim-hm dbim-hb">
 
-    {{-- 0. IMPORTANT NOTICE
-         Slow moving text with Pause / Play. Shows as normal static text when JS is off
-         or when the visitor has reduced motion turned on (WCAG 2.2.2, GIGW 3.0). --}}
-    <div class="dbim-hm-notice" id="dbimNotice" role="note">
-        <div class="dbim-hm-notice__inner">
-            <span class="dbim-hm-notice__icon" aria-hidden="true">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round" focusable="false">
-                    <circle cx="12" cy="12" r="10"/><path d="M12 7v6"/><path d="M12 17h.01"/>
-                </svg>
-            </span>
-            <strong class="dbim-hm-notice__label">Important:</strong>
-            <div class="dbim-hm-notice__viewport">
-                <p class="dbim-hm-notice__text" id="dbimNoticeText">
+    {{-- 0. MOVING HEADLINE
+         Slow moving text with Pause / Play. Static text when JS is off or when the visitor
+         has reduced motion turned on (WCAG 2.2.2, GIGW 3.0). --}}
+    <section class="dbim-hb-ticker" id="dbimTicker" aria-label="Important notice">
+        <div class="dbim-hb-ticker__inner">
+            <strong class="dbim-hb-ticker__label">Important</strong>
+            <div class="dbim-hb-ticker__viewport">
+                <p class="dbim-hb-ticker__text" id="dbimTickerText">
                     Please file RTI application/first appeal through this portal for Departments/Public
                     Authorities under the Goa State Government only. If filed wrongly, the application
                     would be returned, without a refund of amount.
                 </p>
             </div>
-            <button type="button" class="dbim-hm-notice__btn" id="dbimNoticeToggle"
+            <button type="button" class="dbim-hb-ticker__btn" id="dbimTickerToggle"
                     aria-label="Pause scrolling notice" hidden>Pause</button>
         </div>
-    </div>
+    </section>
 
-    {{-- 1. ABOUT THIS PORTAL (Linen band) ---------------------- --}}
-    <section class="dbim-hm-hero" aria-labelledby="homeHeading">
+    {{-- 1. HERO (blue) ----------------------------------------- --}}
+    <section class="dbim-hb-hero" aria-labelledby="homeHeading">
         <div class="dbim-hm-wrap">
-            <div class="dbim-hm-about">
+            <div class="dbim-hb-hero__grid">
 
-                {{-- Round photo + name, on the left --}}
-                <figure class="dbim-hm-person">
-                    <img src="{{ asset('images/CM_image.png') }}"
-                         alt="Dr. Pramod Sawant, Chief Minister of Goa"
-                         class="dbim-hm-person__photo"
-                         width="230" height="230">
-                    <figcaption class="dbim-hm-person__caption">
-                        <span class="dbim-hm-person__name">Dr. Pramod Sawant</span>
-                        <span>Chief Minister</span>
-                        <span>Government of Goa</span>
-                    </figcaption>
-                </figure>
+                <div class="dbim-hb-hero__body">
+                    <h1 id="homeHeading" class="dbim-hb-hero__title">About this Portal</h1>
 
-                {{-- Text, on the right --}}
-                <div class="dbim-hm-about__body">
-                    <h1 id="homeHeading" class="dbim-hm-heading">About this Portal</h1>
-
-                    <div class="dbim-hm-lead">
+                    <div class="dbim-hb-hero__lead">
                         <p>
                             This is a portal to file RTI application / first appeal / second appeal online
                             along with an eChallan payment gateway.
@@ -79,32 +58,51 @@
                         </p>
                     </div>
 
-                    <div class="dbim-hm-pair">
-                        <div>
-                            <h2 class="dbim-hm-subheading">Payment options</h2>
-                            <ul class="dbim-hm-chips">
-                                <li>Internet banking</li>
-                                <li>Debit / credit cards (Master, Visa)</li>
-                                <li>UPI</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h2 class="dbim-hm-subheading">Instructions</h2>
-                            <div class="dbim-hm-lead">
-                                <p>
-                                    Please read the instructions carefully while submitting your RTI application,
-                                    first appeal or second appeal.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="{{ $links['rti'] }}" class="dbim-hb-cta">
+                        File RTI application<span class="dbim-sr-only"> online</span>
+                    </a>
                 </div>
+
+                <figure class="dbim-hb-person">
+                    <img src="{{ asset('images/CM_image.png') }}"
+                         alt="Dr. Pramod Sawant, Chief Minister of Goa"
+                         class="dbim-hb-person__photo"
+                         width="220" height="220">
+                    <figcaption class="dbim-hb-person__caption">
+                        <span class="dbim-hb-person__name">Dr. Pramod Sawant</span>
+                        <span>Chief Minister</span>
+                        <span>Government of Goa</span>
+                    </figcaption>
+                </figure>
 
             </div>
         </div>
     </section>
 
-    {{-- 2. ONLINE SERVICES (white) ------------------------------ --}}
+    {{-- 2. PAYMENT OPTIONS + INSTRUCTIONS (light blue band, white cards) --}}
+    <section class="dbim-hb-info" aria-label="Payment options and instructions">
+        <div class="dbim-hm-wrap">
+            <div class="dbim-hb-info__grid">
+                <div class="dbim-hb-panel">
+                    <h2 class="dbim-hb-panel__title">Payment options</h2>
+                    <ul class="dbim-hm-chips">
+                        <li>Internet banking</li>
+                        <li>Debit / credit cards (Master, Visa)</li>
+                        <li>UPI</li>
+                    </ul>
+                </div>
+                <div class="dbim-hb-panel">
+                    <h2 class="dbim-hb-panel__title">Instructions</h2>
+                    <p>
+                        Please read the instructions carefully while submitting your RTI application,
+                        first appeal or second appeal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- 3. ONLINE SERVICES (white) ------------------------------ --}}
     <section class="dbim-hm-section" aria-labelledby="servicesHeading">
         <div class="dbim-hm-wrap">
             <h2 id="servicesHeading" class="dbim-hm-heading">Online Services</h2>
@@ -166,7 +164,7 @@
         </div>
     </section>
 
-    {{-- 3. HOW IT WORKS (white, light-blue step boxes) --------- --}}
+    {{-- 4. HOW IT WORKS (white, light-blue step boxes) --------- --}}
     <section class="dbim-hm-section dbim-hm-how" aria-labelledby="stepsHeading">
         <div class="dbim-hm-wrap">
             <h2 id="stepsHeading" class="dbim-hm-heading">How it works</h2>
@@ -215,9 +213,9 @@
 
 <script>
     (function () {
-        var box  = document.getElementById('dbimNotice');
-        var text = document.getElementById('dbimNoticeText');
-        var btn  = document.getElementById('dbimNoticeToggle');
+        var box  = document.getElementById('dbimTicker');
+        var text = document.getElementById('dbimTickerText');
+        var btn  = document.getElementById('dbimTickerToggle');
         if (!box || !text || !btn) { return; }
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
 

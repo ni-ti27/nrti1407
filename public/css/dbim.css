@@ -3012,7 +3012,7 @@ html.dbim-kbd .dbim-header__appsearch:focus-within {
   transition: background-color 0.15s, color 0.15s;
 }
 .dbim-header__nav .nav-link.active {
-  background: var(--dbim-azureish-white-bg);
+  /* background: var(--dbim-azureish-white-bg); */
   color: var(--dbim-key);
   font-weight: 700;
   border-bottom: 4px solid var(--dbim-key);
@@ -8484,4 +8484,1018 @@ fieldset.dbim-fa-field {
 }
 .dbim-fa-card .form-select.is-invalid {
   border-color: var(--dbim-error);
+}
+/* ============================================================
+   66. FORM NOTE ON LIGHT BLUE  (Feedback page: intro + required-fields line)
+   Lightest shade of the Blue colour group (--dbim-azureish-white-bg, #D2DFFF),
+   with the 6px Blue bar used by the other note boxes. Existing variables only.
+   APPEND AFTER section 65.
+
+   Contrast, light theme:
+     #150202 on #D2DFFF 15.4:1 (text) | #162F6A on #D2DFFF 9.6:1 (asterisk)
+     #214AAB bar on white 8.0:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-lo-required.dbim-lo-required--note {
+  padding: 1rem 1.25rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  line-height: 1.6;
+}
+/* red asterisk is only ~3.6:1 on #D2DFFF, so inside this box it uses the key colour;
+   the sentence already says the fields are required */
+.dbim-lo-required--note .dbim-required {
+  color: var(--dbim-key);
+  font-weight: 700;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-lo-required.dbim-lo-required--note {
+  background: var(--dbim-linen); /* #23232A */
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-lo-required.dbim-lo-required--note {
+    border: 2px solid CanvasText;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-lo-required.dbim-lo-required--note {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+/* ============================================================
+   67. SIDE SPACE + MEITY-STYLE HEADER SEARCH
+   APPEND AT THE VERY END of public/css/dbim.css (after section 66).
+   1) One side padding for header, nav, notice, footer and the page bands,
+      so everything starts on the same vertical line, as on meity.gov.in
+      (about 110px each side on a 1860px screen). It grows with the screen:
+      24px on phones, about 6% of the width on desktop, never more than 112px.
+      Same value everywhere: clamp(1.5rem, 5.9vw, 7rem).
+   2) Header search: rectangular box, thin grey outline, 2px navy line at the
+      bottom, magnifier button with a thin divider (MeitY look). Replaces the
+      rounded box of section 26.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #8E8E8E / #C6C6C6 box outline on white: decoration (the 2px navy line
+     #162F6A on white is 12.7:1 and marks the field edge)
+     #606060 placeholder on white 6.3:1 | #162F6A icon on white 12.7:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- 1. Side space ---- */
+.dbim-header .container,
+.dbim-header .container-fluid,
+.footerbox .container,
+.footerbox .container-fluid {
+  width: 100%;
+  max-width: none;
+  padding-right: clamp(1.5rem, 5.9vw, 7rem);
+  padding-left: clamp(1.5rem, 5.9vw, 7rem);
+}
+/* a container inside another one must not add the space twice */
+.dbim-header .container .container,
+.dbim-header .container-fluid .container,
+.dbim-header .container .container-fluid,
+.dbim-header .container-fluid .container-fluid,
+.footerbox .container .container,
+.footerbox .container-fluid .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+/* Notice and page bands use the same value (was 3rem) */
+.dbim-hm-wrap,
+.dbim-sd-wrap,
+.dbim-lg-wrap,
+.dbim-hp-wrap {
+  padding-right: clamp(1.5rem, 5.9vw, 7rem);
+  padding-left: clamp(1.5rem, 5.9vw, 7rem);
+}
+.dbim-hm-notice__inner,
+.dbim-hp-notice__inner,
+.dbim-lg-notice__inner {
+  padding-right: clamp(1.5rem, 5.9vw, 7rem);
+  padding-left: clamp(1.5rem, 5.9vw, 7rem);
+}
+/* Payment / Application pages keep their own wider space (section 62, .dbim-pv) */
+
+/* ---- 2. Header search: MeitY look ---- */
+.dbim-header__appsearch,
+.dbim-header__search {
+  max-width: 250px;
+  border: 1px solid var(--dbim-grey-01);
+  border-bottom: 2px solid var(--dbim-key); /* navy line under the box */
+  border-radius: 0;
+  overflow: visible;
+  background: var(--dbim-inclusive-white);
+}
+.dbim-header__appsearch input,
+.dbim-header__search input {
+  padding: 8px 10px; /* undo the pill padding of section 26 */
+  font-size: var(--dbim-fs-p2);
+}
+.dbim-header__appsearch button,
+.dbim-header__search button {
+  width: 44px; /* touch target width */
+  padding: 0;
+  border-left: 1px solid var(--dbim-grey-01); /* thin divider before the icon */
+  color: var(--dbim-key);
+}
+.dbim-header__appsearch button svg,
+.dbim-header__search button svg {
+  width: 18px;
+  height: 18px;
+}
+/* mouse: no fill, no ring (only the border colour calms down);
+   keyboard users keep the ring from section 3 (html.dbim-kbd) */
+.dbim-header__appsearch:focus-within,
+.dbim-header__search:focus-within {
+  border-color: var(--dbim-grey-01);
+  border-bottom-color: var(--dbim-key);
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-header__appsearch,
+[data-theme="dark"] .dbim-header__search {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__appsearch button,
+[data-theme="dark"] .dbim-header__search button {
+  border-left-color: var(--dbim-key);
+}
+
+/* ============================================================
+   68. HOME PAGE, BLUE COLOUR GROUP  (resources/views/home.blade.php)
+   APPEND AT THE VERY END of public/css/dbim.css (after section 67).
+   Adds: header side-space fix, moving headline bar, blue hero, info cards.
+   Services and steps reuse section 49 (.dbim-hm-*). The old notice rules
+   (.dbim-hm-notice*) and .dbim-hm-hero / .dbim-hm-person* are no longer used by
+   the home page and can be deleted.
+   Existing variables only. Gradient = two shades of the Blue group (DBIM Figure 2).
+
+   Contrast, light theme:
+     #FFFFFF on #162F6A 12.8:1 | #FFFFFF on #214AAB 8.0:1 (hero text on the gradient)
+     #162F6A on #D2DFFF 9.6:1 (label chip, button text on white 12.7:1)
+     #D2DFFF on #162F6A 9.6:1 (focus ring, hero heading bar)
+     #150202 on #FFFFFF 20:1 (card text) | #162F6A on #FFFFFF 12.7:1 (card titles)
+     #214AAB bar on #D2DFFF 6.0:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1 | #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- 1. Side space: Bootstrap's px-lg-5 is !important, so this must be too.
+        Header, nav and footer now start on the same line as the page content. ---- */
+.dbim-header .container,
+.dbim-header .container-fluid,
+.footerbox .container,
+.footerbox .container-fluid {
+  max-width: none;
+  padding-right: clamp(1.5rem, 5.9vw, 7rem) !important;
+  padding-left: clamp(1.5rem, 5.9vw, 7rem) !important;
+}
+/* a container inside another one must not add the space twice */
+.dbim-header .container .container,
+.dbim-header .container .container-fluid,
+.dbim-header .container-fluid .container,
+.dbim-header .container-fluid .container-fluid,
+.footerbox .container .container,
+.footerbox .container-fluid .container {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* ---- 2. Moving headline bar ---- */
+.dbim-hb-ticker {
+  background: var(--dbim-wintergreen-dream); /* #162F6A */
+  border-bottom: 4px solid var(--dbim-columbia-blue);
+  color: #fff;
+}
+.dbim-hb-ticker__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.625rem clamp(1.5rem, 5.9vw, 7rem);
+}
+.dbim-hb-ticker__label {
+  flex: 0 0 auto;
+  padding: 0.25rem 0.875rem;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-radius: 2rem;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.dbim-hb-ticker__viewport {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow: hidden;
+}
+.dbim-hb-ticker__text {
+  margin: 0;
+  color: #fff; /* 12.8:1 on #162F6A */
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.6;
+}
+.dbim-hb-ticker__btn {
+  flex: 0 0 auto;
+  min-width: 80px;
+  min-height: 44px; /* touch target */
+  padding: 4px 16px;
+  background: var(--dbim-inclusive-white);
+  border: 2px solid var(--dbim-inclusive-white);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream); /* 12.7:1 on white */
+  font-family: var(--dbim-font-family);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  cursor: pointer;
+}
+.dbim-hb-ticker__btn:hover {
+  background: var(--dbim-azureish-white-bg);
+  border-color: var(--dbim-azureish-white-bg);
+}
+.dbim-hb-ticker__btn:focus-visible {
+  outline: 3px solid var(--dbim-azureish-white-bg); /* 9.6:1 on #162F6A */
+  outline-offset: 2px;
+}
+
+/* Moving state: added by the script only when motion is allowed */
+.dbim-hb-ticker.is-moving .dbim-hb-ticker__viewport {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 20px,
+    #000 calc(100% - 20px),
+    transparent 100%
+  );
+}
+.dbim-hb-ticker.is-moving .dbim-hb-ticker__text {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  animation: dbim-hb-marquee 35s linear infinite; /* the script sets the real duration */
+}
+.dbim-hb-ticker.is-paused .dbim-hb-ticker__text,
+.dbim-hb-ticker__viewport:hover .dbim-hb-ticker__text {
+  animation-play-state: paused; /* pause on hover too (WCAG 2.2.2) */
+}
+@keyframes dbim-hb-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dbim-hb-ticker.is-moving .dbim-hb-ticker__text {
+    display: block;
+    padding-left: 0;
+    white-space: normal;
+    animation: none;
+  }
+}
+
+/* ---- 3. Hero ---- */
+.dbim-hb-hero {
+  padding: 3.5rem 0;
+  background: linear-gradient(
+    90deg,
+    var(--dbim-wintergreen-dream) 0%,
+    var(--dbim-powder-blue) 100%
+  );
+  color: #fff;
+}
+@media (max-width: 575.98px) {
+  .dbim-hb-hero {
+    padding: 2.25rem 0;
+  }
+}
+.dbim-hb-hero__grid {
+  display: grid;
+  gap: 2.5rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 992px) {
+  .dbim-hb-hero__grid {
+    grid-template-columns: minmax(0, 1fr) 17.5rem;
+    gap: 4rem;
+  }
+}
+.dbim-hb-hero__title {
+  margin: 0 0 1.25rem;
+  padding-left: 1rem;
+  border-left: 6px solid var(--dbim-azureish-white-bg); /* 9.6:1 on #162F6A */
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+@media (min-width: 768px) {
+  .dbim-hb-hero__title {
+    font-size: 2.25rem;
+  }
+}
+.dbim-hb-hero__lead p {
+  max-width: 62ch;
+  margin: 0 0 1rem;
+  color: #fff;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.7;
+}
+
+/* Call-to-action: white button, navy text (12.7:1) */
+.dbim-hb-cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px; /* touch target */
+  margin-top: 0.5rem;
+  padding: 0 1.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 2px solid var(--dbim-inclusive-white);
+  border-radius: 4px;
+  color: var(--dbim-wintergreen-dream);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+.dbim-hb-cta::after {
+  content: "\2192"/ ""; /* decorative arrow, empty alt text for screen readers */
+  margin-left: 0.5rem;
+}
+.dbim-hb-cta:hover {
+  background: var(--dbim-azureish-white-bg);
+  border-color: var(--dbim-azureish-white-bg);
+  color: var(--dbim-wintergreen-dream);
+  text-decoration: none;
+}
+.dbim-hb-cta:focus-visible {
+  outline: 3px solid var(--dbim-azureish-white-bg);
+  outline-offset: 3px;
+}
+
+/* Round photo + name */
+.dbim-hb-person {
+  margin: 0;
+  text-align: center;
+}
+.dbim-hb-person__photo {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto 0.875rem;
+  border: 6px solid #fff; /* photo has a transparent background: white in every theme */
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+.dbim-hb-person__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #fff;
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-hb-person__name {
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+}
+
+/* ---- 4. Info cards on a light-blue band ---- */
+.dbim-hb-info {
+  padding: 2.5rem 0;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+}
+.dbim-hb-info__grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 768px) {
+  .dbim-hb-info__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dbim-hb-panel {
+  padding: 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-azureish-white);
+  border-top: 5px solid var(--dbim-powder-blue); /* 6.0:1 on #D2DFFF */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+}
+.dbim-hb-panel__title {
+  margin: 0 0 1rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-hb-panel p {
+  max-width: 60ch;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* ============ High-contrast theme (yellow on near-black) ============ */
+[data-theme="dark"] .dbim-hb-ticker {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__label {
+  background: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hb-ticker__btn {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__btn:hover {
+  background: var(--dbim-linen);
+}
+[data-theme="dark"] .dbim-hb-ticker__btn:focus-visible,
+[data-theme="dark"] .dbim-hb-cta:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-hero {
+  background: var(--dbim-linen);
+  border-bottom: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-hero__title {
+  border-left-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-hero__lead p,
+[data-theme="dark"] .dbim-hb-person__caption {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-person__photo {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-cta,
+[data-theme="dark"] .dbim-hb-cta:hover {
+  background: var(--dbim-key);
+  border-color: var(--dbim-key);
+  color: #000;
+}
+[data-theme="dark"] .dbim-hb-cta:hover {
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-hb-info {
+  background: var(--dbim-linen);
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-panel {
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-panel__title {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hb-hero,
+  .dbim-hb-ticker {
+    border-bottom: 2px solid CanvasText;
+  }
+  .dbim-hb-panel {
+    border: 2px solid CanvasText;
+  }
+  .dbim-hb-cta,
+  .dbim-hb-ticker__btn {
+    border: 2px solid ButtonText;
+  }
+  .dbim-hb-cta:focus-visible,
+  .dbim-hb-ticker__btn:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain backgrounds, no Pause button ---- */
+@media print {
+  .dbim-hb-hero,
+  .dbim-hb-ticker,
+  .dbim-hb-info {
+    background: none;
+    color: #000;
+  }
+  .dbim-hb-hero__title,
+  .dbim-hb-hero__lead p,
+  .dbim-hb-person__caption,
+  .dbim-hb-ticker__text {
+    color: #000;
+  }
+  .dbim-hb-ticker__btn {
+    display: none;
+  }
+}
+/* ============================================================
+   69. HOME HERO BACK TO GREY  (About this Portal)
+   APPEND AFTER section 68.
+   Linen (#EBEAEA) band as before; text in the Blue group key colour;
+   the call-to-action turns into the solid blue button used on the service cards.
+   The high-contrast rules of section 68 still apply (they are more specific).
+   Existing variables only. No gradients.
+
+   Contrast, light theme:
+     #162F6A on #EBEAEA 10.7:1 (heading, lead text)
+     #150202 on #EBEAEA 17.2:1 (name, role)
+     #FFFFFF on #214AAB 8.0:1 (button) | #FFFFFF on #162F6A 12.8:1 (button hover)
+     #214AAB bar on #EBEAEA 6.7:1
+   ============================================================ */
+.dbim-hb-hero {
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-bottom: 1px solid var(--dbim-grey-01);
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-hb-hero__title {
+  border-left-color: var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  color: var(--dbim-key); /* 10.7:1 on Linen */
+}
+.dbim-hb-hero__lead p {
+  color: var(--dbim-key);
+  font-weight: 600;
+}
+
+/* Call-to-action: solid blue, same as .dbim-hm-btn */
+.dbim-hb-cta {
+  background: var(--dbim-powder-blue);
+  border-color: var(--dbim-powder-blue);
+  color: #fff;
+}
+.dbim-hb-cta:hover {
+  background: var(--dbim-wintergreen-dream);
+  border-color: var(--dbim-wintergreen-dream);
+  color: #fff;
+}
+.dbim-hb-cta:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring); /* 8.0:1 on Linen */
+  outline-offset: 3px;
+  color: #fff;
+}
+
+/* Photo caption */
+.dbim-hb-person__caption {
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-hb-person__name {
+  color: var(--dbim-key);
+}
+
+/* High-contrast theme: dark panel with yellow text (section 68 rules) */
+[data-theme="dark"] .dbim-hb-person__name {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-cta:focus-visible {
+  outline-color: var(--dbim-key);
+  color: #000;
+}
+
+/* Print */
+@media print {
+  .dbim-hb-hero {
+    background: none;
+  }
+  .dbim-hb-cta {
+    display: none;
+  }
+}
+/* ============================================================
+   70. MOVING HEADLINE: SUBTLE LOOK
+   APPEND AFTER section 69.
+   Replaces the dark navy bar of section 68 with the lightest shade of the
+   Blue colour group (#D2DFFF), thin lines instead of the 4px bar, navy text,
+   a small navy "Important" chip and a quiet outline Pause button.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #162F6A on #D2DFFF 9.6:1 (headline text)
+     #FFFFFF on #162F6A 12.8:1 (chip)
+     #162F6A on #FFFFFF 12.7:1 (Pause button)
+     #214AAB (focus ring) on #D2DFFF 6.0:1
+   The high-contrast rules of section 68 still apply (they are more specific).
+   ============================================================ */
+.dbim-hb-ticker {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-top: 0;
+  border-bottom: 1px solid var(--dbim-azureish-white); /* #A3BBF3, thin line */
+  color: var(--dbim-wintergreen-dream);
+}
+.dbim-hb-ticker__inner {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Chip: small navy pill, white text */
+.dbim-hb-ticker__label {
+  padding: 0.25rem 0.75rem;
+  background: var(--dbim-wintergreen-dream); /* #162F6A */
+  color: #fff; /* 12.8:1 */
+  font-size: var(--dbim-fs-small);
+  letter-spacing: 0.06em;
+}
+
+/* Text: navy on light blue, regular weight so it is easy on the eyes */
+.dbim-hb-ticker__text {
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 500;
+}
+
+/* Pause / Play: white outline button, smaller than before (still 44px high) */
+.dbim-hb-ticker__btn {
+  min-width: 72px;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-powder-blue);
+  color: var(--dbim-wintergreen-dream); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-small);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.dbim-hb-ticker__btn:hover {
+  background: var(--dbim-azureish-white);
+  border-color: var(--dbim-powder-blue);
+}
+.dbim-hb-ticker__btn:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring); /* 6.0:1 on #D2DFFF */
+  outline-offset: 2px;
+}
+
+/* Soft fade at both ends of the moving text, matched to the new background */
+.dbim-hb-ticker.is-moving .dbim-hb-ticker__viewport {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 32px,
+    #000 calc(100% - 32px),
+    transparent 100%
+  );
+}
+
+/* ---- High-contrast theme: dark panel, yellow line (the rest is in section 68) ---- */
+[data-theme="dark"] .dbim-hb-ticker {
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__btn {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hb-ticker {
+    border-bottom: 1px solid CanvasText;
+  }
+  .dbim-hb-ticker__label {
+    border: 1px solid CanvasText;
+  }
+}
+/* ============================================================
+   71. HOME HERO: PHOTO ON THE LEFT
+   APPEND AFTER section 70.
+   Photo column first (17.5rem), text column after it, same gap as before.
+   Below 992px the photo sits above the text. The photo has no links or
+   buttons, so the keyboard order is not affected; screen readers still read
+   the heading first, which is the better order for them.
+   Existing variables only.
+   ============================================================ */
+@media (min-width: 992px) {
+  .dbim-hb-hero__grid {
+    grid-template-columns: 17.5rem minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+.dbim-hb-person {
+  order: -1; /* visually first, in the grid and when stacked on small screens */
+}
+/* ============================================================
+   72. MOVING HEADLINE: THIN STRIP (Directorate of Panchayats look)
+   APPEND AFTER section 71.
+   Compact light-blue strip under the navigation: 1px navy line on top,
+   plain bold uppercase label (no pill) with a thin divider, small moving text,
+   small Pause button. Replaces the look of sections 68 and 70 for the ticker.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #162F6A on #D2DFFF 9.6:1 (label, text)
+     #162F6A on #FFFFFF 12.7:1 (Pause button)
+     #214AAB (focus ring) on #D2DFFF 6.0:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-hb-ticker {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-top: 1px solid var(--dbim-key); /* navy line, as under the menu on the reference */
+  border-bottom: 0;
+  color: var(--dbim-key);
+}
+.dbim-hb-ticker__inner {
+  flex-wrap: nowrap; /* one slim line on desktop */
+  gap: 0.75rem;
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+/* Label: plain bold uppercase text with a thin divider after it */
+.dbim-hb-ticker__label {
+  padding: 0 0.875rem 0 0;
+  background: none;
+  border-right: 1px solid var(--dbim-azureish-white); /* #A3BBF3 */
+  border-radius: 0;
+  color: var(--dbim-key); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* Moving text: small and calm */
+.dbim-hb-ticker__text {
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Pause / Play: small outline button (32px high, above the 24px WCAG 2.2 minimum) */
+.dbim-hb-ticker__btn {
+  min-width: 64px;
+  min-height: 32px;
+  padding: 0 0.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Phones: label above, text below, so nothing is squeezed */
+@media (max-width: 575.98px) {
+  .dbim-hb-ticker__inner {
+    flex-wrap: wrap;
+  }
+  .dbim-hb-ticker__label {
+    padding-right: 0;
+    border-right: 0;
+  }
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-hb-ticker {
+  background: var(--dbim-linen); /* #23232A */
+  border-top-color: var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__label {
+  background: none;
+  border-right-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-hb-ticker__text {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-hb-ticker {
+    border-top: 1px solid CanvasText;
+    border-bottom: 1px solid CanvasText;
+  }
+  .dbim-hb-ticker__label {
+    border: 0;
+    border-right: 1px solid CanvasText;
+  }
+}
+/* ============================================================
+   73. HOME HERO: LEAD TEXT IN EARTHY BROWN
+   APPEND AFTER section 72.
+   The two intro paragraphs ("This is a portal to file..." and "Through this
+   portal...") use Deep Earthy Brown, the DBIM text colour for light backgrounds.
+   The heading, bar and button stay in the Blue group.
+   Existing variables only.
+
+   Contrast, light theme:
+     #150202 on #EBEAEA 17.2:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #23232A 14.5:1 (the variable turns yellow, so no extra rule is needed)
+   ============================================================ */
+.dbim-hb-hero__lead p {
+  color: var(--dbim-deep-earthy-brown); /* #150202 */
+  font-weight: 500; /* a little lighter than before: dark text reads heavier */
+}
+
+/* ============================================================
+   74. LOGGED-IN STRIP: SUBTLE, PROFESSIONAL
+   APPEND AFTER section 73.
+   Replaces the full light-blue bar with a quiet white strip: thin blue line on
+   top, small round user icon, name | mobile in navy, Logout as a small outline
+   button. The light-blue bar was stacking against the moving headline bar
+   (also #D2DFFF) and looked heavy.
+   Existing variables only (the icon image is a data URI, like the cursor
+   images in the accessibility section).
+
+   Contrast, light theme:
+     #162F6A on #FFFFFF 12.7:1 (name, Logout) | #162F6A on #D2DFFF 9.6:1 (icon, Logout hover)
+     #214AAB (Logout outline, focus ring) on white 8.0:1
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-header__user {
+  background: var(--dbim-inclusive-white);
+  border-top: 1px solid var(--dbim-azureish-white); /* #A3BBF3, thin line under the menu */
+  font-size: var(--dbim-fs-p2);
+}
+
+/* Name | mobile and Logout: one row, aligned to the right, no divider line */
+.dbim-header__user a,
+.dbim-header__user span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 40px;
+  padding: 0.25rem 0;
+  border-left: 0; /* removes the divider of section 26 */
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.dbim-header__user a + a,
+.dbim-header__user a + span,
+.dbim-header__user span + a {
+  margin-left: 1rem;
+  border-left: 0;
+}
+.dbim-header__user a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.dbim-header__user a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring); /* 8.0:1 on white */
+  outline-offset: 2px;
+}
+
+/* Small round user icon before the name (decorative) */
+.dbim-header__user a:first-child::before,
+.dbim-header__user span:first-child::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23162F6A'%3E%3Cpath d='M12 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm0 2c-3.1 0-7 1.5-7 4.2V19h14v-.8c0-2.7-3.9-4.2-7-4.2z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px 18px;
+}
+
+/* Logout: small outline button, same family as the other soft buttons */
+.dbim-header__user a:last-child:not(:first-child) {
+  min-height: 32px;
+  padding: 0 0.875rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-powder-blue);
+  border-radius: 4px;
+  font-size: var(--dbim-fs-small);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.dbim-header__user a:last-child:not(:first-child):hover {
+  background: var(--dbim-azureish-white-bg);
+  text-decoration: none;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-header__user {
+  background: var(--dbim-inclusive-white);
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__user a,
+[data-theme="dark"] .dbim-header__user span {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__user a:first-child::before,
+[data-theme="dark"] .dbim-header__user span:first-child::before {
+  background-color: var(--dbim-linen);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFFF00'%3E%3Cpath d='M12 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm0 2c-3.1 0-7 1.5-7 4.2V19h14v-.8c0-2.7-3.9-4.2-7-4.2z'/%3E%3C/svg%3E");
+  box-shadow: inset 0 0 0 1px var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__user a:last-child:not(:first-child) {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__user a:last-child:not(:first-child):hover {
+  background: var(--dbim-linen);
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-header__user a:focus-visible {
+  outline-color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-header__user a:last-child:not(:first-child) {
+    border: 1px solid ButtonText;
+  }
+  .dbim-header__user a:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Small screens: name on its own line, Logout beside it ---- */
+@media (max-width: 575.98px) {
+  .dbim-header__user a + a {
+    margin-left: 0.75rem;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-header__user {
+    display: none;
+  }
+}
+/* ============================================================
+   75. LOGOUT: NO BORDER
+   APPEND AFTER section 74.
+   Logout becomes a plain navy link, in the same style as the name, with a
+   light-blue hover block instead of the outline. The keyboard focus ring
+   stays, so the link is still visible when tabbed to (GIGW).
+   Contrast: #162F6A on #FFFFFF 12.7:1 | on #D2DFFF 9.6:1 (hover)
+   ============================================================ */
+.dbim-header__user a:last-child:not(:first-child) {
+  padding: 0 0.75rem;
+  background: transparent;
+  border: 0;
+}
+.dbim-header__user a:last-child:not(:first-child):hover {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  text-decoration: none;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-header__user a:last-child:not(:first-child) {
+  background: transparent;
+  border: 0;
+}
+[data-theme="dark"] .dbim-header__user a:last-child:not(:first-child):hover {
+  background: var(--dbim-linen);
+  text-decoration: underline;
+}
+
+/* ---- Windows forced colours: no border, so underline marks it as a link ---- */
+@media (forced-colors: active) {
+  .dbim-header__user a:last-child:not(:first-child) {
+    border: 0;
+    text-decoration: underline;
+  }
 }

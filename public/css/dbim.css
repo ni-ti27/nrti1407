@@ -8807,8 +8807,8 @@ fieldset.dbim-fa-field {
 }
 .dbim-hb-hero__title {
   margin: 0 0 1.25rem;
-  padding-left: 1rem;
-  border-left: 6px solid var(--dbim-azureish-white-bg); /* 9.6:1 on #162F6A */
+ /* padding-left: 1rem;
+  border-left: 6px solid var(--dbim-azureish-white-bg); /* 9.6:1 on #162F6A */*/
   color: #fff;
   font-size: 1.75rem;
   font-weight: 700;
@@ -8955,7 +8955,7 @@ fieldset.dbim-fa-field {
   color: var(--dbim-key);
 }
 [data-theme="dark"] .dbim-hb-hero__title {
-  border-left-color: var(--dbim-key);
+  /*border-left-color: var(--dbim-key);*/
   color: var(--dbim-key);
 }
 [data-theme="dark"] .dbim-hb-hero__lead p,
@@ -9043,7 +9043,7 @@ fieldset.dbim-fa-field {
   color: var(--dbim-deep-earthy-brown);
 }
 .dbim-hb-hero__title {
-  border-left-color: var(--dbim-powder-blue); /* 6.7:1 on Linen */
+  /* border-left-color: var(--dbim-powder-blue); /* 6.7:1 on Linen */
   color: var(--dbim-key); /* 10.7:1 on Linen */
 }
 .dbim-hb-hero__lead p {

@@ -19,23 +19,10 @@
 
       <div class="dbim-sd-card">
 
-        <h1 class="dbim-sd-heading dbim-nr-head">{{ $category }}</h1>
+        <h1 class="dbim-sd-heading">{{ $category }}</h1>
 
-        {{-- ===== Office / username / role strip ===== --}}
-        <dl class="dbim-nr-strip">
-            <div>
-                <dt>Office:</dt>
-                <dd>{{ session('officeName') }}</dd>
-            </div>
-            <div>
-                <dt>Username:</dt>
-                <dd>{{ session('username') }}</dd>
-            </div>
-            <div>
-                <dt>Role:</dt>
-                <dd>{{ session('role_name') }}</dd>
-            </div>
-        </dl>
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
 
         {{-- ===== Search (submits to the page you are on) ===== --}}
         <form method="GET" action="{{ request()->url() }}" role="search"

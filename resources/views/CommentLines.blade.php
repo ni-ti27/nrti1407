@@ -17,23 +17,10 @@
 
       <div class="dbim-sd-card">
 
-        <h1 class="dbim-sd-heading dbim-nr-head">View Comments / Reply</h1>
+        <h1 class="dbim-sd-heading">View Comments / Reply</h1>
 
-        {{-- ===== Office / username / role strip ===== --}}
-        <dl class="dbim-nr-strip">
-            <div>
-                <dt>Office:</dt>
-                <dd>{{ session('officeName') }}</dd>
-            </div>
-            <div>
-                <dt>Username:</dt>
-                <dd>{{ session('username') }}</dd>
-            </div>
-            <div>
-                <dt>Role:</dt>
-                <dd>{{ session('role_name') }}</dd>
-            </div>
-        </dl>
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
 
         {{-- ===== Comments table ===== --}}
         <section aria-labelledby="commentsHeading">

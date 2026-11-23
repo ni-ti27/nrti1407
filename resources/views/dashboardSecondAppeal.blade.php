@@ -3,6 +3,11 @@
      Uses layouts/app.blade.php for <head>, header, <main>, footer.
      Pagination: resources/views/pagination.blade.php
      No inline styles, no inline event handlers.
+     Look: same as the Officer Application list (Layout B: grey band + one white card,
+     title inside the card, light-blue table header, status pill).
+     Styles: dbim.css sections 50, 76, 79, 80 and 82.
+     ONLY THE MARKUP AND CLASSES CHANGED: every variable, condition, route, column
+     and the pagination call is the same as before.
      ============================================================ --}}
 @extends('layouts.app')
 
@@ -20,38 +25,35 @@
 
     $isClosed = $req_type == '{closed_SA}';
     $isAdmin  = session('role') == 1;
+
+    // columns in the table, for the "No Data Present" row
+    $colCount = 6 + ($isAdmin ? 1 : 0) + ($isClosed ? 1 : 0);
 @endphp
-<div class="container px-3 px-lg-5 py-4">
+<div class="dbim-sd dbim-nr-page">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
+      <div class="dbim-sd-card">
 
-    <h1 class="h2 mb-4">{{ $pageTitle }}</h1>
-
-    {{-- ===== Office / user details ===== --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="h5 text-center mb-3">{{ session('officeName') }}</h2>
-            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                <p class="fs-6 fw-bold mb-0">Username: <span class="fw-normal">{{ $userDetails['name'] }}</span></p>
-                <p class="fs-6 fw-bold mb-0">Role: <span class="fw-normal">{{ $userDetails['role_name'] }}</span></p>
-            </div>
+        <div class="dbim-nr-head">
+            <h1 class="dbim-sd-heading">{{ $pageTitle }}</h1>
         </div>
-    </div>
 
-    {{-- ===== Flash messages ===== --}}
-    @include('partials.flash-messages')
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
 
-    {{-- ===== Requests table ===== --}}
-    <section aria-labelledby="requestsHeading">
-        <h2 id="requestsHeading" class="visually-hidden">{{ $pageTitle }} list</h2>
+        {{-- ===== Flash messages ===== --}}
+        @include('partials.flash-messages')
 
-        @if($secondAppealData->count() == 0)
-            <div class="alert alert-info" role="status">No Data Present</div>
-        @else
-            <div class="table-responsive" role="region" tabindex="0" aria-labelledby="requestsHeading">
-                <table class="table table-striped table-bordered align-middle">
+        {{-- ===== Requests table ===== --}}
+        <section aria-labelledby="requestsHeading">
+            <h2 id="requestsHeading" class="visually-hidden">{{ $pageTitle }} list</h2>
+
+            <div class="dbim-sd-scroll" role="region" tabindex="0" aria-labelledby="requestsHeading">
+                <table class="dbim-sd-table dbim-nr-table">
                     <caption class="visually-hidden">{{ $pageTitle }}</caption>
-                    <thead class="table-light">
+                    <thead>
                         <tr>
-                            <th scope="col">Sr. No</th>
+                            <th scope="col" class="dbim-nr-col-sr">Sr. No</th>
                             <th scope="col">Registration Number</th>
                             <th scope="col">Name</th>
                             <th scope="col">e-Filing Date</th>
@@ -70,6 +72,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @if($secondAppealData->count() == 0)
+                            <tr>
+                                <td colspan="{{ $colCount }}" class="dbim-nr-none">No Data Present</td>
+                            </tr>
+                        @endif
                         @php
                             $serialNumber = $secondAppealData->firstItem();
                         @endphp
@@ -86,25 +93,31 @@
                                     <a href="{{ route('detailedSaRequest', ['id' => $request->id]) }}">{{ $request->sa_reg_no }}</a>
                                 </td>
                                 <td>{{ $request->name }}</td>
-                                <td>{{ $request->created_at->format('d-m-Y H:i') }}</td>
-                                <td>{{ $daysPassed }}</td>
+                                <td class="dbim-nr-num">{{ $request->created_at->format('d-m-Y H:i') }}</td>
+                                <td class="dbim-nr-num">{{ $daysPassed }}</td>
                                 @if($isAdmin)
                                     <td>{{ $request->username ?? '' }}</td>
                                 @endif
                                 @if ($isClosed)
-                                    <td>{{ $request->updated_at->format('d-m-Y H:i') }}</td>
+                                    <td class="dbim-nr-num">{{ $request->updated_at->format('d-m-Y H:i') }}</td>
                                 @endif
-                                <td>{{ $request->status }}</td>
+                                <td><span class="dbim-nr-status">{{ $request->status }}</span></td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-            {{ $secondAppealData->onEachSide(1)
-                                ->links('Pagination', ['label' => $pageTitle . ' pages']) }}
-        @endif
-    </section>
+            @if($secondAppealData->count() > 0)
+                <div class="dbim-pv-pager">
+                    {{ $secondAppealData->onEachSide(1)
+                                        ->links('Pagination', ['label' => $pageTitle . ' pages']) }}
+                </div>
+            @endif
+        </section>
 
+      </div>
+    </div>
+  </div>
 </div>
 @endsection

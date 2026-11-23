@@ -38,20 +38,9 @@
         {{-- ============ Title + department / username / role strip ============ --}}
         <h1 class="dbim-rq-title">{{ $pageTitle }}</h1>
 
-        <dl class="dbim-rq-strip">
-            <div>
-                <dt>Department:</dt>
-                <dd>{{ $deptDetails }}</dd>
-            </div>
-            <div>
-                <dt>Username:</dt>
-                <dd>{{ $userDetails['name'] }}</dd>
-            </div>
-            <div>
-                <dt>Role:</dt>
-                <dd>{{ $userDetails['role_name'] }}</dd>
-            </div>
-        </dl>
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
+
 
         {{-- ============ Public Authority Details ============ --}}
         <section class="dbim-rq-sec" aria-labelledby="rqAuthority">

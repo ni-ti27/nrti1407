@@ -1,7 +1,8 @@
 {{-- ============================================================
      Officer: View Notices (DBIM / GIGW 3.0, keyboard + screen reader friendly)
-     Uses layouts/app.blade.php for <head>, header, <main>, footer.
+     One card on the grey band (.dbim-sd frame).
      Pagination: resources/views/pagination.blade.php
+     Styles: dbim.css sections 50, 58, 79, 84, 85.
      No inline styles, no inline event handlers.
      ============================================================ --}}
 @extends('layouts.app')
@@ -9,34 +10,27 @@
 @section('title', 'View Notices | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container px-3 px-lg-5 py-4">
+<div class="dbim-sd">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
 
-    <h1 class="h2 mb-4">View Notices</h1>
+      @include('partials.flash-messages')
 
-    {{-- ===== User details ===== --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between align-items-center">
-                <p class="fs-6 fw-bold mb-0">Username: <span class="fw-normal">{{ session('username') }}</span></p>
-                <p class="fs-6 fw-bold mb-0">Role: <span class="fw-normal">{{ session('role_name') }}</span></p>
-            </div>
-        </div>
-    </div>
+      <div class="dbim-sd-card">
 
-    {{-- ===== Flash messages ===== --}}
-    @include('partials.flash-messages')
+        <h1 class="dbim-sd-heading">View Notices</h1>
 
-    {{-- ===== Notices table ===== --}}
-    <section aria-labelledby="noticesHeading">
-        <h2 id="noticesHeading" class="visually-hidden">Notices list</h2>
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
 
-        @if($requestLines->count() == 0)
-            <div class="alert alert-info" role="status">No Data Present</div>
-        @else
-            <div class="table-responsive" role="region" tabindex="0" aria-labelledby="noticesHeading">
-                <table class="table table-striped table-bordered align-middle">
+        {{-- ===== Notices table ===== --}}
+        <section aria-labelledby="noticesHeading">
+            <h2 id="noticesHeading" class="visually-hidden">Notices list</h2>
+
+            <div class="dbim-sd-scroll" role="region" tabindex="0" aria-labelledby="noticesHeading">
+                <table class="dbim-sd-table dbim-hl-table">
                     <caption class="visually-hidden">Notices</caption>
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th scope="col">Sr. No</th>
                             <th scope="col">Registration Number</th>
@@ -50,7 +44,7 @@
                         @php
                             $serialNumber = $requestLines->firstItem();
                         @endphp
-                        @foreach($requestLines as $request)
+                        @forelse($requestLines as $request)
                             <tr>
                                 <td>{{ $serialNumber++ }}</td>
                                 <td>{{ $request->sa_reg_no }}</td>
@@ -67,15 +61,26 @@
                                 </td>
                                 <td>{{ $request->status }}</td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="6" class="dbim-nr-none">No Data Present</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
 
-            {{ $requestLines->onEachSide(1)
-                            ->links('Pagination', ['label' => 'Notices pages']) }}
-        @endif
-    </section>
+            @if($requestLines->count() > 0)
+                <div class="mt-4">
+                    {{ $requestLines->onEachSide(1)
+                                    ->links('Pagination', ['label' => 'Notices pages']) }}
+                </div>
+            @endif
+        </section>
 
-</div>
+      </div>{{-- .dbim-sd-card --}}
+
+    </div>{{-- .dbim-sd-wrap --}}
+  </div>{{-- .dbim-sd-section --}}
+</div>{{-- .dbim-sd --}}
 @endsection

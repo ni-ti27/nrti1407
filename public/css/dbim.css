@@ -5641,11 +5641,11 @@ body:has(.dbim-sd) #app > main {
   line-height: 1.25;
   overflow-wrap: anywhere;
 }
-@media (min-width: 768px) {
+/*@media (min-width: 768px) {
   .dbim-sd-heading {
-    font-size: 1.875rem; /* 30px */
+    font-size: 1.875rem;
   }
-}
+}*/
 
 /* ---- Search form ---- */
 .dbim-sd-label {
@@ -10180,5 +10180,924 @@ fieldset.dbim-fa-field {
   }
   .dbim-ar-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================
+   87. HOME PAGE  (resources/views/home.blade.php)
+   ONE self-contained section (replaces the old 87 and 88).
+   Every class starts with .dbim-home. Existing variables only.
+
+   Bands, top to bottom:
+     announcements (grey) / About (Linen) / Payment + Instructions (white)
+     / Online Services (Linen, one white panel with rows) / How it works (white)
+
+   Contrast, light theme:
+     #150202 on #C6C6C6 ~11:1 | #162F6A on #C6C6C6 ~7.7:1
+     #162F6A on #EBEAEA 10.7:1 | #150202 on #EBEAEA 17.2:1
+     #162F6A on #FFFFFF 12.7:1 | #150202 on #FFFFFF 20:1
+     #162F6A on #D2DFFF 9.6:1 (button hover, icon tiles) | #FFFFFF on #214AAB 8.0:1
+     #214AAB on #FFFFFF 8.0:1 (focus ring)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1 | #000 on #FFFF00 19.6:1
+   ============================================================ */
+
+/* ---- Page frame ---- */
+body:has(.dbim-home) {
+  background-color: var(--dbim-inclusive-white);
+}
+body:has(.dbim-home) main,
+body:has(.dbim-home) .main-content,
+body:has(.dbim-home) #app > main {
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+.dbim-home {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-home-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0 clamp(1.5rem, 5.9vw, 7rem); /* same side space as header and footer */
+}
+.dbim-home-section {
+  padding: 3rem 0;
+  background: var(--dbim-inclusive-white);
+}
+@media (max-width: 575.98px) {
+  .dbim-home-section {
+    padding: 2rem 0;
+  }
+}
+
+/* ---- Headings: outline icon + bold navy, one size ---- */
+.dbim-home-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0 1.25rem;
+  color: var(--dbim-key);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+@media (min-width: 768px) {
+  .dbim-home-title {
+    font-size: 1.75rem; /* 28px, as the MeitY headings */
+  }
+}
+.dbim-home-title__icon {
+  flex: 0 0 auto;
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+/* ---- Outline button (View Event / View More style) ---- */
+.dbim-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px; /* touch target */
+  padding: 0.5rem 1rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-key);
+  border-radius: 4px;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background-color 0.15s;
+}
+.dbim-home-btn svg {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+}
+.dbim-home-btn:hover {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF, text 9.6:1 */
+  color: var(--dbim-key);
+  text-decoration: none;
+}
+.dbim-home-btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring); /* 8.0:1 */
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   ANNOUNCEMENTS BAR: grey, label + moving text + Pause / Play
+   ============================================================ */
+.dbim-home-notice {
+  background: var(--dbim-grey-01); /* #C6C6C6 */
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-home-notice__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem clamp(1.5rem, 5.9vw, 7rem);
+}
+.dbim-home-notice__label {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--dbim-key); /* ~7.7:1 on #C6C6C6 */
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.dbim-home-notice__viewport {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow: hidden;
+}
+.dbim-home-notice__text {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* ~11:1 on #C6C6C6 */
+  font-size: var(--dbim-fs-p1);
+  font-weight: 500;
+  line-height: 1.6;
+}
+.dbim-home-notice__btn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  color: var(--dbim-key);
+  cursor: pointer;
+}
+.dbim-home-notice__btn[hidden] {
+  display: none;
+}
+.dbim-home-notice__btn:hover {
+  background: var(--dbim-inclusive-white);
+}
+.dbim-home-notice__btn:focus-visible {
+  outline: 3px solid var(--dbim-focus-ring);
+  outline-offset: 0;
+}
+.dbim-home-notice__btn .icon-play {
+  display: none;
+}
+.dbim-home-notice.is-paused .dbim-home-notice__btn .icon-pause {
+  display: none;
+}
+.dbim-home-notice.is-paused .dbim-home-notice__btn .icon-play {
+  display: block;
+}
+
+/* Moving state: added by the script only when motion is allowed */
+.dbim-home-notice.is-moving .dbim-home-notice__viewport {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+.dbim-home-notice.is-moving .dbim-home-notice__text {
+  display: inline-block;
+  padding-left: 100%;
+  white-space: nowrap;
+  animation: dbim-home-marquee 35s linear infinite; /* the script sets the real duration */
+}
+.dbim-home-notice.is-paused .dbim-home-notice__text,
+.dbim-home-notice__viewport:hover .dbim-home-notice__text {
+  animation-play-state: paused; /* WCAG 2.2.2 */
+}
+@keyframes dbim-home-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dbim-home-notice.is-moving .dbim-home-notice__text {
+    display: block;
+    padding-left: 0;
+    white-space: normal;
+    animation: none;
+  }
+}
+@media (max-width: 575.98px) {
+  .dbim-home-notice__inner {
+    flex-wrap: wrap;
+    gap: 0.25rem 0.75rem;
+  }
+  .dbim-home-notice__viewport {
+    order: 3;
+    flex-basis: 100%;
+  }
+}
+
+/* ============================================================
+   ABOUT: Linen band, round photo left, text right
+   ============================================================ */
+.dbim-home-hero {
+  padding: 3rem 0;
+  background: var(--dbim-linen); /* #EBEAEA */
+  border-bottom: 1px solid var(--dbim-grey-01);
+}
+@media (max-width: 575.98px) {
+  .dbim-home-hero {
+    padding: 2rem 0;
+  }
+}
+.dbim-home-hero__grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+@media (min-width: 992px) {
+  .dbim-home-hero__grid {
+    grid-template-columns: 17.5rem minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+.dbim-home-person {
+  margin: 0;
+  text-align: center;
+}
+.dbim-home-person__photo {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  height: 220px;
+  margin: 0 auto 0.875rem;
+  border: 6px solid #fff; /* transparent photo: keep white in every theme */
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+  object-position: 50% 12%;
+}
+.dbim-home-person__caption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+}
+.dbim-home-person__name {
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+}
+.dbim-home-lead p {
+  max-width: 80ch;
+  margin: 0 0 1rem;
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 on Linen */
+  font-size: 1.125rem; /* 18px */
+  font-weight: 400;
+  line-height: 1.7;
+}
+.dbim-home-hero .dbim-home-btn {
+  margin-top: 0.5rem;
+}
+
+/* ============================================================
+   PAYMENT OPTIONS + INSTRUCTIONS: white band, outlined white panels
+   ============================================================ */
+.dbim-home-info {
+  padding: 3rem 0;
+  background: var(--dbim-inclusive-white);
+}
+@media (max-width: 575.98px) {
+  .dbim-home-info {
+    padding: 2rem 0;
+  }
+}
+.dbim-home-info__grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 768px) {
+  .dbim-home-info__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dbim-home-panel {
+  padding: 1.5rem 1.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-key); /* thin navy outline, as MeitY cards */
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-home-panel .dbim-home-title {
+  margin-bottom: 1rem;
+}
+.dbim-home-panel p {
+  max-width: 60ch;
+  margin: 0;
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.7;
+}
+.dbim-home-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dbim-home-chips li {
+  padding: 0.375rem 1rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-key);
+  border-radius: 2rem;
+  color: var(--dbim-key); /* 12.7:1 */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+}
+
+/* ============================================================
+   ONLINE SERVICES: Linen band, one white panel, one row per service
+   (same idea as the MeitY "Key Offerings" list)
+   ============================================================ */
+.dbim-home-services {
+  background: var(--dbim-linen); /* #EBEAEA, same grey as About */
+  border-top: 1px solid var(--dbim-grey-01);
+  border-bottom: 1px solid var(--dbim-grey-01);
+}
+.dbim-home-list {
+  margin: 0;
+  padding: 0 1.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-key);
+  border-radius: 4px;
+  list-style: none;
+}
+.dbim-home-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.5rem 0;
+}
+.dbim-home-row + .dbim-home-row {
+  border-top: 1px solid var(--dbim-azureish-white); /* thin light-blue line */
+}
+.dbim-home-row__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-key); /* 9.6:1 on #D2DFFF */
+}
+.dbim-home-row__icon svg {
+  width: 28px;
+  height: 28px;
+}
+.dbim-home-row__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.dbim-home-row__title {
+  margin: 0 0 0.25rem;
+  color: var(--dbim-key); /* 12.7:1 on white */
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-home-row__text {
+  max-width: 70ch;
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 on white */
+  line-height: 1.6;
+}
+@media (max-width: 767.98px) {
+  .dbim-home-list {
+    padding: 0 1rem;
+  }
+  .dbim-home-row {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.75rem 1rem;
+    padding: 1.25rem 0;
+  }
+  .dbim-home-row__body {
+    flex-basis: calc(100% - 56px - 1rem);
+  }
+  .dbim-home-row .dbim-home-btn {
+    margin-left: calc(56px + 1rem); /* aligns with the text */
+  }
+}
+@media (max-width: 479.98px) {
+  .dbim-home-row .dbim-home-btn {
+    width: 100%;
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   HOW IT WORKS: white band, four outlined step boxes
+   ============================================================ */
+.dbim-home-how {
+  background: var(--dbim-inclusive-white);
+}
+.dbim-home-steps {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: dbim-home-step;
+}
+.dbim-home-steps li {
+  padding: 1.5rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-key);
+  border-radius: 4px;
+  color: var(--dbim-deep-earthy-brown); /* 20:1 */
+  line-height: 1.7;
+  counter-increment: dbim-home-step;
+}
+.dbim-home-steps li::before {
+  content: counter(dbim-home-step) / ""; /* the <ol> already announces the numbers */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background: var(--dbim-powder-blue); /* white on #214AAB, 8.0:1 */
+  color: #fff;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+.dbim-home-steps strong {
+  display: block;
+  margin-bottom: 0.375rem;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+
+/* ============================================================
+   HIGH-CONTRAST THEME (yellow on near-black)
+   ============================================================ */
+[data-theme="dark"] .dbim-home-title,
+[data-theme="dark"] .dbim-home-person__caption,
+[data-theme="dark"] .dbim-home-person__name,
+[data-theme="dark"] .dbim-home-lead p,
+[data-theme="dark"] .dbim-home-panel,
+[data-theme="dark"] .dbim-home-row__title,
+[data-theme="dark"] .dbim-home-row__text,
+[data-theme="dark"] .dbim-home-steps li,
+[data-theme="dark"] .dbim-home-steps strong {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-btn {
+  background: var(--dbim-inclusive-white); /* #0B0C0E */
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-btn:hover {
+  background: var(--dbim-linen);
+  text-decoration: underline;
+}
+[data-theme="dark"] .dbim-home-btn:focus-visible,
+[data-theme="dark"] .dbim-home-notice__btn:focus-visible {
+  outline-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-notice {
+  background: var(--dbim-linen);
+  border-top: 1px solid var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-notice__label,
+[data-theme="dark"] .dbim-home-notice__text,
+[data-theme="dark"] .dbim-home-notice__btn {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-notice__btn:hover {
+  background: var(--dbim-inclusive-white);
+}
+[data-theme="dark"] .dbim-home-hero {
+  background: var(--dbim-linen);
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-person__photo {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-panel,
+[data-theme="dark"] .dbim-home-list,
+[data-theme="dark"] .dbim-home-steps li,
+[data-theme="dark"] .dbim-home-chips li {
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-chips li {
+  background: var(--dbim-inclusive-white);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-services {
+  background: var(--dbim-linen); /* #23232A */
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-list {
+  background: var(--dbim-inclusive-white); /* #0B0C0E */
+}
+[data-theme="dark"] .dbim-home-row + .dbim-home-row {
+  border-top-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-row__icon {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-steps li::before {
+  background: var(--dbim-key);
+  color: #000;
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-home-notice {
+    border-top: 1px solid CanvasText;
+    border-bottom: 1px solid CanvasText;
+  }
+  .dbim-home-panel,
+  .dbim-home-list,
+  .dbim-home-steps li,
+  .dbim-home-chips li {
+    border: 2px solid CanvasText;
+  }
+  .dbim-home-btn {
+    border: 2px solid ButtonText;
+  }
+  .dbim-home-btn:focus-visible,
+  .dbim-home-notice__btn:focus-visible {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* ---- Print: plain backgrounds, no Pause button, no buttons ---- */
+@media print {
+  .dbim-home-notice,
+  .dbim-home-hero,
+  .dbim-home-services,
+  .dbim-home-steps li {
+    background: none;
+  }
+  .dbim-home-notice__btn,
+  .dbim-home-btn {
+    display: none;
+  }
+}
+
+/* ============================================================
+   88. CHANGE PASSWORD  (resources/views/.../change-password.blade.php)
+   APPEND AFTER section 87. Uses the appeal / profile form styles
+   (section 65 and 65b, .dbim-fa-*). This only adds the show / hide
+   button and the read-only field look. Existing variables only.
+
+   Contrast, light theme:
+     #162F6A on #FFFFFF 12.7:1 (toggle border and icon area)
+     #150202 on #EBEAEA 17.2:1 (read-only username)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* Show / hide button: square outline button flush with the field */
+.dbim-fa-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 0 0.875rem;
+}
+.dbim-fa-toggle img {
+  max-width: none;
+}
+
+/* Read-only field (username): soft grey, still readable */
+.dbim-fa-card .form-control[readonly] {
+  background: var(--dbim-linen); /* #EBEAEA */
+  color: var(--dbim-deep-earthy-brown); /* 17.2:1 */
+}
+
+/* High-contrast theme: the eye icon is a dark image, so invert it to light */
+[data-theme="dark"] .dbim-fa-toggle img {
+  filter: invert(1);
+}
+/* ============================================================
+   80. OFFICER LIST PAGES: SPACE ON BOTH SIDES  (.dbim-nr-page)
+   APPEND AFTER section 79.
+   The white card stays centred on the grey band with free space left and right
+   (72rem = about 1150px, as in the approved screenshot). On small screens it
+   still uses the full width, so nothing is squeezed.
+   Add the class "dbim-nr-page" to the outer div of any officer list page
+   (for example <div class="dbim-sd dbim-as dbim-nr-page">).
+   Existing variables only.
+   ============================================================ */
+.dbim-nr-page .dbim-sd-card {
+  max-width: 80rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* ============================================================
+   82. OFFICER PAGE HEADER STRIP  (OfficerView/officer-header-card.blade.php)
+   One light-blue strip under the title, left-aligned with the title and the
+   search box, items separated by thin dividers.
+   Replaces earlier drafts of sections 81 and 82 and the .dbim-nr-strip rules of section 79.
+   Existing variables only. No gradients, no shadows.
+   Contrast, light theme: #162F6A on #D2DFFF 9.6:1 | #150202 on #D2DFFF 15.4:1
+   Contrast, high-contrast theme: #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-nr-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  background: var(--dbim-linen); /* #D2DFFF */
+  border-radius: 4px;
+}
+.dbim-nr-bar__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5rem;
+  min-width: 0;
+  padding: 0.75rem 1.25rem;
+}
+.dbim-nr-bar__item + .dbim-nr-bar__item {
+  border-left: 1px solid var(--dbim-azureish-white); /* #A3BBF3 */
+}
+.dbim-nr-bar dt {
+  margin: 0;
+  color: var(--dbim-wintergreen-dream);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 700;
+}
+.dbim-nr-bar dd {
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 575.98px) {
+  .dbim-nr-bar__item {
+    flex: 1 1 100%;
+    padding: 0.625rem 1rem;
+  }
+  .dbim-nr-bar__item + .dbim-nr-bar__item {
+    border-left: 0;
+    border-top: 1px solid var(--dbim-azureish-white);
+  }
+}
+
+[data-theme="dark"] .dbim-nr-bar {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+}
+[data-theme="dark"] .dbim-nr-bar dt,
+[data-theme="dark"] .dbim-nr-bar dd {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-nr-bar__item + .dbim-nr-bar__item {
+  border-color: var(--dbim-key);
+}
+
+@media (forced-colors: active) {
+  .dbim-nr-bar {
+    border: 2px solid CanvasText;
+  }
+}
+@media print {
+  .dbim-nr-bar {
+    background: none;
+    border: 1px solid #000;
+  }
+}
+/* name of the public authority: no visible label, so it is bold and navy */
+.dbim-nr-bar__item--name dd {
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-weight: 700;
+}
+[data-theme="dark"] .dbim-nr-bar__item--name dd {
+  color: var(--dbim-key);
+}
+
+/* ============================================================
+   83. OFFICER NOTICE STRIP  (static, centred)
+   Same look as the moving "Important" headline strip (sections 68, 70 and 72),
+   but the text does not move, so there is no Pause button.
+   Existing variables only. No gradients, no shadows.
+   Contrast, light theme: #162F6A on #D2DFFF 9.6:1 | #150202 on #D2DFFF 15.4:1
+   Contrast, high-contrast theme: #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-nt {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  border-top: 1px solid var(--dbim-key);
+  border-bottom: 1px solid var(--dbim-azureish-white);
+}
+.dbim-nt__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* centred */
+  gap: 0.25rem 0.875rem;
+  padding: 0.5rem clamp(1.5rem, 5.9vw, 7rem); /* same side space as the header */
+  text-align: center;
+}
+.dbim-nt__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding-right: 0.875rem;
+  border-right: 1px solid var(--dbim-azureish-white); /* #A3BBF3 */
+  color: var(--dbim-key); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.dbim-nt__icon {
+  flex: 0 0 auto;
+}
+.dbim-nt__text {
+  flex: 0 1 auto;
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* phones: label above, text below, no divider */
+@media (max-width: 575.98px) {
+  .dbim-nt__label {
+    padding-right: 0;
+    border-right: 0;
+  }
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-nt {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-nt__label {
+  border-right-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-nt__text {
+  color: var(--dbim-key);
+}
+
+/* ---- Windows forced colours ---- */
+@media (forced-colors: active) {
+  .dbim-nt {
+    border-top: 1px solid CanvasText;
+    border-bottom: 1px solid CanvasText;
+  }
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-nt {
+    background: none;
+  }
+}
+/* ============================================================
+   83. OFFICER NOTICE STRIP  (static, centred, no borders)
+   Lightest shade of the Blue group (#D2DFFF). The text does not move,
+   so there is no Pause button.
+   Existing variables only. No gradients, no shadows, no borders.
+   Contrast, light theme: #150202 on #D2DFFF 15.4:1 | #162F6A on #D2DFFF 9.6:1
+   Contrast, high-contrast theme: #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-nt {
+  background: var(--dbim-azureish-white-bg); /* #D2DFFF */
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-nt__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* centred */
+  gap: 0.25rem 0.875rem;
+  padding: 0.5rem clamp(1.5rem, 5.9vw, 7rem); /* same side space as the header */
+  text-align: center;
+}
+.dbim-nt__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--dbim-wintergreen-dream); /* 9.6:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+.dbim-nt__icon {
+  flex: 0 0 auto;
+}
+.dbim-nt__text {
+  flex: 0 1 auto;
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown); /* 15.4:1 on #D2DFFF */
+  font-size: var(--dbim-fs-p2);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* ---- High-contrast theme (yellow on near-black) ---- */
+[data-theme="dark"] .dbim-nt {
+  background: var(--dbim-linen); /* #23232A */
+}
+[data-theme="dark"] .dbim-nt__label,
+[data-theme="dark"] .dbim-nt__text {
+  color: var(--dbim-key);
+}
+
+/* ---- Print ---- */
+@media print {
+  .dbim-nt {
+    background: none;
+  }
+}
+
+/* ============================================================
+   90. OFFICER + APPLICANT LOGIN: NOTE BOX + FORM CARD
+   REPLACES section 89 (split card; delete 89 and dbim-section-89-*.css).
+   APPEND AT THE VERY END of public/css/dbim.css.
+   Same look as the User Profile page: light-blue note box on the left,
+   white rounded card on the right, on the grey (Linen) band.
+   Note box, help box, card, title, legend, field and button styles already
+   exist in section 65 (.dbim-fa-*); fields and errors in section 52 (.dbim-lo-*).
+   This section only adds the two columns and two small fixes.
+   Existing variables only. No gradients, no shadows.
+
+   Contrast, light theme:
+     #150202 on #D2DFFF 15.4:1 (note text) | #162F6A on #FFFFFF 12.7:1 (title, links)
+     #FFFFFF on #162F6A 12.8:1 (Login button)
+   Contrast, high-contrast theme: handled by the section 65 rules
+     (#FFFF00 on #23232A 14.5:1 | #000000 on #FFFF00 19.6:1)
+   ============================================================ */
+
+/* ---- Two columns: note (1/3) | card (2/3), centred, stacked below 992px ---- */
+.dbim-lp {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  width: 100%;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+@media (min-width: 992px) {
+  .dbim-lp {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+.dbim-lp-side,
+.dbim-lp > .dbim-fa-card {
+  min-width: 0;
+}
+
+/* The card is a bit roomier on wide screens */
+@media (min-width: 992px) {
+  .dbim-lp > .dbim-fa-card {
+    padding: 2.5rem;
+  }
+}
+
+/* ---- Fix 1: field + button joined (show/hide password, Send OTP) ----
+   Section 65 rounds inputs to 8px on every corner; the joined button must match. */
+.dbim-lp .input-group > .form-control {
+  border-radius: 8px 0 0 8px;
+}
+.dbim-lp .dbim-lo-toggle {
+  border-radius: 0 8px 8px 0;
+}
+
+/* ---- Fix 2: fields keep a comfortable width inside the wide card ---- */
+.dbim-lp .dbim-lo-form {
+  max-width: 36rem;
+}
+
+/* ---- Phones: Login button first and full width, Forgot Password under it ---- */
+@media (max-width: 575.98px) {
+  .dbim-lp .dbim-lo-actions .dbim-fa-btn {
+    flex: 1 1 100%;
+    order: -1;
   }
 }

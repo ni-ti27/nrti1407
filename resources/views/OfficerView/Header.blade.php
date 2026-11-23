@@ -95,7 +95,13 @@
                 {{-- Utility icons --}}
                 <div class="col-12 col-md-5 col-lg-3">
                     <div class="dbim-header__tools" role="group" aria-label="Utility links">
-
+ <div >
+                     @if($manual)
+                    <a href="{{ $manual[0] }}" target="_blank" rel="noopener noreferrer" download>
+                        {{ $manual[1] }}<span class="visually-hidden"> (PDF, opens in a new window)</span>
+                    </a>
+                @endif
+</div>
                         {{-- Skip to main content --}}
                         <div class="tool">
                             <a id="skipFromMenu" href="#main-content" title="Skip to main Content" aria-label="Skip to main Content">
@@ -293,31 +299,46 @@
     <nav class="dbim-header__user" aria-label="User account">
         <div class="container-fluid px-3 px-lg-5">
             <div class="d-flex flex-wrap justify-content-center justify-content-md-end align-items-center">
-                <span>
+
+            <span>
                     <span class="visually-hidden">Logged in as: </span>{{ Auth::user()->name }}
                 </span>
 
-                @if($manual)
-                    <a href="{{ $manual[0] }}" target="_blank" rel="noopener noreferrer" download>
-                        {{ $manual[1] }}<span class="visually-hidden"> (PDF, opens in a new window)</span>
-                    </a>
-                @endif
 
                 <form class="d-inline" action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-link p-0 text-decoration-none">Logout</button>
                 </form>
+
+
             </div>
         </div>
     </nav>
 </header>
 
-{{-- Notice to officers --}}
+{{-- Notice to officers
 <div class="alert alert-danger text-center rounded-0 mb-0 py-2" role="note">
     Nodal / PIO / APIO / First Appellate / Clerk / State Information Commissioner is required to update their
     Mobile Number and Email Id in "Profile Update" to receive SMS Messages and Notifications.
-</div>
+</div>--}}
 
+{{-- Notice to officers --}}
+<div class="dbim-nt" role="note" aria-label="Important notice">
+    <div class="dbim-nt__inner">
+        <span class="dbim-nt__label">
+            <svg class="dbim-nt__icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 aria-hidden="true" focusable="false">
+                <path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>
+            </svg>
+            Important
+        </span>
+        <p class="dbim-nt__text">
+            Nodal / PIO / APIO / First Appellate / Clerk / State Information Commissioner is required to update their
+            Mobile Number and Email Id in "Profile Update" to receive SMS Messages and Notifications.
+        </p>
+    </div>
+</div>
 {{-- Header-only script. Theme, text size and all accessibility options
      live in partials/accessibility.blade.php --}}
 <script>

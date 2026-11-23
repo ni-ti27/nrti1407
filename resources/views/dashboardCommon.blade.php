@@ -34,20 +34,7 @@
         </div>
 
         {{-- ===== Office / user details ===== --}}
-        <dl class="dbim-nr-strip">
-            <div class="dbim-nr-strip__item">
-                <dt>Department:</dt>
-                <dd>{{ session('officeName') }}</dd>
-            </div>
-            <div class="dbim-nr-strip__item">
-                <dt>Username:</dt>
-                <dd>{{ $userDetails['name'] }}</dd>
-            </div>
-            <div class="dbim-nr-strip__item">
-                <dt>Role:</dt>
-                <dd>{{ $userDetails['role_name'] }}</dd>
-            </div>
-        </dl>
+        @include('OfficerView.officer-header-card')
 
         {{-- ===== Flash messages ===== --}}
         @include('partials.flash-messages')

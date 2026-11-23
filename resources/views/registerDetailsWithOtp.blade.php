@@ -1,8 +1,9 @@
 {{-- ============================================================
      Applicant Login with OTP  (DBIM / GIGW 3.0, WCAG 2.1 AA)
-     Same look as Officers Login, Search and Contact: grey band outside,
-     ONE white card inside, main heading with the blue bar.
-     Styles: section 50 (frame) + 52 (login form) + 53 (OTP parts) in public/css/dbim.css
+     Note box on the left, form card on the right (same layout as the User Profile page).
+     Same look as Officers Login.
+     Styles: section 50 (frame) + 52 (login form) + 53 (OTP parts)
+             + 65 (note + card) + 90 (two columns) in public/css/dbim.css
      No inline styles, no autofocus, no jQuery. Works with JS off.
      ============================================================ --}}
 @extends('layouts.app')
@@ -21,150 +22,149 @@
 @endphp
 
 <div class="dbim-sd">
-    <div class="dbim-sd">
-    <div class="dbim-pb">
-        <div class="dbim-pb-wrap">
-            <nav aria-label="Breadcrumb">
-                <ol class="dbim-pb-crumb">
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li aria-current="page">Applicant Login</li>
-                </ol>
-            </nav>
-            <h1 id="loginHeading" class="dbim-pb-title">Applicant Login</h1>
-        </div>
-    </div>
-
     <section class="dbim-sd-section" aria-labelledby="loginHeading">
         <div class="dbim-sd-wrap">
-            <div class="dbim-sd-card dbim-lo-card">
+            <div class="dbim-lp">
 
-                {{-- Status messages from the server --}}
-                @if($timedOut)
-                    <div class="alert alert-info" role="status">
-                        <strong>Note:</strong> Your session has expired. Please log in again.
+                {{-- Left: note (and help) --}}
+                <aside class="dbim-lp-side" aria-label="Before you log in">
+                    <div class="dbim-fa-note">
+                        <svg class="dbim-fa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <div class="dbim-fa-note__body">
+                            <p><strong>Note:</strong></p>
+                            <ul>
+                                <li>Enter your name, email and mobile number, then select <strong>Send OTP</strong>.</li>
+                                <li>Enter the OTP you receive by SMS on that number.</li>
+                                <li>Select <strong>Login</strong> once the OTP is entered.</li>
+                            </ul>
+                        </div>
                     </div>
-                @endif
-                @if(session('warning'))
-                    <div class="alert alert-warning" role="alert"><strong>Warning:</strong> {{ session('warning') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger" role="alert"><strong>Error:</strong> {{ session('error') }}</div>
-                @endif
-                @if(session('success'))
-                    <div class="alert alert-success" role="status"><strong>Success:</strong> {{ session('success') }}</div>
-                @endif
+                    <div class="dbim-fa-help">
+                        <svg class="dbim-fa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <p class="mb-0">Need help? Read the <a href="{{ $manual }}" download>User Manual (PDF)</a>.</p>
+                    </div>
+                </aside>
 
-                {{-- Error summary: filled by script or by the server; receives focus --}}
-                <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
-                     @if(!$errors->any()) hidden @endif>
-                    <p class="fw-bold mb-2">Please correct the following:</p>
-                    <ul class="mb-0" id="errorSummaryList">
-                        @foreach($errors->messages() as $key => $messages)
-                            @foreach($messages as $message)
-                                <li><a href="#{{ $fieldIds[$key] ?? 'username' }}">{{ $message }}</a></li>
+                {{-- Right: form card. The only <h1> of the page. --}}
+                <div class="dbim-fa-card">
+                    <h1 id="loginHeading" class="dbim-fa-title">Applicant Login</h1>
+                    <p class="dbim-fa-legend">Fields marked with (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>) are required.</p>
+
+                    {{-- Status messages from the server --}}
+                    @if($timedOut)
+                        <div class="alert alert-info" role="status">
+                            <strong>Note:</strong> Your session has expired. Please log in again.
+                        </div>
+                    @endif
+                    @if(session('warning'))
+                        <div class="alert alert-warning" role="alert"><strong>Warning:</strong> {{ session('warning') }}</div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger" role="alert"><strong>Error:</strong> {{ session('error') }}</div>
+                    @endif
+                    @if(session('success'))
+                        <div class="alert alert-success" role="status"><strong>Success:</strong> {{ session('success') }}</div>
+                    @endif
+
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->messages() as $key => $messages)
+                                @foreach($messages as $message)
+                                    <li><a href="#{{ $fieldIds[$key] ?? 'username' }}">{{ $message }}</a></li>
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </ul>
-                </div>
-
-                <form id="rtiRequestForm" class="dbim-lo-form" method="POST" action="{{ route('sessionForm.save') }}" novalidate>
-                    @csrf
-
-                    <p class="dbim-lo-required">
-                        Fields marked with
-                        (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>)
-                        are required.
-                    </p>
-
-                    {{-- Name --}}
-                    <div class="dbim-lo-field">
-                        <label for="username" class="dbim-sd-label">
-                            Name <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="text"
-                               class="form-control @error('username') is-invalid @enderror"
-                               id="username" name="username" value="{{ old('username') }}"
-                               placeholder="Enter your first and last name"
-                               autocomplete="name" required aria-required="true"
-                               aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
-                               aria-describedby="usernameError">
-                        <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
+                        </ul>
                     </div>
 
-                    {{-- Email --}}
-                    <div class="dbim-lo-field">
-                        <label for="email_id" class="dbim-sd-label">
-                            Email <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="email"
-                               class="form-control @error('email_id') is-invalid @enderror"
-                               id="email_id" name="email_id" value="{{ old('email_id') }}"
-                               placeholder="name@example.com"
-                               autocomplete="email" required aria-required="true"
-                               aria-invalid="{{ $errors->has('email_id') ? 'true' : 'false' }}"
-                               aria-describedby="emailIdError">
-                        <div id="emailIdError" class="invalid-feedback @error('email_id') d-block @enderror">@error('email_id'){{ $message }}@enderror</div>
-                    </div>
+                    <form id="rtiRequestForm" class="dbim-lo-form" method="POST" action="{{ route('sessionForm.save') }}" novalidate>
+                        @csrf
 
-                    {{-- Mobile number + Send OTP --}}
-                    <div class="dbim-lo-field">
-                        <label for="mobile_no" class="dbim-sd-label">
-                            Mobile Number <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <div class="input-group">
-                            <input type="tel"
-                                   class="form-control @error('mobile_no') is-invalid @enderror"
-                                   id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
-                                   placeholder="10-digit mobile number"
-                                   inputmode="numeric" maxlength="10" autocomplete="tel-national"
-                                   required aria-required="true"
-                                   aria-invalid="{{ $errors->has('mobile_no') ? 'true' : 'false' }}"
-                                   aria-describedby="mobileNoHint mobileNoError">
-                            <button type="button" id="sendOTP" class="dbim-lo-toggle dbim-lo-send">
-                                Send OTP<span class="dbim-sr-only"> to this mobile number</span>
+                        {{-- Name --}}
+                        <div class="dbim-lo-field">
+                            <label for="username" class="dbim-sd-label">
+                                Name <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control @error('username') is-invalid @enderror"
+                                   id="username" name="username" value="{{ old('username') }}"
+                                   placeholder="Enter your first and last name"
+                                   autocomplete="name" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('username') ? 'true' : 'false' }}"
+                                   aria-describedby="usernameError">
+                            <div id="usernameError" class="invalid-feedback @error('username') d-block @enderror">@error('username'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="dbim-lo-field">
+                            <label for="email_id" class="dbim-sd-label">
+                                Email <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="email"
+                                   class="form-control @error('email_id') is-invalid @enderror"
+                                   id="email_id" name="email_id" value="{{ old('email_id') }}"
+                                   placeholder="name@example.com"
+                                   autocomplete="email" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('email_id') ? 'true' : 'false' }}"
+                                   aria-describedby="emailIdError">
+                            <div id="emailIdError" class="invalid-feedback @error('email_id') d-block @enderror">@error('email_id'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Mobile number + Send OTP --}}
+                        <div class="dbim-lo-field">
+                            <label for="mobile_no" class="dbim-sd-label">
+                                Mobile Number <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="tel"
+                                       class="form-control @error('mobile_no') is-invalid @enderror"
+                                       id="mobile_no" name="mobile_no" value="{{ old('mobile_no') }}"
+                                       placeholder="10-digit mobile number"
+                                       inputmode="numeric" maxlength="10" autocomplete="tel-national"
+                                       required aria-required="true"
+                                       aria-invalid="{{ $errors->has('mobile_no') ? 'true' : 'false' }}"
+                                       aria-describedby="mobileNoHint mobileNoError">
+                                <button type="button" id="sendOTP" class="dbim-lo-toggle dbim-lo-send">
+                                    Send OTP<span class="dbim-sr-only"> to this mobile number</span>
+                                </button>
+                            </div>
+                            <div id="mobileNoHint" class="form-text">Enter 10 digits without +91 or 0. The OTP is sent by SMS.</div>
+                            <div id="mobileNoError" class="invalid-feedback @error('mobile_no') d-block @enderror">@error('mobile_no'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- OTP (never restored) --}}
+                        <div class="dbim-lo-field">
+                            <label for="otp" class="dbim-sd-label">
+                                OTP <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control @error('otp') is-invalid @enderror"
+                                   id="otp" name="otp"
+                                   placeholder="Enter the OTP"
+                                   inputmode="numeric" autocomplete="one-time-code" aria-required="true"
+                                   aria-invalid="{{ $errors->has('otp') ? 'true' : 'false' }}"
+                                   aria-describedby="otpHint otpError">
+                            <div id="otpHint" class="form-text">Enter the OTP received on your mobile number.@if($otpMinutes) It is valid for {{ $otpMinutes }} minutes.@endif</div>
+                            <div id="otpError" class="invalid-feedback @error('otp') d-block @enderror">@error('otp'){{ $message }}@enderror</div>
+                        </div>
+
+                        <x-captcha/>
+
+                        <div class="dbim-lo-actions dbim-lo-actions--end">
+                            <button type="submit" id="loginButton" class="dbim-fa-btn" title="Login">
+                                Login
                             </button>
                         </div>
-                        <div id="mobileNoHint" class="form-text">Enter 10 digits without +91 or 0. The OTP is sent by SMS.</div>
-                        <div id="mobileNoError" class="invalid-feedback @error('mobile_no') d-block @enderror">@error('mobile_no'){{ $message }}@enderror</div>
-                    </div>
+                        <span class="dbim-sr-only" id="lgBusy" role="status"></span>
 
-                    {{-- OTP (never restored) --}}
-                    <div class="dbim-lo-field">
-                        <label for="otp" class="dbim-sd-label">
-                            OTP <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="text"
-                               class="form-control @error('otp') is-invalid @enderror"
-                               id="otp" name="otp"
-                               placeholder="Enter the OTP"
-                               inputmode="numeric" autocomplete="one-time-code" aria-required="true"
-                               aria-invalid="{{ $errors->has('otp') ? 'true' : 'false' }}"
-                               aria-describedby="otpHint otpError">
-                        <div id="otpHint" class="form-text">Enter the OTP received on your mobile number.@if($otpMinutes) It is valid for {{ $otpMinutes }} minutes.@endif</div>
-                        <div id="otpError" class="invalid-feedback @error('otp') d-block @enderror">@error('otp'){{ $message }}@enderror</div>
-                    </div>
-
-                    <x-captcha/>
-
-                    <div class="dbim-lo-actions dbim-lo-actions--end">
-                        <button type="submit" id="loginButton" class="dbim-sd-btn" title="Login">
-                            Login
-                        </button>
-                    </div>
-                    <span class="dbim-sr-only" id="lgBusy" role="status"></span>
-
-                    <p class="dbim-lo-note">
-                        Your details are used only to verify your identity and file your requests, as described in the
-                        <a href="{{ $privacy }}">Privacy Policy</a>.
-                    </p>
-                </form>
-
-                <hr class="dbim-sd-divider">
-
-                <p class="dbim-lo-note dbim-lo-note--last">
-                    Refer to the user manual if required:
-                    <a href="{{ $manual }}" download>User Manual (PDF)</a>
-                </p>
+                        <p class="dbim-lo-note">
+                            Your details are used only to verify your identity and file your requests, as described in the
+                            <a href="{{ $privacy }}">Privacy Policy</a>.
+                        </p>
+                    </form>
+                </div>
 
             </div>
         </div>

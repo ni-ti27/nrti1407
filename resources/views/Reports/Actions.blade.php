@@ -22,33 +22,10 @@
 
       <div class="dbim-sd-card">
 
-        <h1 class="dbim-sd-heading dbim-nr-head">Application Stats</h1>
+        <h1 class="dbim-sd-heading">Application Stats</h1>
 
-        {{-- ===== Department / office / username / role strip ===== --}}
-        <dl class="dbim-nr-strip">
-            <div>
-                <dt>Department:</dt>
-                <dd>{{ session('faaDeptName') }}</dd>
-            </div>
-            @if($showSubDept)
-                <div>
-                    <dt>Office:</dt>
-                    <dd>{{ session('subDepartmentName') }}</dd>
-                </div>
-                <div>
-                    <dt>Sub Office:</dt>
-                    <dd>{{ session('officeName') }}</dd>
-                </div>
-            @endif
-            <div>
-                <dt>Username:</dt>
-                <dd>{{ session('username') }}</dd>
-            </div>
-            <div>
-                <dt>Role:</dt>
-                <dd>{{ session('role_name') }}</dd>
-            </div>
-        </dl>
+        {{-- ===== Office / user details ===== --}}
+        @include('OfficerView.officer-header-card')
 
         <div class="dbim-ar-grid">
 

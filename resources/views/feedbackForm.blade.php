@@ -1,8 +1,8 @@
 {{-- ============================================================
      Feedback Form  (DBIM / GIGW 3.0, WCAG 2.1 AA)
-     Same look as Applicant Login: blue banner with breadcrumb,
-     grey band outside, ONE white card inside.
-     Styles: section 50 (frame) + 52 (form) + 53 (hints, notes) + 60 (banner)
+     Same layout as Applicant Login: note box on the left, form card on the right.
+     Styles: section 50 (frame) + 52 (form) + 53 (hints, notes) + 65 (note + card)
+             + 90 (two columns) in public/css/dbim.css
      No inline styles, no autofocus, no jQuery. Works with JS off.
      ============================================================ --}}
 @extends('layouts.app')
@@ -12,132 +12,139 @@
 @section('content')
 @php
     $privacy  = '#';   // route('privacy')
+    $contact  = '#';   // route('contact')
     // server error key => field id
     $fieldIds = ['name' => 'name', 'mobile' => 'mobile', 'email' => 'email', 'message' => 'message'];
 @endphp
 
 <div class="dbim-sd">
-    <div class="dbim-pb">
-        <div class="dbim-pb-wrap">
-            <nav aria-label="Breadcrumb">
-                <ol class="dbim-pb-crumb">
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li aria-current="page">Feedback</li>
-                </ol>
-            </nav>
-            <h1 id="feedbackHeading" class="dbim-pb-title">Feedback Form</h1>
-        </div>
-    </div>
-
     <section class="dbim-sd-section" aria-labelledby="feedbackHeading">
         <div class="dbim-sd-wrap">
-            <div class="dbim-sd-card dbim-lo-card">
+            <div class="dbim-lp">
 
-                {{-- Success message (stays visible, no auto-hide) --}}
-                @if(session('success'))
-                    <div class="alert alert-success" role="status"><strong>Success:</strong> {{ session('success') }}</div>
-                @endif
-                @if(session('error'))
-                    <div class="alert alert-danger" role="alert"><strong>Error:</strong> {{ session('error') }}</div>
-                @endif
+                {{-- Left: note and help --}}
+                <aside class="dbim-lp-side" aria-label="Before you send feedback">
+                    <div class="dbim-fa-note">
+                        <svg class="dbim-fa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <div class="dbim-fa-note__body">
+                            <p><strong>Note:</strong></p>
+                            <ul>
+                                <li>Your feedback helps us improve this portal.</li>
+                                <li>Please do not enter sensitive personal details in the message.</li>
+                                <li>Fill in all the fields, then select <strong>Send Feedback</strong>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="dbim-fa-help">
+                        <svg class="dbim-fa-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <p class="mb-0">Need help? See <a href="{{ $contact }}">Contact Us</a>.</p>
+                    </div>
+                </aside>
 
-                {{-- Error summary: filled by script or by the server; receives focus --}}
-                <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
-                     @if(!$errors->any()) hidden @endif>
-                    <p class="fw-bold mb-2">Please correct the following:</p>
-                    <ul class="mb-0" id="errorSummaryList">
-                        @foreach($errors->messages() as $key => $messages)
-                            @foreach($messages as $message)
-                                <li><a href="#{{ $fieldIds[$key] ?? 'name' }}">{{ $message }}</a></li>
+                {{-- Right: form card. The only <h1> of the page. --}}
+                <div class="dbim-fa-card">
+                    <h1 id="feedbackHeading" class="dbim-fa-title">Feedback Form</h1>
+                    <p class="dbim-fa-legend">Fields marked with (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>) are required.</p>
+
+                    {{-- Status messages from the server (stay visible, no auto-hide) --}}
+                    @if(session('success'))
+                        <div class="alert alert-success" role="status"><strong>Success:</strong> {{ session('success') }}</div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger" role="alert"><strong>Error:</strong> {{ session('error') }}</div>
+                    @endif
+
+                    {{-- Error summary: filled by script or by the server; receives focus --}}
+                    <div id="errorSummary" class="alert alert-danger" role="alert" tabindex="-1"
+                         @if(!$errors->any()) hidden @endif>
+                        <p class="fw-bold mb-2">Please correct the following:</p>
+                        <ul class="mb-0" id="errorSummaryList">
+                            @foreach($errors->messages() as $key => $messages)
+                                @foreach($messages as $message)
+                                    <li><a href="#{{ $fieldIds[$key] ?? 'name' }}">{{ $message }}</a></li>
+                                @endforeach
                             @endforeach
-                        @endforeach
-                    </ul>
+                        </ul>
+                    </div>
+
+                    <form id="feedbackForm" class="dbim-lo-form" method="post" action="{{ route('feedback.submit') }}" novalidate>
+                        @csrf
+
+                        {{-- Name --}}
+                        <div class="dbim-lo-field">
+                            <label for="name" class="dbim-sd-label">
+                                Name <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control @error('name') is-invalid @enderror"
+                                   id="name" name="name" value="{{ old('name') }}"
+                                   placeholder="Enter your full name"
+                                   autocomplete="name" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
+                                   aria-describedby="nameError">
+                            <div id="nameError" class="invalid-feedback @error('name') d-block @enderror">@error('name'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Mobile --}}
+                        <div class="dbim-lo-field">
+                            <label for="mobile" class="dbim-sd-label">
+                                Mobile Number <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="tel"
+                                   class="form-control @error('mobile') is-invalid @enderror"
+                                   id="mobile" name="mobile" value="{{ old('mobile') }}"
+                                   placeholder="10-digit mobile number"
+                                   inputmode="numeric" maxlength="10" pattern="[0-9]{10}"
+                                   autocomplete="tel-national" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('mobile') ? 'true' : 'false' }}"
+                                   aria-describedby="mobileHint mobileError">
+                            <div id="mobileHint" class="form-text">Enter 10 digits without +91 or 0.</div>
+                            <div id="mobileError" class="invalid-feedback @error('mobile') d-block @enderror">@error('mobile'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Email --}}
+                        <div class="dbim-lo-field">
+                            <label for="email" class="dbim-sd-label">
+                                Email <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <input type="email"
+                                   class="form-control @error('email') is-invalid @enderror"
+                                   id="email" name="email" value="{{ old('email') }}"
+                                   placeholder="name@example.com"
+                                   autocomplete="email" required aria-required="true"
+                                   aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                                   aria-describedby="emailError">
+                            <div id="emailError" class="invalid-feedback @error('email') d-block @enderror">@error('email'){{ $message }}@enderror</div>
+                        </div>
+
+                        {{-- Message --}}
+                        <div class="dbim-lo-field">
+                            <label for="message" class="dbim-sd-label">
+                                Your Feedback <span class="dbim-required" aria-hidden="true">*</span>
+                            </label>
+                            <textarea class="form-control @error('message') is-invalid @enderror"
+                                      id="message" name="message" rows="5"
+                                      placeholder="Enter your feedback"
+                                      required aria-required="true"
+                                      aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}"
+                                      aria-describedby="messageError">{{ old('message') }}</textarea>
+                            <div id="messageError" class="invalid-feedback @error('message') d-block @enderror">@error('message'){{ $message }}@enderror</div>
+                        </div>
+
+                        <div class="dbim-lo-actions dbim-lo-actions--end">
+                            <button type="reset" class="dbim-fa-btn dbim-fa-btn--outline" title="Reset">Reset</button>
+                            <button type="submit" id="feedbackButton" class="dbim-fa-btn" title="Send Feedback">
+                                Send Feedback
+                            </button>
+                        </div>
+                        <span class="dbim-sr-only" id="fbBusy" role="status"></span>
+
+                        <p class="dbim-lo-note">
+                            Your details are used only to respond to your feedback, as described in the
+                            <a href="{{ $privacy }}">Privacy Policy</a>.
+                        </p>
+                    </form>
                 </div>
-
-                <form id="feedbackForm" class="dbim-lo-form" method="post" action="{{ route('feedback.submit') }}" novalidate>
-                    @csrf
-
-               <p class="dbim-lo-required dbim-lo-required--note">
-                    Your feedback helps us improve this portal. Please do not enter sensitive personal details in the message.
-                    Fields marked with
-                    (<span class="dbim-required" aria-hidden="true">*</span><span class="dbim-sr-only">asterisk</span>)
-                    are required.
-                </p>
-
-                    {{-- Name --}}
-                    <div class="dbim-lo-field">
-                        <label for="name" class="dbim-sd-label">
-                            Name <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="text"
-                               class="form-control @error('name') is-invalid @enderror"
-                               id="name" name="name" value="{{ old('name') }}"
-                               placeholder="Enter your full name"
-                               autocomplete="name" required aria-required="true"
-                               aria-invalid="{{ $errors->has('name') ? 'true' : 'false' }}"
-                               aria-describedby="nameError">
-                        <div id="nameError" class="invalid-feedback @error('name') d-block @enderror">@error('name'){{ $message }}@enderror</div>
-                    </div>
-
-                    {{-- Mobile --}}
-                    <div class="dbim-lo-field">
-                        <label for="mobile" class="dbim-sd-label">
-                            Mobile Number <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="tel"
-                               class="form-control @error('mobile') is-invalid @enderror"
-                               id="mobile" name="mobile" value="{{ old('mobile') }}"
-                               placeholder="10-digit mobile number"
-                               inputmode="numeric" maxlength="10" pattern="[0-9]{10}"
-                               autocomplete="tel-national" required aria-required="true"
-                               aria-invalid="{{ $errors->has('mobile') ? 'true' : 'false' }}"
-                               aria-describedby="mobileHint mobileError">
-                        <div id="mobileHint" class="form-text">Enter 10 digits without +91 or 0.</div>
-                        <div id="mobileError" class="invalid-feedback @error('mobile') d-block @enderror">@error('mobile'){{ $message }}@enderror</div>
-                    </div>
-
-                    {{-- Email --}}
-                    <div class="dbim-lo-field">
-                        <label for="email" class="dbim-sd-label">
-                            Email <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <input type="email"
-                               class="form-control @error('email') is-invalid @enderror"
-                               id="email" name="email" value="{{ old('email') }}"
-                               placeholder="name@example.com"
-                               autocomplete="email" required aria-required="true"
-                               aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
-                               aria-describedby="emailError">
-                        <div id="emailError" class="invalid-feedback @error('email') d-block @enderror">@error('email'){{ $message }}@enderror</div>
-                    </div>
-
-                    {{-- Message --}}
-                    <div class="dbim-lo-field">
-                        <label for="message" class="dbim-sd-label">
-                            Your Feedback <span class="dbim-required" aria-hidden="true">*</span>
-                        </label>
-                        <textarea class="form-control @error('message') is-invalid @enderror"
-                                  id="message" name="message" rows="5"
-                                  placeholder="Enter your feedback"
-                                  required aria-required="true"
-                                  aria-invalid="{{ $errors->has('message') ? 'true' : 'false' }}"
-                                  aria-describedby="messageError">{{ old('message') }}</textarea>
-                        <div id="messageError" class="invalid-feedback @error('message') d-block @enderror">@error('message'){{ $message }}@enderror</div>
-                    </div>
-
-                    <div class="dbim-lo-actions dbim-lo-actions--end">
-                        <button type="reset" class="dbim-pv-clear" title="Reset">Reset</button>
-                        <button type="submit" id="feedbackButton" class="dbim-sd-btn" title="Send Feedback">
-                            Send Feedback
-                        </button>
-                    </div>
-                    <span class="dbim-sr-only" id="fbBusy" role="status"></span>
-
-                    <p class="dbim-lo-note">
-                        Your details are used only to respond to your feedback, as described in the
-                        <a href="{{ $privacy }}">Privacy Policy</a>.
-                    </p>
-                </form>
 
             </div>
         </div>

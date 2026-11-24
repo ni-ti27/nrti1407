@@ -38,13 +38,22 @@ class SessionFormController extends Controller
 
     public function saveSessionData(Request $request)
     {
+        // Send OTP click: sendOtp flag is set and no OTP has been entered yet.
+        // This is the same condition the code below uses to decide to send an OTP.
+        $isSendOtp = $request->boolean('sendOtp') && !$request->filled('otp');
 
-        $validatedData = $request->validate([
-            'username' => ['required', 'max:255'],
-            'email_id' => ['required', 'email'],
-            'mobile_no' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/','min:10','max:10'],
-            'captcha'   => ['required', new CaptchaValid]
-        ]);
+        $rules = [
+            'username'  => ['required', 'max:255'],
+            'email_id'  => ['required', 'email'],
+            'mobile_no' => ['required', 'regex:/^([0-9\s\-\+\(\)]*)$/', 'min:10', 'max:10'],
+        ];
+
+        // Captcha is checked only on Login, not when asking for an OTP
+        if (!$isSendOtp) {
+            $rules['captcha'] = ['required', new CaptchaValid];
+        }
+
+        $validatedData = $request->validate($rules);
 
         try
         {
@@ -58,12 +67,12 @@ class SessionFormController extends Controller
 
             $mobile = $request->input('mobile_no');
 
-            if($request->input('sendOtp') == true && $request->input('otp') == null)
+            if($isSendOtp)
             {
                 $tempOtp = $this->_generateNumericOTP();
                 $msg = "Your OTP is $tempOtp, for Login to RTI Online Portal Goa - Dept. of Information and Publicity";
                 Session::put('encryptedOtp', sha1($tempOtp));
-                $this->_sendSms($mobile,$msg);
+                $this->_sendSms($mobile, $msg);
                 return redirect('/registerDetailsWithOtp')->with('warning', 'OTP has been sent to Mobile Number')->withInput();
             }
             else
@@ -94,6 +103,6 @@ class SessionFormController extends Controller
         {
             return redirect('/registerDetailsWithOtp')->with('error', $ex->getMessage())->withInput();
         }
-
     }
+
 }

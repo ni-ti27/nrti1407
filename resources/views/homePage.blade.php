@@ -7,14 +7,12 @@
 @section('title', 'Home | RTI Online, Government of Goa')
 
 @section('content')
-@php
-    $links = [
-        'rti'    => '#',   // new RTI application
-        'first'  => '#',   // first appeal
-        'second' => '#',   // second appeal
-    ];
-@endphp
 
+@php
+    $pending = $hasPendingRecords ?? false;
+    $rtiNewRequestActive = request()->is('profile*')
+        || request()->routeIs('pending-records-list*');
+@endphp
 <div class="dbim-home">
 
     {{-- 0. ANNOUNCEMENTS (grey bar, moving text with Pause / Play) --}}
@@ -85,7 +83,7 @@
                            Goa State Government.</p>
                     </div>
 
-                    <a href="{{ $links['rti'] }}" class="dbim-home-btn">
+                    <a href="{{ $pending ? route('pending-records-list') : url('/profile') }}" class="dbim-home-btn">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                             <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 12v6M9 15h6"/>
@@ -98,37 +96,43 @@
         </div>
     </section>
 
-    {{-- 2. PAYMENT OPTIONS + INSTRUCTIONS (light blue band, white panels) --}}
+    {{-- 2. PAYMENT OPTIONS + INSTRUCTIONS --}}
     <section class="dbim-home-info" aria-label="Payment options and instructions">
         <div class="dbim-home-wrap">
             <div class="dbim-home-info__grid">
+
                 <div class="dbim-home-panel">
-                    <h2 class="dbim-home-title">
-                        <svg class="dbim-home-title__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
-                             aria-hidden="true" focusable="false">
-                            <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>
-                        </svg>
-                        Payment options
-                    </h2>
+                    <div class="dbim-home-panel__head">
+                        <span class="dbim-home-panel__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>
+                            </svg>
+                        </span>
+                        <h2 class="dbim-home-panel__title">Payment options</h2>
+                    </div>
+                    <p class="dbim-home-panel__text">Payment can be made through internet banking, debit / credit cards of Master / Visa cards and UPI.</p>
                     <ul class="dbim-home-chips">
                         <li>Internet banking</li>
                         <li>Debit / credit cards (Master, Visa)</li>
                         <li>UPI</li>
                     </ul>
                 </div>
+
                 <div class="dbim-home-panel">
-                    <h2 class="dbim-home-title">
-                        <svg class="dbim-home-title__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
-                             aria-hidden="true" focusable="false">
-                            <circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>
-                        </svg>
-                        Instructions
-                    </h2>
-                    <p>Please read the instructions carefully while submitting your RTI application,
-                       first appeal or second appeal.</p>
+                    <div class="dbim-home-panel__head">
+                        <span class="dbim-home-panel__icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                                stroke-linecap="round" stroke-linejoin="round" focusable="false">
+                                <circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>
+                            </svg>
+                        </span>
+                        <h2 class="dbim-home-panel__title">Instructions</h2>
+                    </div>
+                    <p class="dbim-home-panel__text">Please read the instructions carefully while submitting your
+                        RTI application, first appeal or second appeal.</p>
                 </div>
+
             </div>
         </div>
     </section>
@@ -161,7 +165,7 @@
                         <p class="dbim-home-row__text">Submit a new RTI application to the Public Authority of
                             your choice. Fee payment is online, for non-BPL applicants only.</p>
                     </div>
-                    <a href="{{ $links['rti'] }}" class="dbim-home-btn">
+                    <a href="{{ $pending ? route('pending-records-list') : url('/profile') }}" class="dbim-home-btn">
                         File RTI application<span class="dbim-sr-only"> online</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -182,7 +186,7 @@
                         <p class="dbim-home-row__text">Not satisfied with the reply, or no reply received? File a
                             first appeal before the First Appellate Authority.</p>
                     </div>
-                    <a href="{{ $links['first'] }}" class="dbim-home-btn">
+                    <a href="{{ route('first-appeal-detail') }}" class="dbim-home-btn">
                         File first appeal<span class="dbim-sr-only"> online</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -203,7 +207,7 @@
                         <p class="dbim-home-row__text">Still not resolved at the first appeal stage? Escalate by
                             filing a second appeal.</p>
                     </div>
-                    <a href="{{ $links['second'] }}" class="dbim-home-btn">
+                    <a href="{{ route('request-type-form') }}" class="dbim-home-btn">
                         File second appeal<span class="dbim-sr-only"> online</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">

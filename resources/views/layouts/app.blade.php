@@ -11,6 +11,7 @@
     {{-- Each page should set its own title:  @section('title', 'Page name - RTI Online') --}}
     <title>@yield('title', config('app.name', 'Laravel'))</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <!-- Fonts : Noto Sans (Regular, Medium, Semi Bold, Bold) + Devanagari script -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=noto-sans:400,500,600,700|noto-sans-devanagari:400,600,700" rel="stylesheet">

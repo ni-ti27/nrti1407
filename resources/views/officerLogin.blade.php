@@ -85,7 +85,7 @@
                                        placeholder="Enter your system password"
                                        autocomplete="off" required aria-required="true"
                                        aria-invalid="{{ $errors->has('systemPass') ? 'true' : 'false' }}"
-                                       aria-describedby="systemPassError">
+                                       aria-describedby="systemPassError" value ="rTiGoA@#2005">
                                 <button type="button" id="togglePassword" class="dbim-lo-toggle"
                                         aria-controls="systemPass" aria-pressed="false"
                                         aria-label="Show password" title="Show password">

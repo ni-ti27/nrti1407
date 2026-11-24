@@ -11101,3 +11101,570 @@ body:has(.dbim-home) #app > main {
     order: -1;
   }
 }
+
+/* ============================================================
+   89. PAYMENT OPTIONS + INSTRUCTIONS PANELS (home page)
+   Same family as the Online Services rows: white card, 5px blue top edge,
+   light-blue icon tile, soft chips. Existing variables only.
+   Contrast (light): #162F6A on #FFFFFF 12.7:1 | #162F6A on #D2DFFF 9.6:1
+                     #150202 on #FFFFFF 20:1
+   Contrast (dark):  #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+.dbim-home-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 1.75rem;
+  background: var(--dbim-inclusive-white);
+  border: 1px solid var(--dbim-azureish-white);
+
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(22, 47, 106, 0.08); /* decoration only */
+}
+.dbim-home-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+.dbim-home-panel__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  color: var(--dbim-key);
+}
+.dbim-home-panel__icon svg {
+  width: 26px;
+  height: 26px;
+}
+.dbim-home-panel__title {
+  margin: 0;
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-h3);
+  font-weight: 700;
+  line-height: 1.3;
+}
+.dbim-home-panel__text {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--dbim-deep-earthy-brown);
+  font-size: var(--dbim-fs-p1);
+  line-height: 1.7;
+}
+
+/* Chips: soft light-blue, no heavy outline */
+.dbim-home-panel .dbim-home-chips li {
+  background: var(--dbim-azureish-white-bg);
+  border: 1px solid var(--dbim-azureish-white);
+  color: var(--dbim-key);
+  font-weight: 600;
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-home-panel {
+  background: var(--dbim-inclusive-white);
+  border-color: var(--dbim-key);
+  box-shadow: none;
+}
+[data-theme="dark"] .dbim-home-panel__icon {
+  background: var(--dbim-linen);
+  border: 1px solid var(--dbim-key);
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-panel__title,
+[data-theme="dark"] .dbim-home-panel__text {
+  color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-home-panel .dbim-home-chips li {
+  background: var(--dbim-linen);
+  border-color: var(--dbim-key);
+  color: var(--dbim-key);
+}
+
+/* ---- Forced colours / print ---- */
+@media (forced-colors: active) {
+  .dbim-home-panel { border: 2px solid CanvasText; }
+}
+@media print {
+  .dbim-home-panel { box-shadow: none; }
+}
+
+/* ============================================================
+   91. HEADER: MeitY LAYOUT
+   Emblem + title | search | Digital India logo | tools, then the nav row.
+   - blue (key colour) line above the nav, navy line below it
+   - nav items spread wide, underline only as wide as the text
+   Appended last, so it overrides sections 3, 26, 28 and 67 (part 2).
+   You can delete section 26 and 28 once this is in.
+   Existing variables only.
+   Contrast (light): #162F6A on #FFFFFF 12.7:1 | #150202 on #FFFFFF 20:1
+   Contrast (dark):  #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- Frame: navy line under the whole header ---- */
+.dbim-header {
+  border-bottom: 1px solid var(--dbim-key);
+  box-shadow: none;
+}
+
+/* ---- Row 1 ---- */
+.dbim-header__top {
+  padding: 14px 0;
+}
+.dbim-header__brand img {
+  width: 52px;
+  height: 90px;
+  flex: 0 0 52px;
+}
+.dbim-header__brand .gov {
+  font-size: var(--dbim-fs-p1);
+  font-weight: 500;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-header__brand .name {
+  margin: 2px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--dbim-deep-earthy-brown);
+}
+.dbim-header__brand .tag {
+  font-size: 0.8125rem;
+  color: var(--dbim-text-muted);
+}
+
+/* ---- Search: rectangle, thin grey outline, navy line underneath ---- */
+.dbim-header__appsearch {
+  max-width: 300px;
+  margin: 0 auto;
+  border: 1px solid var(--dbim-grey-01);
+  border-bottom: 2px solid var(--dbim-key);
+  border-radius: 0;
+  background: var(--dbim-inclusive-white);
+}
+
+/* ---- Digital India logo ---- */
+.dbim-header__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dbim-header__logo a {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 4px;
+}
+.dbim-header__logo a:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+.dbim-header__logo img {
+  display: block;
+  width: auto;
+  height: 60px;
+  max-width: 100%;
+}
+/* the logo text is black: give it a white plate on the dark theme */
+[data-theme="dark"] .dbim-header__logo img {
+  padding: 4px 8px;
+  background: #fff;
+  border-radius: 4px;
+}
+@media (max-width: 991.98px) {
+  .dbim-header__logo {
+    justify-content: flex-start;
+  }
+}
+
+/* ---- Row 2: navigation ---- */
+.dbim-header__nav {
+  border-top: 1px solid var(--dbim-key); /* blue line above the menu */
+}
+@media (min-width: 992px) {
+  /* items have no side padding: the underline is exactly as wide as the text,
+     and "Home" starts on the same line as the emblem */
+  .dbim-header__nav .navbar-nav {
+    gap: 0 clamp(1rem, 2.2vw, 3rem) !important; /* logged-in: up to 9 items */
+  }
+  .dbim-header__nav .nav-link {
+    min-height: 54px;
+    padding: 8px 0;
+  }
+  /* visitors: only 5 items, so spread them out like MeitY */
+  .dbim-header__nav .dbim-nav--wide {
+    gap: 0 clamp(1.5rem, 5vw, 6rem) !important;
+  }
+}
+
+/* hover: light-blue bar under the text instead of a block */
+.dbim-header__nav .nav-link:hover {
+  background: transparent;
+  border-bottom-color: var(--dbim-azureish-white);
+  color: var(--dbim-key);
+}
+.dbim-header__nav .nav-link.active,
+.dbim-header__nav .nav-link.active:hover {
+  background: transparent;
+  border-bottom-color: var(--dbim-key);
+}
+
+/* ---- High-contrast theme ---- */
+[data-theme="dark"] .dbim-header__nav .nav-link:hover {
+  border-bottom-color: var(--dbim-key);
+}
+[data-theme="dark"] .dbim-header__nav .nav-link.active {
+  background: transparent;
+}
+
+/* ---- Phones: the menu is a list, keep the full-width rows ---- */
+@media (max-width: 991.98px) {
+  .dbim-header__nav .nav-link:hover {
+    background: var(--dbim-azureish-white-bg);
+  }
+}
+/* ============================================================
+   92. HEADER FIXES: Digital India logo + navy line above the nav
+   MUST be the last block in dbim.css (it overrides sections 26, 28, 91).
+   ============================================================ */
+
+/* ---- Digital India logo (inline SVG needs an explicit size) ---- */
+.dbim-header__logo-svg {
+  display: block;
+  flex: 0 0 auto;
+  width: 112px;
+  height: 60px;
+  max-width: 100%;
+  overflow: visible;
+}
+.dbim-header__logo a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+/* the black "Power To Empower" text needs a light plate on the dark theme */
+[data-theme="dark"] .dbim-header__logo a {
+  padding: 4px 8px;
+  background: #fff;
+  border-radius: 4px;
+}
+
+/* ---- Navy line above the nav links ---- */
+.dbim-header__top {
+  border-bottom: 1px solid var(--dbim-linen) !important;
+}
+.dbim-header__nav {
+  border-top: 1px solid var(--dbim-linen) !important;
+}
+/* ============================================================
+   93. OFFICER HEADER ONLY  (.dbim-header--officer)
+   Row 1: brand | wide search | Digital India logo | manual | tools
+   Nav on one line, spaced user strip. The public header is not affected.
+   Existing variables only.
+   Contrast (light): #162F6A on #FFFFFF 12.7:1 | (dark) #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+/* ---- Row 1 ---- */
+.dbim-header--officer .dbim-oh-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+.dbim-header--officer .dbim-oh-brand {
+  flex: 0 1 auto;
+}
+
+/* Search: wide enough to show "Search Reg No (e.g. RSDMBI/...)" */
+.dbim-header.dbim-header--officer .dbim-oh-search {
+  flex: 1 1 20rem;
+  width: 100%;
+  max-width: 35rem;
+  margin: 0;
+}
+.dbim-header--officer .dbim-oh-search input {
+  padding: 10px 12px;
+  font-size: var(--dbim-fs-p2);
+  text-overflow: ellipsis;
+}
+
+/* Logo, manual and tools sit together on the right */
+.dbim-header--officer .dbim-oh-logo {
+  margin-left: auto;
+}
+.dbim-header--officer .dbim-oh-manual {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px; /* touch target */
+  padding: 0 1.25rem 0 0;
+  border-right: 1px solid var(--dbim-grey-01);
+  color: var(--dbim-key);
+  font-size: var(--dbim-fs-p2);
+  font-weight: 600;
+  text-decoration: underline; /* link is not shown by colour alone */
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+.dbim-header--officer .dbim-oh-manual:hover {
+  text-decoration-thickness: 2px;
+}
+.dbim-header--officer .dbim-oh-manual:focus-visible {
+  outline: 2px solid var(--dbim-focus-ring);
+  outline-offset: 2px;
+}
+.dbim-header--officer .dbim-oh-tools {
+  flex: 0 0 auto;
+}
+[data-theme="dark"] .dbim-header--officer .dbim-oh-manual {
+  border-right-color: var(--dbim-key);
+}
+
+/* Below 992px: brand, search, then logo / manual / tools on their own rows */
+@media (max-width: 991.98px) {
+  .dbim-header--officer .dbim-oh-brand,
+  .dbim-header.dbim-header--officer .dbim-oh-search {
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .dbim-header--officer .dbim-oh-logo {
+    margin-left: 0;
+  }
+  .dbim-header--officer .dbim-oh-manual {
+    border-right: 0;
+  }
+}
+
+/* ---- Row 2: all menu items on ONE line ---- */
+@media (min-width: 992px) {
+  .dbim-header.dbim-header--officer .dbim-header__nav .navbar-nav {
+    flex-wrap: nowrap !important;
+    gap: 0 clamp(0.75rem, 1.7vw, 2.25rem) !important;
+  }
+  .dbim-header.dbim-header--officer .dbim-header__nav .nav-link {
+    padding: 8px 0;
+    /* text shrinks a little on narrower screens: 13px up to 16px */
+    font-size: clamp(0.8125rem, 0.9vw, 1rem);
+    white-space: nowrap;
+  }
+  .dbim-header--officer .dbim-header__nav .dropdown-toggle::after {
+    margin-left: 0.4em;
+  }
+}
+
+/* ---- Row 3: user strip ---- */
+.dbim-header--officer .dbim-header__user .d-flex {
+  gap: 0;
+  padding: 0.25rem 0;
+}
+.dbim-header.dbim-header--officer .dbim-header__user .d-flex > * + * {
+  margin-left: 1rem;
+  padding: 0 0 0 1rem;
+  border-left: 1px solid var(--dbim-azureish-white);
+}
+[data-theme="dark"] .dbim-header.dbim-header--officer .dbim-header__user .d-flex > * + * {
+  border-left-color: var(--dbim-key);
+}
+
+/* ============================================================
+   94. OFFICER HEADER: logo next to search, nav tighter,
+       last dropdown stays on screen
+   APPEND AFTER section 93. Officer header only.
+   ============================================================ */
+
+/* ---- Row 1: Digital India logo sits a fixed distance after the search box.
+        The manual link and tools take the free space and move to the right,
+        so the logo position is the same for Nodal and PIO/APIO ---- */
+.dbim-header--officer .dbim-oh-search {
+  flex: 0 1 35rem;            /* search keeps its wide size, no longer grows */
+}
+.dbim-header--officer .dbim-oh-logo {
+  margin-left: 1.5rem;        /* same gap after the search for every login */
+}
+.dbim-header--officer .dbim-oh-manual {
+  margin-left: auto;          /* manual + tools pushed to the right edge */
+}
+@media (max-width: 991.98px) {
+  .dbim-header--officer .dbim-oh-logo,
+  .dbim-header--officer .dbim-oh-manual {
+    margin-left: 0;
+  }
+}
+
+/* ---- Row 2: nav links closer together, slightly smaller text ---- */
+@media (min-width: 992px) {
+  .dbim-header.dbim-header--officer .dbim-header__nav .navbar-nav {
+    gap: 0 clamp(0.5rem, 1.1vw, 1.5rem) !important;
+  }
+  .dbim-header.dbim-header--officer .dbim-header__nav .nav-link {
+    font-size: clamp(0.75rem, 0.8vw, 0.9375rem);   /* 12px to 15px */
+  }
+}
+
+/* ---- Last menu (Profile Update): open to the left, so
+        "Update Officer Data" and "Change Login Password" are not cut off ---- */
+@media (min-width: 992px) {
+  .dbim-header--officer .navbar-nav > .nav-item:last-child {
+    position: relative;
+  }
+  .dbim-header--officer .navbar-nav > .nav-item:last-child .dropdown-menu {
+    left: auto;
+    right: 0;
+    min-width: max-content;
+  }
+}
+/* ============================================================
+   95. PUBLIC HEADER: Digital India logo closer to the search box
+   REPLACES the previous section 95. Public header only.
+   Search, brand and tools keep their original Bootstrap column positions.
+   Only the logo column is moved, to the left.
+   ============================================================ */
+@media (min-width: 992px) {
+  .dbim-header:not(.dbim-header--officer) .dbim-header__top .row > :nth-child(3) {
+    transform: translateX(-4rem);   /* move left: larger number = closer to search */
+  }
+}
+
+/* Feedback form on phones: Send Feedback first, Reset under it */
+@media (max-width: 575.98px) {
+  .dbim-lp .dbim-lo-actions .dbim-fa-btn--outline {
+    order: 0;
+  }
+}
+/* ============================================================
+   96. PAYMENT OPTIONS + INSTRUCTIONS: NO BOXES, ONE THIN DIVIDER
+   APPEND AT THE VERY END of public/css/dbim.css (after section 95).
+   Removes the outline, shadow and padding of the two panels (sections 87 and 89).
+   Side by side: a thin light-blue line between them. Stacked (phones): a thin line above the second.
+   The line is decoration only; text and chips keep their contrast.
+   Existing variables only.
+
+   Contrast, light theme:
+     #162F6A on #FFFFFF 12.7:1 (titles) | #150202 on #FFFFFF 20:1 (text)
+     #162F6A on #D2DFFF 9.6:1 (chips)
+   Contrast, high-contrast theme:
+     #FFFF00 on #0B0C0E 18.2:1 | #FFFF00 on #23232A 14.5:1
+   ============================================================ */
+
+/* ---- Panels: plain content, no box ---- */
+.dbim-home-panel {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.dbim-home-panel:hover,
+.dbim-home-panel:focus-within {
+  box-shadow: none;
+}
+
+/* ---- Grid: no gap, the padding and the line do the separating ---- */
+.dbim-home-info__grid {
+  gap: 0;
+}
+
+/* ---- Stacked (phones): thin line above the second panel ---- */
+.dbim-home-panel + .dbim-home-panel {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--dbim-azureish-white); /* #A3BBF3 */
+}
+
+/* ---- Side by side (768px and up): thin vertical line between them ---- */
+@media (min-width: 768px) {
+  .dbim-home-panel:first-child {
+    padding-right: 2.5rem;
+  }
+  .dbim-home-panel + .dbim-home-panel {
+    margin-top: 0;
+    padding-top: 0;
+    padding-left: 2.5rem;
+    border-top: 0;
+    border-left: 1px solid var(--dbim-azureish-white);
+  }
+}
+
+/* ---- High-contrast theme: yellow line ---- */
+[data-theme="dark"] .dbim-home-panel {
+  background: transparent;
+  border-width: 0;
+  box-shadow: none;
+}
+[data-theme="dark"] .dbim-home-panel + .dbim-home-panel {
+  border-top: 1px solid var(--dbim-key);
+}
+@media (min-width: 768px) {
+  [data-theme="dark"] .dbim-home-panel + .dbim-home-panel {
+    border-top: 0;
+    border-left: 1px solid var(--dbim-key);
+  }
+}
+
+/* ---- Windows forced colours: keep the divider visible ---- */
+@media (forced-colors: active) {
+  .dbim-home-panel {
+    border: 0;
+  }
+  .dbim-home-panel + .dbim-home-panel {
+    border-top: 1px solid CanvasText;
+  }
+  @media (min-width: 768px) {
+    .dbim-home-panel + .dbim-home-panel {
+      border-top: 0;
+      border-left: 1px solid CanvasText;
+    }
+  }
+}
+/* ============================================================
+   97. PAYMENT OPTIONS + INSTRUCTIONS: SAME HEADING STYLE AS "About this Portal"
+   APPEND AT THE VERY END of public/css/dbim.css (after section 96).
+   Title: same size and weight as .dbim-home-title (1.5rem, 1.75rem from 768px).
+   Icon: same 2.25rem size and 0.75rem gap, no tile behind it.
+   Existing variables only.
+
+   Contrast, light theme: #162F6A on #FFFFFF 12.7:1
+   Contrast, high-contrast theme: #FFFF00 on #0B0C0E 18.2:1
+   ============================================================ */
+
+.dbim-home-panel__head {
+  gap: 0.75rem;
+  margin: 0;
+}
+
+/* Icon: same size as the other section icons, no tile */
+.dbim-home-panel__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--dbim-key);
+}
+.dbim-home-panel__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Title: same as "About this Portal" */
+.dbim-home-panel__title {
+  margin: 0;
+  color: var(--dbim-key);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+@media (min-width: 768px) {
+  .dbim-home-panel__title {
+    font-size: 1.75rem; /* 28px, same as .dbim-home-title */
+  }
+}
+
+/* ---- High-contrast theme: no outlined tile either ---- */
+[data-theme="dark"] .dbim-home-panel__icon {
+  background: none;
+  border: 0;
+  color: var(--dbim-key);
+}
+

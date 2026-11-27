@@ -16,7 +16,7 @@
         <div class="dbim-sd-wrap">
             <div class="dbim-sd-card">
 
-                <h1 id="helpHeading" class="dbim-sd-heading">Help</h1>
+                <h1 id="helpHeading" class="dbim-sd-heading dbim-sd-heading--arrow">Help</h1>
 
                 {{-- ---------- 1. File formats ---------- --}}
                 <section class="dbim-hl-section" aria-labelledby="help-formats">

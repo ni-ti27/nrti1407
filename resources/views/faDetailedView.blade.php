@@ -1,261 +1,286 @@
 {{-- ============================================================
-     First Appeal Details  (DBIM / GIGW 3.0, keyboard accessible)
-     Uses layouts/app.blade.php for <head>, header, <main>, footer.
-     Same fields, labels and conditions as the original page.
+     First Appeal Details (officer, read-only)
+     DBIM / GIGW 3.0. One card on the grey band (.dbim-sd frame).
+     Same layout as request-processing.blade.php.
+     Styles: dbim.css sections 50, 81, 82, 83 (.dbim-rq-*), 82 (header strip)
      ============================================================ --}}
 @extends('layouts.app')
+
+@php
+    $faStatusId  = $faDetails->status_id;
+    $pageTitle   = $faStatusId == 1 ? 'First Appeal New Request'
+                 : ($faStatusId == 2 ? 'First Appeal In Process Request'
+                 : ($faStatusId == 5 ? 'First Appeal Closed Request' : 'First Appeal Details'));
+    $showSubDept = !in_array(session('role_name'), ['Nodal Officer', 'First Appellete Authority']);
+@endphp
 
 @section('title', 'First Appeal Details | RTI Online, Government of Goa')
 
 @section('content')
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-10">
+<div class="dbim-sd">
+  <div class="dbim-sd-section">
+    <div class="dbim-sd-wrap">
 
-            @include('partials.flash-messages')
+      @include('partials.flash-messages')
 
-            {{-- Department name and page title --}}
-            <div class="text-center mb-4">
-                <p class="h4 mb-2">{{ session('faaDeptName') }}</p>
-                <h1 class="h5 mb-0">
-                    @if ($faDetails->status_id == 1)
-                        First Appeal New Request
-                    @elseif ($faDetails->status_id == 2)
-                        First Appeal In Process Request
-                    @elseif ($faDetails->status_id == 5)
-                        First Appeal Closed Request
-                    @endif
-                </h1>
+      <div class="dbim-rq-card">
+
+        {{-- ============ Title + department / username / role strip ============ --}}
+        <h1 class="dbim-rq-title">{{ $pageTitle }}</h1>
+
+        @if ($faDetails->status_id == 5)
+            <p class="dbim-rq-status" role="status">Status - Closed</p>
+        @endif
+
+        {{-- ============ Public Authority Details ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="authorityHeading">
+            <h2 class="dbim-rq-sec__head" id="authorityHeading">Public Authority Details</h2>
+            <div class="dbim-rq-sec__body">
+                <dl class="dbim-rq-meta">
+                    <div>
+                        <dt>FA Reg No.:</dt>
+                        <dd>{{ $faDetails->fa_reg_no }}</dd>
+                    </div>
+                    <div>
+                        <dt>Filed Date:</dt>
+                        <dd>{{ \Carbon\Carbon::parse($faDetails->created_at)->format('d-m-Y H:i') }}</dd>
+                    </div>
+                </dl>
+
+                <hr class="dbim-rq-hr">
+
+                <dl class="dbim-rq-grid">
+                    <dt>Department:</dt>
+                    <dd>{{ $departmentDetails['dept'] ?? 'N/A' }}</dd>
+                    <dt>Office:</dt>
+                    <dd>{{ $departmentDetails['office'] ?? 'N/A' }}</dd>
+                    <dt>Sub Office:</dt>
+                    <dd>{{ $departmentDetails['suboffice'] ?? 'N/A' }}</dd>
+                </dl>
             </div>
+        </section>
 
-            @if ($faDetails->status_id == 5)
-                <div class="alert alert-success text-center" role="status">
-                    Status - Closed
-                </div>
-            @endif
+        {{-- ============ Personal Details of RTI Applicant ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="applicantHeading">
+            <h2 class="dbim-rq-sec__head" id="applicantHeading">Personal Details of RTI Applicant</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Name:</dt>
+                            <dd>{{ $faDetails->name }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Address Line1:</dt>
+                            <dd>{{ $faDetails->address_line1 }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Address Line3:</dt>
+                            <dd>{{ $faDetails->address_line3 }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Country:</dt>
+                            <dd>India</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>District:</dt>
+                            <dd>{{ $uploadedDocs['district'] }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Phone No.:</dt>
+                            <dd>{{ $faDetails->phone_no == '0' ? 'NA' : $faDetails->phone_no }}</dd>
+                        </div>
+                    </dl>
 
-            {{-- ===== Public Authority Details ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="authorityHeading">
-                <h2 id="authorityHeading" class="card-header h5 mb-0">Public Authority Details</h2>
-                <div class="card-body">
-                    <dl class="row mb-0">
-                        <dt class="col-md-3">FA Reg No.</dt>
-                        <dd class="col-md-3">{{ $faDetails->fa_reg_no }}</dd>
-
-                        <dt class="col-md-3">Filed Date</dt>
-                        <dd class="col-md-3">{{ \Carbon\Carbon::parse($faDetails->created_at)->format('d-m-Y H:i') }}</dd>
-
-                        <dt class="col-sm-4 col-lg-3">Department</dt>
-                        <dd class="col-sm-8 col-lg-9">{{ $departmentDetails['dept'] ?? 'N/A' }}</dd>
-
-                        <dt class="col-sm-4 col-lg-3">Office</dt>
-                        <dd class="col-sm-8 col-lg-9">{{ $departmentDetails['office'] ?? 'N/A' }}</dd>
-
-                        <dt class="col-sm-4 col-lg-3">Sub Office</dt>
-                        <dd class="col-sm-8 col-lg-9 mb-0">{{ $departmentDetails['suboffice'] ?? 'N/A' }}</dd>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Gender:</dt>
+                            <dd>{{ $faDetails->gender }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Address Line2:</dt>
+                            <dd>{{ $faDetails->address_line2 }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Pincode:</dt>
+                            <dd>{{ $faDetails->pincode }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>State:</dt>
+                            <dd>{{ $faDetails->stateName ?? 'Others' }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Village:</dt>
+                            <dd>{{ $uploadedDocs['village'] }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Mobile No.:</dt>
+                            <dd>{{ $faDetails->mobile_no }}</dd>
+                        </div>
                     </dl>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            {{-- ===== Personal Details of RTI Applicant ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="applicantHeading">
-                <h2 id="applicantHeading" class="card-header h5 mb-0">Personal Details of RTI Applicant</h2>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">Name</dt>
-                                <dd class="col-sm-7">{{ $faDetails->name }}</dd>
-
-                                <dt class="col-sm-5">Address Line1</dt>
-                                <dd class="col-sm-7">{{ $faDetails->address_line1 }}</dd>
-
-                                <dt class="col-sm-5">Address Line3</dt>
-                                <dd class="col-sm-7">{{ $faDetails->address_line3 }}</dd>
-
-                                <dt class="col-sm-5">Country</dt>
-                                <dd class="col-sm-7">India</dd>
-
-                                <dt class="col-sm-5">District</dt>
-                                <dd class="col-sm-7">{{ $uploadedDocs['district'] }}</dd>
-
-                                <dt class="col-sm-5">Phone No.</dt>
-                                <dd class="col-sm-7">{{ $faDetails->phone_no == '0' ? 'NA' : $faDetails->phone_no }}</dd>
-                            </dl>
+        {{-- ============ Details of RTI Application ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="rtiHeading">
+            <h2 class="dbim-rq-sec__head" id="rtiHeading">Details of RTI Application</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>RTI Filed Reg No:</dt>
+                            <dd>{{ $faDetails->reg_no }}</dd>
                         </div>
-
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">Gender</dt>
-                                <dd class="col-sm-7">{{ $faDetails->gender }}</dd>
-
-                                <dt class="col-sm-5">Address Line2</dt>
-                                <dd class="col-sm-7">{{ $faDetails->address_line2 }}</dd>
-
-                                <dt class="col-sm-5">Pincode</dt>
-                                <dd class="col-sm-7">{{ $faDetails->pincode }}</dd>
-
-                                <dt class="col-sm-5">State</dt>
-                                <dd class="col-sm-7">{{ $faDetails->stateName ?? 'Others' }}</dd>
-
-                                <dt class="col-sm-5">Village</dt>
-                                <dd class="col-sm-7">{{ $uploadedDocs['village'] }}</dd>
-
-                                <dt class="col-sm-5">Mobile No.</dt>
-                                <dd class="col-sm-7">{{ $faDetails->mobile_no }}</dd>
-                            </dl>
+                    </dl>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>RTI Filed Date:</dt>
+                            <dd>{{ \Carbon\Carbon::parse($faDetails->submitted_date)->format('d-m-Y') }}</dd>
                         </div>
-                    </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Copy of the RTI Application:</dt>
+                            <dd>
+                                <a href="{{ Storage::url($faDetails->document_path) }}" target="_blank" rel="noopener">{{ $faDetails->document_name_original }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                            </dd>
+                        </div>
+                    </dl>
                 </div>
-            </section>
 
-            {{-- ===== Details of RTI Application ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="rtiHeading">
-                <h2 id="rtiHeading" class="card-header h5 mb-0">Details of RTI Application</h2>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">RTI Filed Reg No</dt>
-                                <dd class="col-sm-7">{{ $faDetails->reg_no }}</dd>
+                <hr class="dbim-rq-hr">
 
-                                <dt class="col-sm-5">Requested Text</dt>
-                                <dd class="col-sm-7 text-break">{{ $faDetails->sr_req_note }}</dd>
-                            </dl>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">RTI Filed Date</dt>
-                                <dd class="col-sm-7">{{ \Carbon\Carbon::parse($faDetails->submitted_date)->format('d-m-Y') }}</dd>
-
-                                <dt class="col-sm-5">Copy of the RTI Application</dt>
-                                <dd class="col-sm-7">
-                                    <a href="{{ Storage::url($faDetails->document_path) }}" target="_blank" rel="noopener">
-                                        {{ $faDetails->document_name_original }}<span class="visually-hidden"> (opens in a new tab)</span>
-                                    </a>
-                                </dd>
-                            </dl>
-                        </div>
+                <dl class="dbim-rq-list">
+                    <div class="dbim-rq-pair dbim-rq-pair--block">
+                        <dt>Requested Text:</dt>
+                        <dd class="dbim-rq-text">{{ $faDetails->sr_req_note }}</dd>
                     </div>
-                </div>
-            </section>
+                </dl>
+            </div>
+        </section>
 
-            {{-- ===== PIO Response ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="pioHeading">
-                <h2 id="pioHeading" class="card-header h5 mb-0">PIO Response</h2>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">PIO Response</dt>
-                                <dd class="col-sm-7 text-break">{{ $uploadedDocs['details']->reason }}</dd>
-                            </dl>
+        {{-- ============ PIO Response ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="pioHeading">
+            <h2 class="dbim-rq-sec__head" id="pioHeading">PIO Response</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair dbim-rq-pair--block">
+                            <dt>PIO Response:</dt>
+                            <dd class="dbim-rq-text">{{ $uploadedDocs['details']->reason }}</dd>
                         </div>
-
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">Reply of PIO</dt>
-                                <dd class="col-sm-7">
-                                    @if($uploadedDocs['pioReplyDoc'] != null)
-                                        <a href="{{ Storage::url($uploadedDocs['pioReplyDoc']['document_path']) }}" target="_blank" rel="noopener">
-                                            {{ $uploadedDocs['pioReplyDoc']['document_name_original'] }}<span class="visually-hidden"> (opens in a new tab)</span>
-                                        </a>
-                                    @else
-                                        File Not Found
-                                    @endif
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {{-- ===== Details of FAA Application ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="faaHeading">
-                <h2 id="faaHeading" class="card-header h5 mb-0">Details of FAA Application</h2>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">Registration Number</dt>
-                                <dd class="col-sm-7">{{ $faDetails->fa_reg_no }}</dd>
-
-                                <dt class="col-sm-5">Requested Text</dt>
-                                <dd class="col-sm-7 text-break">{{ $faDetails->fa_req_note }}</dd>
-                            </dl>
-                        </div>
-
-                        <div class="col-12 col-md-6">
-                            <dl class="row mb-0">
-                                <dt class="col-sm-5">FA Received</dt>
-                                <dd class="col-sm-7">{{ \Carbon\Carbon::parse($faDetails->created_at)->format('d-m-Y') }}</dd>
-
-                                <dt class="col-sm-5">Supporting Document</dt>
-                                <dd class="col-sm-7">
-                                    @if($uploadedDocs['suppDoc'] != null)
-                                        <a href="{{ Storage::url($uploadedDocs['suppDoc']['document_path']) }}" target="_blank" rel="noopener">
-                                            {{ $uploadedDocs['suppDoc']['document_name_original'] }}<span class="visually-hidden"> (opens in a new tab)</span>
-                                        </a>
-                                    @else
-                                        File Not Found
-                                    @endif
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {{-- ===== Officer's Reply ===== --}}
-            @if($faAction != null)
-                <section class="card shadow-sm mb-4" aria-labelledby="replyHeading">
-                    <h2 id="replyHeading" class="card-header h5 mb-0">Officer's Reply</h2>
-                    <div class="card-body">
-                        @if(!empty($faAction->return_to_applicant_reason))
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4 col-lg-3">Reverted Date &amp; Time</dt>
-                                <dd class="col-sm-8 col-lg-9">{{ \Carbon\Carbon::parse($faAction->created_at)->format('d-m-Y H:i') }}</dd>
-
-                                <dt class="col-sm-4 col-lg-3">Reverted Reason</dt>
-                                <dd class="col-sm-8 col-lg-9 mb-0 text-break">{{ $faAction->return_to_applicant_reason }}</dd>
-                            </dl>
-                        @elseif(!empty($faAction->disposal_reason))
-                            <dl class="row mb-0">
-                                <dt class="col-sm-4 col-lg-3">Disposal Date &amp; Time</dt>
-                                <dd class="col-sm-8 col-lg-9">{{ \Carbon\Carbon::parse($faAction->created_at)->format('d-m-Y H:i') }}</dd>
-
-                                <dt class="col-sm-4 col-lg-3">Disposal Reason</dt>
-                                <dd class="col-sm-8 col-lg-9 text-break">{{ $faAction->disposal_reason }}</dd>
-
-                                @if(!empty($faAction->document_path) && !empty($faAction->document_name))
-                                    <dt class="col-sm-4 col-lg-3">Disposal Reply</dt>
-                                    <dd class="col-sm-8 col-lg-9 mb-0">
-                                        <a href="{{ asset($faAction->document_path) }}" target="_blank" rel="noopener">
-                                            {{ $faAction->document_name }}<span class="visually-hidden"> (opens in a new tab)</span>
-                                        </a>
-                                    </dd>
+                    </dl>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Reply of PIO:</dt>
+                            <dd>
+                                @if($uploadedDocs['pioReplyDoc'] != null)
+                                    <a href="{{ Storage::url($uploadedDocs['pioReplyDoc']['document_path']) }}" target="_blank" rel="noopener">{{ $uploadedDocs['pioReplyDoc']['document_name_original'] }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                @else
+                                    File Not Found
                                 @endif
-                            </dl>
-                        @else
-                            <p class="mb-0">No officer reply available yet.</p>
-                        @endif
-                    </div>
-                </section>
-            @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </div>
+        </section>
 
-            {{-- ===== Print Details ===== --}}
-            <section class="card shadow-sm mb-4" aria-labelledby="printHeading">
-                <h2 id="printHeading" class="card-header h5 mb-0">Print Details</h2>
-                <div class="card-body">
-                    <a href="/inprocess-pdf/{{ $faDetails->id }}" target="_blank" rel="noopener"
-                       class="download-btn text-uppercase w-ft">
-                        Print As PDF<span class="visually-hidden"> (opens in a new tab)</span>
-                    </a>
+        {{-- ============ Details of FAA Application ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="faaHeading">
+            <h2 class="dbim-rq-sec__head" id="faaHeading">Details of FAA Application</h2>
+            <div class="dbim-rq-sec__body">
+                <div class="dbim-rq-cols">
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>Registration Number:</dt>
+                            <dd>{{ $faDetails->fa_reg_no }}</dd>
+                        </div>
+                    </dl>
+                    <dl class="dbim-rq-list">
+                        <div class="dbim-rq-pair">
+                            <dt>FA Received:</dt>
+                            <dd>{{ \Carbon\Carbon::parse($faDetails->created_at)->format('d-m-Y') }}</dd>
+                        </div>
+                        <div class="dbim-rq-pair">
+                            <dt>Supporting Document:</dt>
+                            <dd>
+                                @if($uploadedDocs['suppDoc'] != null)
+                                    <a href="{{ Storage::url($uploadedDocs['suppDoc']['document_path']) }}" target="_blank" rel="noopener">{{ $uploadedDocs['suppDoc']['document_name_original'] }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                @else
+                                    File Not Found
+                                @endif
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <hr class="dbim-rq-hr">
+
+                <dl class="dbim-rq-list">
+                    <div class="dbim-rq-pair dbim-rq-pair--block">
+                        <dt>Requested Text:</dt>
+                        <dd class="dbim-rq-text">{{ $faDetails->fa_req_note }}</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        {{-- ============ Officer's Reply ============ --}}
+        @if($faAction != null)
+            <section class="dbim-rq-sec" aria-labelledby="replyHeading">
+                <h2 class="dbim-rq-sec__head" id="replyHeading">Officer's Reply</h2>
+                <div class="dbim-rq-sec__body">
+                    @if(!empty($faAction->return_to_applicant_reason))
+                        <dl class="dbim-rq-list">
+                            <div class="dbim-rq-pair">
+                                <dt>Reverted Date &amp; Time:</dt>
+                                <dd>{{ \Carbon\Carbon::parse($faAction->created_at)->format('d-m-Y H:i') }}</dd>
+                            </div>
+                            <div class="dbim-rq-pair dbim-rq-pair--block">
+                                <dt>Reverted Reason:</dt>
+                                <dd class="dbim-rq-text">{{ $faAction->return_to_applicant_reason }}</dd>
+                            </div>
+                        </dl>
+                    @elseif(!empty($faAction->disposal_reason))
+                        <dl class="dbim-rq-list">
+                            <div class="dbim-rq-pair">
+                                <dt>Disposal Date &amp; Time:</dt>
+                                <dd>{{ \Carbon\Carbon::parse($faAction->created_at)->format('d-m-Y H:i') }}</dd>
+                            </div>
+                            @if(!empty($faAction->document_path) && !empty($faAction->document_name))
+                                <div class="dbim-rq-pair">
+                                    <dt>Disposal Reply:</dt>
+                                    <dd>
+                                        <a href="{{ asset($faAction->document_path) }}" target="_blank" rel="noopener">{{ $faAction->document_name }}<span class="visually-hidden"> (opens in a new tab)</span></a>
+                                    </dd>
+                                </div>
+                            @endif
+                            <div class="dbim-rq-pair dbim-rq-pair--block">
+                                <dt>Disposal Reason:</dt>
+                                <dd class="dbim-rq-text">{{ $faAction->disposal_reason }}</dd>
+                            </div>
+                        </dl>
+                    @else
+                        <p class="mb-3">No officer reply available yet.</p>
+                    @endif
                 </div>
             </section>
+        @endif
 
-        </div>
-    </div>
-</div>
+        {{-- ============ Print ============ --}}
+        <section class="dbim-rq-sec" aria-labelledby="printHeading">
+            <h2 class="dbim-rq-sec__head" id="printHeading">Print Details</h2>
+            <div class="dbim-rq-sec__body">
+                <a href="/inprocess-pdf/{{ $faDetails->id }}" class="download-outline-btn w-ft mt-0"
+                   target="_blank" rel="noopener">
+                    Print As PDF<span class="visually-hidden"> (opens in a new tab)</span>
+                </a>
+            </div>
+        </section>
+
+      </div>{{-- .dbim-rq-card --}}
+
+    </div>{{-- .dbim-sd-wrap --}}
+  </div>{{-- .dbim-sd-section --}}
+</div>{{-- .dbim-sd --}}
 @endsection

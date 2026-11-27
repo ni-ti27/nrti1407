@@ -20,12 +20,12 @@
     // true when any href in the list is the page being viewed
     $anyOn = fn (array $hrefs) => in_array($cur, $hrefs, true);
 
-    $manual = null;
-    if ($role == 1)                 { $manual = ['../Nodal_Module_User_Manual.pdf', 'Nodal User Manual']; }
-    elseif ($role == 2 || $role == 3) { $manual = ['../PIO_Module_User_Manual.pdf',  'PIO/APIO User Manual']; }
-    elseif ($role == 4)             { $manual = ['../FA_Dept_User_Manual.pdf',       'FA User Manual']; }
-    elseif ($role == 5)             { $manual = ['../FA_Dept_User_Manual.pdf',       'Clerk User Manual']; }
-    elseif ($role == 6)             { $manual = ['../FA_Dept_User_Manual.pdf',       'State Information Commissioner Manual']; }
+   $manual = null;
+    if ($role == 1)                   { $manual = [asset('RTIMIS/Nodal_Module_User_Manual.pdf'), 'Nodal User Manual']; }
+    elseif ($role == 2 || $role == 3) { $manual = [asset('RTIMIS/PIO_Module_User_Manual.pdf'),   'PIO/APIO User Manual']; }
+    elseif ($role == 4)               { $manual = [asset('RTIMIS/FA_Dept_User_Manual.pdf'),      'FA User Manual']; }
+    elseif ($role == 5)               { $manual = [asset('RTIMIS/FA_Dept_User_Manual.pdf'),      'Clerk User Manual']; }
+    elseif ($role == 6)               { $manual = [asset('RTIMIS/FA_Dept_User_Manual.pdf'),      'State Information Commissioner Manual']; }
 
     // Nodal (role 1) has 10 menu items: smaller text so they sit on ONE line
     $navCompact = $role == 1 ? 'dbim-nav--compact' : '';
@@ -33,7 +33,6 @@
 
 {{-- Self-contained fallback: load the DBIM assets if the layout did not. --}}
 @unless($dbimAssetsLoaded ?? false)
-    <link href="https://fonts.bunny.net/css?family=noto-sans:400,500,600,700|noto-sans-devanagari:400,600,700" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('Compiled/css/compiled.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dbim.css') }}">
     <script src="{{ asset('Compiled/js/compiled.bundle.min.js') }}"></script>
@@ -53,7 +52,7 @@
 
             {{-- 1. Brand: your existing emblem + title block --}}
             <div class="dbim-header__brand dbim-oh-brand d-flex align-items-center gap-4">
-                <img src="{{ asset('images/Emblem_of_Goa.png') }}" alt="Emblem of Goa" width="57" height="100">
+                <img class="dbim-header__emblem"src="{{ asset('images/Emblem_of_Goa.png') }}" alt="Emblem of Goa" width="57" height="100">
                         <span>
                             <span class="gov">Government of Goa</span>
                             <span class="name">RTI Online </span>
@@ -97,9 +96,12 @@
             </div>
 
             {{-- 4. Manual link: move it OUT of the tools block, add class "dbim-oh-manual" --}}
-            <a class="dbim-oh-manual" href="{{ $manual[0] }}" target="_blank" rel="noopener noreferrer" download>
+             @if($manual)
+            <a class="dbim-oh-manual" href="{{ $manual[0] }}" target="_blank" rel="noopener noreferrer">
                 {{ $manual[1] }}
+                <span class="visually-hidden">(PDF, opens in a new tab)</span>
             </a>
+            @endif
 
             {{-- 5. Tools: your existing skip / language / accessibility block --}}
             <div class="dbim-header__tools dbim-oh-tools" role="group" aria-label="Utility links">

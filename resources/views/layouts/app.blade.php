@@ -13,9 +13,16 @@
 
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <!-- Fonts : Noto Sans (Regular, Medium, Semi Bold, Bold) + Devanagari script -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=noto-sans:400,500,600,700|noto-sans-devanagari:400,600,700" rel="stylesheet">
-
+    <link rel="preload"
+        href="{{ asset('fonts/NotoSans-Latin-Variable.woff2') }}"
+        as="font"
+        type="font/woff2"
+        crossorigin>
+    <link rel="preload"
+        href="{{ asset('fonts/NotoSans-Devanagari-Variable.woff2') }}"
+        as="font"
+        type="font/woff2"
+        crossorigin>
     <!-- DBIM Toolkit COMPILED CSS (Bootstrap) - must load before our own styles -->
     <link rel="stylesheet" href="{{ asset('Compiled/css/compiled.min.css') }}">
 

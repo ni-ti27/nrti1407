@@ -47,7 +47,7 @@
             {{-- Emblem + title --}}
             <div class="col-12 col-lg-4">
                 <div class="dbim-header__brand d-flex align-items-center justify-content-start gap-4">
-                    <img src="{{ asset('images/Emblem_of_Goa.png') }}" alt="Emblem of Goa" width="57" height="100">
+                    <img class="dbim-header__emblem" src="{{ asset('images/Emblem_of_Goa.png') }}" alt="Emblem of Goa" width="57" height="100">
                     <span>
                         <span class="gov">Government of Goa</span>
                         <span class="name">RTI Online </span>
